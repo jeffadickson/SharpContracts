@@ -5,7 +5,7 @@
 :root{font-family:system-ui,sans-serif;color-scheme:dark}body{max-width:900px;margin:3rem auto;padding:0 1.5rem;background:#101827;color:#e8eef9}h1{font-size:2.4rem}p{line-height:1.6;color:#b7c6da}.panel{padding:1.5rem;border:1px solid #42536d;border-radius:16px;background:#172439;margin:1rem 0}label{display:inline-grid;gap:.4rem;margin:0 .8rem 1rem 0}input,select,button{background:#21334d;color:white;padding:.7rem;border:1px solid #567090;border-radius:8px}button{cursor:pointer;background:#2563eb}pre{padding:1.3rem;white-space:pre-wrap;overflow:auto;background:#0c1320;border-radius:10px}.pass{color:#86efac}.fail{color:#fca5a5}a{color:#93c5fd}
 </style>
 <h1>SharpContracts <small>M1</small></h1>
-<p>Design by Contract for C#: preconditions protect entry, postconditions define promised results, and invariants preserve object validity. This runnable browser simulation uses JavaScript, not .NET or formal proofs. Milestone 1 adds a real Roslyn analyzer, xUnit tests and .NET CI source in GitHub.</p>
+<p>Design by Contract for C#: preconditions protect entry, postconditions define promised results, and invariants preserve object validity. This runnable browser simulation uses JavaScript, not .NET or formal proofs. Milestone 1 adds a C# interface contract proxy, a Roslyn analyzer, xUnit tests and .NET CI source in GitHub.</p>
 <div class="panel"><h2>Experiment: transfer funds</h2>
 <label>Source balance ($)<input id="source" type="number" value="100" step=".01"></label>
 <label>Destination balance ($)<input id="dest" type="number" value="50" step=".01"></label>
@@ -20,6 +20,20 @@ from.Debit(amount);
 to.Credit(amount);
 Contract.Ensure(from.Balance == oldFrom - amount, "POST-001", "source delta");
 Contract.Ensure(to.Balance == oldTo + amount, "POST-002", "destination delta");</pre></div>
+<div class="panel"><h2>Automatic interface contracts</h2><p>Milestone 1 includes a C# <code>DispatchProxy</code> that checks parameter attributes before forwarding an interface call. Test that behavior in this JavaScript simulation.</p>
+<label>Send amount <input type="number" id="proxyAmount" value="0" step="1"></label>
+<label>Recipient <input id="proxyRecipient" value="Alice"></label>
+<button onclick="runProxy()">Invoke guarded interface</button>
+<pre id="proxyOut" aria-live="polite"></pre>
+<pre>public interface ITransferService
+{
+    void Send([ContractPositive("AUTO-001")] decimal amount,
+              [ContractNotNull("AUTO-002")] string recipient);
+}
+var guarded = ContractProxy.Create&lt;ITransferService&gt;(service);
+guarded.Send(0m, "Alice"); // AUTO-001 detected before service is called</pre>
+<p>Important: only calls through the proxy are guarded. Direct target calls and self-invocation are not intercepted.</p>
+</div>
 <div class="panel"><h2>Milestone 1: Roslyn analyzer playground</h2>
 <p>Enter a single SharpContracts call to explore the three diagnostics implemented by the C# Roslyn analyzer. This is an educational browser approximation, not the Roslyn engine.</p>
 <label style="display:block">C# expression<input id="contractCode" style="width:95%" value='Contract.Require(false, "", "never passes");'></label>
@@ -49,6 +63,14 @@ function runAll(){
 let cases=[['valid transfer',100,50,25,false,null],['negative amount',100,50,-1,false,'PRE-004'],['insufficient funds',100,50,125,false,'PRE-005'],['zero amount',100,50,0,false,'PRE-004'],['injected defect',100,50,25,true,'POST-002'],['invalid initial balance',-10,50,25,false,'INV-001']];
 let lines=cases.map(([name,s,d,a,b,expected])=>{try{transfer(s,d,a,b);return (expected?'FAIL':'PASS')+' '+name}catch(e){return (e.message.startsWith(expected||'NOT_EXPECTED')?'PASS':'FAIL')+' '+name+' ('+e.message+')'}});out.textContent=lines.join('\n');out.className=lines.every(x=>x.startsWith('PASS'))?'pass':'fail'}
 
+function runProxy(){
+ const amount=Number(document.getElementById('proxyAmount').value);
+ const recipient=document.getElementById('proxyRecipient').value;
+ const output=document.getElementById('proxyOut');
+ if(!(amount>0)){output.textContent='AUTO-001: amount must be positive; target not called';output.className='fail'}
+ else if(!recipient.trim()){output.textContent='AUTO-002: recipient must not be null (browser example also disallows blank); target not called';output.className='fail'}
+ else {output.textContent='PASS: interface target called with '+amount+' for '+recipient;output.className='pass'}
+}
 function analyzeContract(){
   const s=document.getElementById('contractCode').value;
   const diagnostics=[];
