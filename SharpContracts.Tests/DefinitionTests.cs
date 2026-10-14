@@ -3,6 +3,9 @@ using Xunit;
 
 namespace SharpContracts.Tests;
 
+public interface ICalculatorContract { [ContractNonNegativeResult("POST-NONNEG")] int Read(); }
+public sealed class BrokenCalculator : ICalculatorContract { public int Read() => -5; }
+
 public sealed class DefinitionTests
 {
     [Fact]
@@ -27,6 +30,15 @@ public sealed class DefinitionTests
         var failure = Assert.Throws<ContractViolationException>(() =>
             ContractBoundary.Invoke(3, x => x + 1, pre, post));
         Assert.Equal("POST-X", failure.ContractId);
+    }
+
+    [Fact]
+    public void ProxyAutomaticallyEnforcesPostcondition()
+    {
+        var proxy = ContractProxy.Create<ICalculatorContract>(new BrokenCalculator());
+        var error = Assert.Throws<ContractViolationException>(() => proxy.Read());
+        Assert.Equal("POST-NONNEG", error.ContractId);
+        Assert.Equal(ContractKind.Postcondition, error.Kind);
     }
 
     [Fact]
