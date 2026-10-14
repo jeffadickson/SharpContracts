@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SharpContracts — M0 interactive demo</title>
+<style>
+:root{font-family:system-ui,sans-serif;color-scheme:dark}body{max-width:900px;margin:3rem auto;padding:0 1.5rem;background:#101827;color:#e8eef9}h1{font-size:2.4rem}p{line-height:1.6;color:#b7c6da}.panel{padding:1.5rem;border:1px solid #42536d;border-radius:16px;background:#172439;margin:1rem 0}label{display:inline-grid;gap:.4rem;margin:0 .8rem 1rem 0}input,select,button{background:#21334d;color:white;padding:.7rem;border:1px solid #567090;border-radius:8px}button{cursor:pointer;background:#2563eb}pre{padding:1.3rem;white-space:pre-wrap;overflow:auto;background:#0c1320;border-radius:10px}.pass{color:#86efac}.fail{color:#fca5a5}a{color:#93c5fd}
+</style>
+<h1>SharpContracts <small>M0</small></h1>
+<p>Design by Contract for C#: preconditions protect entry, postconditions define promised results, and invariants preserve object validity. This runnable browser simulation uses JavaScript, not .NET or formal proofs.</p>
+<div class="panel"><h2>Experiment: transfer funds</h2>
+<label>Source balance ($)<input id="source" type="number" value="100" step=".01"></label>
+<label>Destination balance ($)<input id="dest" type="number" value="50" step=".01"></label>
+<label>Transfer amount ($)<input id="amount" type="number" value="25" step=".01"></label>
+<label>Fault injection<select id="fault"><option value="none">None</option><option value="extra">Credit $1 extra</option></select></label>
+<div><button onclick="run()">Run contract</button> <button onclick="runAll()">Run all scenarios</button></div>
+<pre id="out" aria-live="polite">Choose Run contract.</pre></div>
+<div class="panel"><h2>C# API sketch</h2><pre>Contract.Require(amount &gt; 0, "PRE-004", "amount must be positive");
+var oldFrom = Contract.Old(from.Balance);
+var oldTo = Contract.Old(to.Balance);
+from.Debit(amount);
+to.Credit(amount);
+Contract.Ensure(from.Balance == oldFrom - amount, "POST-001", "source delta");
+Contract.Ensure(to.Balance == oldTo + amount, "POST-002", "destination delta");</pre></div>
+<div class="panel"><h2>Semantics and limitations</h2><p>A failed precondition prevents entry. A failed postcondition detects a broken guarantee <b>after mutation</b>; this prototype does not roll back changes. C# `Old&lt;T&gt;` does not deep-copy referenced objects. Proof, automatic weaving, async contracts and Roslyn analyzers remain planned.</p><p>Explore the <a href="docs/REQUIREMENTS.md">48-item requirements baseline</a> and <a href="SharpContracts.Runtime/SharpContracts.cs">C# runtime source</a>.</p></div>
+<script>
+function check(ok,id,msg){if(!ok)throw Error(id+': '+msg)}
+function cents(x){check(Number.isFinite(x),'PRE-NUM','finite number required');return Math.round(x*100)}
+function transfer(s,d,a,bug=false){
+s=cents(s);d=cents(d);a=cents(a);
+check(s>=0&&d>=0,'INV-001','balances cannot be negative');
+check(a>0,'PRE-004','amount must be positive');
+check(s>=a,'PRE-005','insufficient funds');
+const oldS=s,oldD=d;
+s-=a;d+=a+(bug?100:0);
+check(s===oldS-a,'POST-001','source balance differs');
+check(d===oldD+a,'POST-002','destination balance differs');
+check(s+d===oldS+oldD,'POST-003','total not conserved');
+check(s>=0&&d>=0,'INV-001','balance negative');
+return {source:s/100,destination:d/100};
+}
+function run(){let o=document.getElementById('out');try{let v=transfer(+source.value,+dest.value,+amount.value,fault.value==='extra');o.textContent='PASS: '+JSON.stringify(v);o.className='pass'}catch(e){o.textContent='CONTRACT VIOLATION: '+e.message;o.className='fail'}}
+function runAll(){
+let cases=[['valid transfer',100,50,25,false,null],['negative amount',100,50,-1,false,'PRE-004'],['insufficient funds',100,50,125,false,'PRE-005'],['zero amount',100,50,0,false,'PRE-004'],['injected defect',100,50,25,true,'POST-002'],['invalid initial balance',-10,50,25,false,'INV-001']];
+let lines=cases.map(([name,s,d,a,b,expected])=>{try{transfer(s,d,a,b);return (expected?'FAIL':'PASS')+' '+name}catch(e){return (e.message.startsWith(expected||'NOT_EXPECTED')?'PASS':'FAIL')+' '+name+' ('+e.message+')'}});out.textContent=lines.join('\n');out.className=lines.every(x=>x.startsWith('PASS'))?'pass':'fail'}
+</script></html>
