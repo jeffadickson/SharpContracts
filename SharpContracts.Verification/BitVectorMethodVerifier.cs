@@ -9,7 +9,7 @@ using SharpContracts.Solver;
 
 namespace SharpContracts.Verification;
 
-/// <summary>Verification of a deliberately restricted straight-line C# long subset using signed BV64.</summary>
+/// <summary>Verification of a restricted C# long subset with simple merged if/else assignments using signed BV64.</summary>
 public static class BitVectorMethodVerifier
 {
     public static MethodVerification Verify(string source, string methodName)
@@ -116,6 +116,39 @@ public static class BitVectorMethodVerifier
                              assign.Left is IdentifierNameSyntax id && state.ContainsKey(id.Identifier.ValueText) && !startedEnsures:
                         state[id.Identifier.ValueText] = Lower(assign.Right,false,line);
                         break;
+                    // Restricted if/else merge: both branches must assign the same existing long.
+                    // Represent the merged value with SMT ite, preserving BV64 wraparound.
+                    // Checked expressions are rejected here until branch-local overflow VCs exist.
+                    case IfStatementSyntax branch when !startedEnsures:
+                    {
+                        static AssignmentExpressionSyntax? SingleAssign(StatementSyntax statement)
+                        {
+                            if (statement is BlockSyntax block)
+                            {
+                                if (block.Statements.Count != 1) return null;
+                                statement = block.Statements[0];
+                            }
+                            return statement is ExpressionStatementSyntax
+                                { Expression: AssignmentExpressionSyntax assignment }
+                                && assignment.IsKind(SyntaxKind.SimpleAssignmentExpression)
+                                ? assignment : null;
+                        }
+                        var yes=SingleAssign(branch.Statement);
+                        var no=branch.Else is null ? null : SingleAssign(branch.Else.Statement);
+                        if (yes?.Left is not IdentifierNameSyntax left ||
+                            no?.Left is not IdentifierNameSyntax right ||
+                            left.Identifier.ValueText != right.Identifier.ValueText ||
+                            !state.ContainsKey(left.Identifier.ValueText))
+                            throw new NotSupportedException("if/else requires both branches to assign the same existing long");
+                        if (yes.Right.DescendantNodesAndSelf().OfType<CheckedExpressionSyntax>().Any() ||
+                            no.Right.DescendantNodesAndSelf().OfType<CheckedExpressionSyntax>().Any())
+                            throw new NotSupportedException("Checked arithmetic inside branches is not yet modeled");
+                        var condition=Lower(branch.Condition,false,line);
+                        var truth=Lower(yes.Right,false,line);
+                        var falsity=Lower(no.Right,false,line);
+                        state[left.Identifier.ValueText]="(ite "+condition+" "+truth+" "+falsity+")";
+                        break;
+                    }
                     case ExpressionStatementSyntax { Expression: InvocationExpressionSyntax call }
                         when call.Expression.ToString() is "Contract.Require" or "Contract.Ensure":
                         var args=call.ArgumentList.Arguments;
