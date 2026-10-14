@@ -1,4 +1,4 @@
-# SharpContracts — Milestone 8
+# SharpContracts — Milestone 9
 
 A Design by Contract framework for C#.
 
@@ -15,3 +15,8 @@ dotnet run --project SharpContracts.Demo
 The runtime currently requires explicit calls to `Contract.Require`, `Contract.Ensure`, and `Contract.Invariant`. General method weaving, complete Roslyn coverage, solver integration and transactional rollback are planned, not implemented. CI workflow is committed; check Actions for build results.
 
 See `docs/REQUIREMENTS.md` for requirements and limitations.\n\nTo reference the experimental analyzer, add it as an Analyzer project reference (instructions in `docs/INTRODUCTION.md`).
+
+
+## Custom numeric types
+
+[Design and current support](docs/CUSTOM_TYPES.md). User-defined operator semantics are not yet verified; they must not be assumed to be built-in arithmetic.
