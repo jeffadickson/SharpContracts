@@ -68,7 +68,7 @@ public class ValidationProxy<T> : DispatchProxy where T : class
                 Contract.Require(valid, positive.Id, p.Name + " must be positive");
             }
         }
-        try { return targetMethod.Invoke(Target, args); }
+        try { var result = targetMethod.Invoke(Target, args); ContractResultEvaluator.Check(targetMethod, result); return result; }
         catch (TargetInvocationException e) when (e.InnerException is not null)
         {
             ExceptionDispatchInfo.Capture(e.InnerException).Throw();
