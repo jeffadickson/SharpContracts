@@ -1,4 +1,4 @@
-# SharpContracts — Milestone 6
+# SharpContracts — Milestone 7
 
 A Design by Contract framework for C#.
 
