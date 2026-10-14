@@ -4,7 +4,7 @@
 <style>
 :root{font-family:system-ui,sans-serif;color-scheme:dark}body{max-width:900px;margin:3rem auto;padding:0 1.5rem;background:#101827;color:#e8eef9}h1{font-size:2.4rem}p{line-height:1.6;color:#b7c6da}.panel{padding:1.5rem;border:1px solid #42536d;border-radius:16px;background:#172439;margin:1rem 0}label{display:inline-grid;gap:.4rem;margin:0 .8rem 1rem 0}input,select,button{background:#21334d;color:white;padding:.7rem;border:1px solid #567090;border-radius:8px}button{cursor:pointer;background:#2563eb}pre{padding:1.3rem;white-space:pre-wrap;overflow:auto;background:#0c1320;border-radius:10px}.pass{color:#86efac}.fail{color:#fca5a5}a{color:#93c5fd}
 </style>
-<h1>SharpContracts <small>M4</small></h1>
+<h1>SharpContracts <small>M5</small></h1>
 <p>Design by Contract for C#: preconditions protect entry, postconditions define promised results, and invariants preserve object validity. This runnable browser simulation uses JavaScript, not .NET or formal proofs. Milestone 3 adds a typed symbolic expression tree and SMT-LIB exporter. Milestone 2 added reusable typed pre/postcondition definitions and synchronous automatic interface-result contracts, on top of the interface proxy, Roslyn analyzer, xUnit tests and .NET CI source.</p>
 <div class="panel"><h2>Experiment: transfer funds</h2>
 <label>Source balance ($)<input id="source" type="number" value="100" step=".01"></label>
@@ -20,6 +20,13 @@ from.Debit(amount);
 to.Credit(amount);
 Contract.Ensure(from.Balance == oldFrom - amount, "POST-001", "source delta");
 Contract.Ensure(to.Balance == oldTo + amount, "POST-002", "destination delta");</pre></div>
+<div class="panel"><h2>Milestone 5 — source-level proof walkthrough</h2>
+<p>SharpContracts now has a Roslyn-to-Z3 source verifier for a restricted C# method subset. Toggle the critical precondition and see whether the nonnegative-balance guarantee follows. This browser example illustrates the logic; real Z3 executes in the .NET project.</p>
+<label><input id="guardToggle" type="checkbox" checked> Require balance ≥ amount</label>
+<button onclick="checkSource()">Evaluate source-level proof example</button>
+<pre id="sourceResult" aria-live="polite"></pre>
+<pre id="sourceCode"></pre>
+<p>The current verifier models <code>long</code> as mathematical integers, not CLR checked or unchecked overflow. No branches, loops, heap mutation or async verification yet.</p></div>
 <div class="panel"><h2>Milestone 4 — what Z3 proves</h2>
 <p>The actual C# backend now invokes Microsoft Z3. The browser below illustrates the difference between a valid implication and a counterexample, with a small arithmetic sample; it does <b>not</b> run Z3.</p>
 <label>Assume x ≥ <input type="number" id="proofMin" value="5"></label>
@@ -139,4 +146,10 @@ if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)){p.textContent='Enter safe
 if(a>b){p.textContent='PROVED in this arithmetic example: no integer x can satisfy x >= '+a+' AND x <= '+b+'. Actual Z3 integration is in C#.'}
 else{p.textContent='COUNTEREXAMPLE in this arithmetic example: x = '+a+' satisfies the assumption but violates x > '+b+'. Actual Z3 integration is in C#.'}
 }
+function checkSource(){
+  const guard=document.getElementById('guardToggle').checked;
+  document.getElementById('sourceCode').textContent='void Transfer(long balance, long amount) {\n'+(guard?'  Contract.Require(balance >= amount, "PRE1", "sufficient");\n':'')+'  Contract.Require(amount >= 0, "PRE2", "nonnegative");\n  long remaining = balance - amount;\n  Contract.Ensure(remaining >= 0, "POST1", "safe");\n}';
+  document.getElementById('sourceResult').textContent=guard?'PROVED over mathematical integers: constraints imply remaining >= 0.':'COUNTEREXAMPLE: balance=0, amount=1 => remaining=-1.';
+}
+checkSource();
 </script></html>
