@@ -4,7 +4,7 @@
 <style>
 :root{font-family:system-ui,sans-serif;color-scheme:dark}body{max-width:900px;margin:3rem auto;padding:0 1.5rem;background:#101827;color:#e8eef9}h1{font-size:2.4rem}p{line-height:1.6;color:#b7c6da}.panel{padding:1.5rem;border:1px solid #42536d;border-radius:16px;background:#172439;margin:1rem 0}label{display:inline-grid;gap:.4rem;margin:0 .8rem 1rem 0}input,select,button{background:#21334d;color:white;padding:.7rem;border:1px solid #567090;border-radius:8px}button{cursor:pointer;background:#2563eb}pre{padding:1.3rem;white-space:pre-wrap;overflow:auto;background:#0c1320;border-radius:10px}.pass{color:#86efac}.fail{color:#fca5a5}a{color:#93c5fd}
 </style>
-<h1>SharpContracts <small>M6</small></h1>
+<h1>SharpContracts <small>M7</small></h1>
 <p>Design by Contract for C#: preconditions protect entry, postconditions define promised results, and invariants preserve object validity. This runnable browser simulation uses JavaScript, not .NET or formal proofs. Milestone 3 adds a typed symbolic expression tree and SMT-LIB exporter. Milestone 2 added reusable typed pre/postcondition definitions and synchronous automatic interface-result contracts, on top of the interface proxy, Roslyn analyzer, xUnit tests and .NET CI source.</p>
 <div class="panel"><h2>Experiment: transfer funds</h2>
 <label>Source balance ($)<input id="source" type="number" value="100" step=".01"></label>
@@ -20,6 +20,14 @@ from.Debit(amount);
 to.Credit(amount);
 Contract.Ensure(from.Balance == oldFrom - amount, "POST-001", "source delta");
 Contract.Ensure(to.Balance == oldTo + amount, "POST-002", "destination delta");</pre></div>
+<div class="panel"><h2>Milestone 7 — real signed 64-bit overflow</h2>
+<p>Unchecked C# <code>long</code> addition wraps at the boundary; checked addition throws. Our new Z3 backend models signed 64-bit bit-vectors for a restricted straight-line method subset. The browser below illustrates the same boundary behavior using JavaScript BigInt, not Z3.</p>
+<label>Initial value <select id="overflowValue"><option value="max">long.MaxValue</option><option value="normal">42</option><option value="min">long.MinValue</option></select></label>
+<label>Mode <select id="overflowMode"><option value="unchecked">unchecked</option><option value="checked">checked</option></select></label>
+<button onclick="runOverflow()">Run 64-bit addition</button>
+<pre id="overflowResult" aria-live="polite"></pre>
+<p>In the actual C# verifier, overflowing a checked expression creates a failed proof obligation; unchecked wraparound can create a counterexample to a postcondition.</p>
+</div>
 <div class="panel"><h2>Milestone 6 — both branches must satisfy the contract</h2>
 <p>Try a method that clamps negative values to zero. Toggle a bug in the else branch to see why every feasible path needs its own Z3 verification condition. This browser example demonstrates the logic, while the .NET verifier invokes Z3.</p>
 <label><input id="branchBug" type="checkbox"> Defective else branch</label>
@@ -182,4 +190,15 @@ document.getElementById('branchResult').textContent=bug?
 'TRUE PATH: proved for x >= 0\nFALSE PATH: proved for x < 0\nOVERALL: PROVED in mathematical-integer model';
 }
 checkBranches();
+function runOverflow(){
+ const value=document.getElementById('overflowValue').value;
+ const mode=document.getElementById('overflowMode').value;
+ const x=value==='max'?9223372036854775807n:value==='min'?-9223372036854775808n:42n;
+ const raw=x+1n;
+ const overflow=raw>9223372036854775807n||raw< -9223372036854775808n;
+ const output=document.getElementById('overflowResult');
+ output.textContent=mode==='checked'&&overflow?
+ 'CHECKED OVERFLOW: x + 1 exceeds Int64 range. Verification obligation fails.':
+ 'Result: '+BigInt.asIntN(64,raw).toString()+'; postcondition y > x: '+(BigInt.asIntN(64,raw)>x);
+}
 </script></html>
