@@ -18,3 +18,15 @@ jobs:
         run: dotnet test SharpContracts.Tests/SharpContracts.Tests.csproj --no-restore --configuration Release
       - name: Build runnable example
         run: dotnet build SharpContracts.Demo/SharpContracts.Demo.csproj --configuration Release
+
+  solver-tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Native Z3 Linux runtime dependency
+        run: sudo apt-get update && sudo apt-get install -y libgomp1
+      - name: Run actual Z3 solver tests
+        run: dotnet test SharpContracts.Solver.Tests/SharpContracts.Solver.Tests.csproj --configuration Release
