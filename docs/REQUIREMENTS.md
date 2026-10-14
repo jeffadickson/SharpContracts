@@ -12,7 +12,7 @@ M0-Implemented means prototype support, not proof of verified coverage.
 | SC-004 | Old snapshot of value types at method entry | P0 | M0-Implemented |
 | SC-005 | Define old semantics for immutable and mutable reference graphs | P0 | Planned |
 | SC-006 | Named result and exceptional postconditions | P0 | Planned |
-| SC-007 | Explicit check ordering, side-effect policy and exceptions | P0 | Planned |
+| SC-007 | Explicit check ordering, side-effect policy and exceptions | P0 | Partial: typed boundary ordering; exception semantics incomplete |
 | SC-008 | Contract inheritance and Liskov-compatible override rules | P0 | Planned |
 | SC-009 | Nullable and generic contracts | P0 | Planned |
 | SC-010 | Pure expressions and side-effect detection | P0 | Planned |
@@ -40,7 +40,7 @@ M0-Implemented means prototype support, not proof of verified coverage.
 
 | ID | Requirement | Priority | Status |
 |---|---|---|---|
-| SC-025 | Typed contract IR and serialization | P0 | Planned |
+| SC-025 | Typed contract IR and serialization | P0 | Partial: typed runtime definitions, NOT symbolic or serializable |
 | SC-026 | Explicitly documented verifiable C# subset | P0 | Planned |
 | SC-027 | Verification conditions from contract semantics | P0 | Planned |
 | SC-028 | Z3/SMT bounded verification integration | P0 | Planned |
@@ -73,4 +73,4 @@ M0-Implemented means prototype support, not proof of verified coverage.
 ## M0 limitations
 
 Explicit Contract calls only; no automatic weaving, static proofs or test generation. Old<T> copies values only, not referenced graphs. Fault-injected transfer mutates state before detection, illustrating SC-047. Browser prototype is JavaScript rather than a C# runtime. C# has not been compiled in the original environment.
-\n## Milestone 1 progress\n\nRuntime unit tests, interface-boundary attribute enforcement, narrow Roslyn analyzer diagnostics SC1001-SC1003, CI workflow, and HTML analyzer explorer committed. Automatic method weaving, Roslyn code fixes and proof backends remain open.\n
+\n## Milestone 2 progress\n\nTyped reusable runtime contract definitions, explicit pre/postcondition wrapper, synchronous interface return-value postcondition, and related xUnit tests. Contract expressions are executable delegates rather than formal symbolic IR. Postconditions have no automatic rollback.\n\n## Milestone 1 progress\n\nRuntime unit tests, interface-boundary attribute enforcement, narrow Roslyn analyzer diagnostics SC1001-SC1003, CI workflow, and HTML analyzer explorer committed. Automatic method weaving, Roslyn code fixes and proof backends remain open.\n
