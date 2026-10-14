@@ -89,4 +89,75 @@ public sealed class BitVectorTests
         Assert.NotEmpty(report.Errors);
         Assert.Empty(report.Checks);
     }
+    [Fact]
+    public void MergedBranchesProveClampedNonnegative()
+    {
+        const string src = """
+        class C {
+          void Clamp(long x) {
+            long result = 0;
+            if (x >= 0) { result = x; }
+            else { result = 0; }
+            Contract.Ensure(result >= 0, "POST", "clamped");
+          }
+        }
+        """;
+        var report=BitVectorMethodVerifier.Verify(src,"Clamp");
+        Assert.Empty(report.Errors);
+        Assert.True(report.AllProved);
+    }
+
+    [Fact]
+    public void MergedElseBugReturnsCounterexample()
+    {
+        const string src = """
+        class C {
+          void Clamp(long x) {
+            long result = 0;
+            if (x >= 0) { result = x; }
+            else { result = x; }
+            Contract.Ensure(result >= 0, "POST", "clamped");
+          }
+        }
+        """;
+        var report=BitVectorMethodVerifier.Verify(src,"Clamp");
+        Assert.Empty(report.Errors);
+        Assert.Equal(VerificationStatus.Counterexample, Assert.Single(report.Checks).Status);
+    }
+
+    [Fact]
+    public void DifferentBranchTargetsAreRejected()
+    {
+        const string src = """
+        class C {
+          void Bad(long x) {
+            long a = 0;
+            long b = 0;
+            if (x >= 0) { a = x; } else { b = x; }
+            Contract.Ensure(a >= 0, "POST", "a");
+          }
+        }
+        """;
+        var report=BitVectorMethodVerifier.Verify(src,"Bad");
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
+    }
+
+    [Fact]
+    public void CheckedBranchArithmeticIsRejected()
+    {
+        const string src = """
+        class C {
+          void Bad(long x) {
+            long y = 0;
+            if (x >= 0) { y = checked(x + 1); } else { y = 0; }
+            Contract.Ensure(y >= 0, "POST", "safe");
+          }
+        }
+        """;
+        var report=BitVectorMethodVerifier.Verify(src,"Bad");
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
+    }
+
 }
