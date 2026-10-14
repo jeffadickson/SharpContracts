@@ -1,8 +1,16 @@
-# SharpContracts — Introduction (Milestone 5)
+# SharpContracts — Introduction (Milestone 6)
 
 SharpContracts is a C# Design by Contract toolkit inspired by Eiffel. Preconditions declare what callers must supply, postconditions declare what a method guarantees after a successful return, and invariants declare states that must hold at explicitly checked boundaries.
 
-## Roslyn-to-Z3 source verification — Milestone 5
+## Milestone 6: branch-sensitive verification and fail-closed reporting
+
+The verifier now explores both sides of supported `if/else` statements, maintaining independent symbolic variable assignments and branch assumptions. An `Ensure` reached on multiple paths produces a check for each path. The `AllProved` summary requires every check to be proved and no unsupported-code errors.
+
+Unsupported statements, C# parsing errors, or a path explosion above 256 paths invalidate the entire method report; partial proof results are discarded. Regression tests cover a valid clamp, a failing else branch, malformed source, and an unsupported loop after a contract check.
+
+This remains a **mathematical integer** proof prototype, not sound CLR `long` overflow verification. It also does not yet perform full semantic compilation, analyze arbitrary method calls, or support method return values.
+
+## Roslyn-to-Z3 source verification — Milestone 6
 
 The new `SharpContracts.Verification.MethodVerifier.Verify(source, methodName)` parses a C# method with Roslyn, translates a restricted set of statements to symbolic expressions, and queries the real Z3 backend for each `Contract.Ensure`.
 
