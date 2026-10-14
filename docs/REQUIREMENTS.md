@@ -1,3 +1,18 @@
+## Milestone 9 progress — user-defined numeric types
+
+Implemented Roslyn semantic numeric-type descriptors and an explicit custom operator rejection policy, plus tests and the custom-types design document. Pending: integration into BV lowering, operator-body proofs, C# promotion/conversion rules, structs and generic math verification. Existing proof limitations and unverified CI remain in force.
+
+## Additional traceable requirements
+
+| ID | Requirement | Priority | Status |
+|---|---|---|---|
+| SC-049 | Infer numeric width and signedness from Roslyn semantic symbols | P0 | Partial: metadata classification only |
+| SC-050 | Respect bound C# promotions and checked conversions | P0 | Planned |
+| SC-051 | Model custom structs and invariant-bearing fields | P0 | Planned |
+| SC-052 | Verify user-defined operator implementations and contracts | P0 | Planned; policy rejects unmodeled operators |
+| SC-053 | Support generic math interfaces without assuming algebraic laws | P1 | Planned |
+| SC-054 | Model custom implicit/explicit conversion methods | P0 | Planned |
+
 ## Milestone 8 progress
 
 Added BV64 if/else joins through SMT ite, with tests for successful clamp, else-path counterexample, and unsupported patterns. Checked arithmetic within branches is explicitly rejected to prevent unsound overflow claims. Tests committed but .NET CI outcome not confirmed.
