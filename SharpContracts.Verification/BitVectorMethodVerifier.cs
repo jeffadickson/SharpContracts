@@ -28,7 +28,7 @@ public static class BitVectorMethodVerifier
         var method = methods[0];
         var state = new Dictionary<string, string>(StringComparer.Ordinal);
         var assumptions = new List<string>();
-        var overflowConditions = new List<(string Formula,int Line)>();
+        var overflowConditions = new List<(string Formula,int Line,string[] Assumptions)>();
         bool startedEnsures = false;
         try
         {
@@ -74,7 +74,7 @@ public static class BitVectorMethodVerifier
                             string overflow = add
                                 ? "(or (and "+lp+" "+rp+" (not "+op+")) (and (not "+lp+") (not "+rp+") "+op+"))"
                                 : "(or (and "+lp+" (not "+rp+") (not "+op+")) (and (not "+lp+") "+rp+" "+op+"))";
-                            overflowConditions.Add((overflow,line));
+                            overflowConditions.Add((overflow,line,assumptions.ToArray()));
                         }
                         return result;
                     }
@@ -142,22 +142,14 @@ public static class BitVectorMethodVerifier
                 }
             }
             // A checked overflow must never be silently interpreted as an assumption.
-            foreach (var (formula,line) in overflowConditions)
-                checks.Add(Solve("CHECKED-OVERFLOW",line,assumptions.Take(0).Concat(InitialPreconditions(method,source,state))
-                    .Append(formula),state.Keys));
+            foreach (var (formula,line,atOperation) in overflowConditions)
+                checks.Add(Solve("CHECKED-OVERFLOW",line,atOperation.Append(formula),state.Keys));
         }
         catch (Exception ex) when (ex is NotSupportedException or ArgumentException or Z3Exception)
         {
             errors.Add(ex.Message);
         }
         return errors.Count == 0 ? new(checks, errors) : new(Array.Empty<MethodCheck>(),errors);
-    }
-
-    private static IEnumerable<string> InitialPreconditions(MethodDeclarationSyntax method,string source,Dictionary<string,string> unused)
-    {
-        // Overflow reachability is checked without postcondition assumptions. To avoid falsely
-        // claiming safety under postconditions, return no assumptions (conservative).
-        return Array.Empty<string>();
     }
 
     private static MethodCheck Solve(string id,int line,IEnumerable<string> formulas,IEnumerable<string> names)
