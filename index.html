@@ -148,8 +148,16 @@ else{p.textContent='COUNTEREXAMPLE in this arithmetic example: x = '+a+' satisfi
 }
 function checkSource(){
   const guard=document.getElementById('guardToggle').checked;
-  document.getElementById('sourceCode').textContent='void Transfer(long balance, long amount) {\n'+(guard?'  Contract.Require(balance >= amount, "PRE1", "sufficient");\n':'')+'  Contract.Require(amount >= 0, "PRE2", "nonnegative");\n  long remaining = balance - amount;\n  Contract.Ensure(remaining >= 0, "POST1", "safe");\n}';
-  document.getElementById('sourceResult').textContent=guard?'PROVED over mathematical integers: constraints imply remaining >= 0.':'COUNTEREXAMPLE: balance=0, amount=1 => remaining=-1.';
+  const lines=[
+    'void Transfer(long balance, long amount) {',
+    ...(guard?['  Contract.Require(balance >= amount, "PRE1", "sufficient");']:[]),
+    '  Contract.Require(amount >= 0, "PRE2", "nonnegative");',
+    '  long remaining = balance - amount;',
+    '  Contract.Ensure(remaining >= 0, "POST1", "safe");',
+    '}'
+  ];
+  document.getElementById('sourceCode').textContent=lines.join('\n');
+  document.getElementById('sourceResult').textContent=guard?'PROVED in mathematical-integer model: constraints imply remaining >= 0.':'COUNTEREXAMPLE: balance=0, amount=1 => remaining=-1.';
 }
 checkSource();
 </script></html>
