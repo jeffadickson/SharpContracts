@@ -3,8 +3,30 @@ using Xunit;
 
 namespace SharpContracts.Tests;
 
+public interface ITransferService
+{
+    void Send([ContractPositive("AUTO-001")] decimal amount, [ContractNotNull("AUTO-002")] string recipient);
+}
+public sealed class TransferService : ITransferService
+{
+    public int Calls { get; private set; }
+    public void Send(decimal amount, string recipient) => Calls++;
+}
 public sealed class ContractTests
 {
+    [Fact] public void ProxyChecksAttributeContractsBeforeCall()
+    {
+        var target = new TransferService();
+        var proxy = ContractProxy.Create<ITransferService>(target);
+        var violation = Assert.Throws<ContractViolationException>(() => proxy.Send(0m, "Alice"));
+        Assert.Equal("AUTO-001", violation.ContractId);
+        Assert.Equal(0, target.Calls);
+        violation = Assert.Throws<ContractViolationException>(() => proxy.Send(1m, null!));
+        Assert.Equal("AUTO-002", violation.ContractId);
+        Assert.Equal(0, target.Calls);
+        proxy.Send(1m, "Alice");
+        Assert.Equal(1, target.Calls);
+    }
     [Fact] public void ValidTransferPreservesTotal()
     {
         var a = new Account("A", 100m);
