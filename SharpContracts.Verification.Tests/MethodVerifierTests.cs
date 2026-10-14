@@ -41,18 +41,62 @@ public sealed class MethodVerifierTests
         Assert.NotNull(result.Checks[0].Counterexample);
     }
 
-    [Fact] public void FailsClosedOnUnsupportedControlFlow()
+    [Fact] public void VerifiesBothBranchesIndependently()
     {
         const string source = """
             class C {
-              void M(long balance) {
-                if (balance > 0) { balance = balance - 1; }
-                Contract.Ensure(balance >= 0, "POST", "valid");
+              void Clamp(long x) {
+                long result = 0;
+                if (x >= 0) { result = x; }
+                else { result = 0; }
+                Contract.Ensure(result >= 0, "POST", "nonnegative");
               }
             }
             """;
-        var result=MethodVerifier.Verify(source,"M");
-        Assert.NotEmpty(result.Errors);
-        Assert.Empty(result.Checks);
+        var report=MethodVerifier.Verify(source,"Clamp");
+        Assert.Empty(report.Errors);
+        Assert.Equal(2,report.Checks.Count);
+        Assert.True(report.AllProved);
+    }
+
+    [Fact] public void FindsBugInElseBranch()
+    {
+        const string source = """
+            class C {
+              void Clamp(long x) {
+                long result = 0;
+                if (x >= 0) { result = x; }
+                else { result = x; }
+                Contract.Ensure(result >= 0, "POST", "nonnegative");
+              }
+            }
+            """;
+        var report=MethodVerifier.Verify(source,"Clamp");
+        Assert.Empty(report.Errors);
+        Assert.Contains(report.Checks,c=>c.Status==VerificationStatus.Counterexample);
+        Assert.False(report.AllProved);
+    }
+
+    [Fact] public void FailsClosedOnLoopEvenAfterAValidCheck()
+    {
+        const string source = """
+            class C {
+              void M(long x) {
+                Contract.Ensure(x == x, "POST", "valid");
+                while (x > 0) { x = x - 1; }
+              }
+            }
+            """;
+        var report=MethodVerifier.Verify(source,"M");
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
+        Assert.False(report.AllProved);
+    }
+
+    [Fact] public void FailsClosedOnMalformedCSharp()
+    {
+        var report=MethodVerifier.Verify("class C { void M(long x) { if ( } }","M");
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
     }
 }
