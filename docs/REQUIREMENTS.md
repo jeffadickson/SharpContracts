@@ -25,14 +25,14 @@ M0-Implemented means prototype support, not proof of verified coverage.
 
 | ID | Requirement | Priority | Status |
 |---|---|---|---|
-| SC-015 | Roslyn analyzer with stable diagnostics and code fixes | P0 | Planned |
+| SC-015 | Roslyn analyzer with stable diagnostics and code fixes | P0 | Partial: SC1001–SC1003, no fixes |
 | SC-016 | Method injection via verified weaving or transformation | P0 | Planned |
 | SC-017 | Incremental source generation where additive code suffices | P1 | Planned |
-| SC-018 | xUnit automated behavioral tests and negative cases | P0 | Planned |
+| SC-018 | xUnit automated behavioral tests and negative cases | P0 | Implemented: initial tests; CI pending verification |
 | SC-019 | NSubstitute sequence-sensitive dependency verification | P1 | Planned |
 | SC-020 | Testcontainers database integration tests | P1 | Planned |
 | SC-021 | Stable source locations, structured errors and JSON/SARIF | P0 | Planned |
-| SC-022 | Documentation site, runnable examples and IDE integration | P0 | M0-Implemented (demo only) |
+| SC-022 | Documentation site, runnable examples and IDE integration | P0 | Partial: M1 HTML and introduction; no hosted site |
 | SC-023 | Deterministic fuzz and property-based generation | P1 | Planned |
 | SC-024 | Contract coverage and mutation testing | P1 | Planned |
 
@@ -73,3 +73,4 @@ M0-Implemented means prototype support, not proof of verified coverage.
 ## M0 limitations
 
 Explicit Contract calls only; no automatic weaving, static proofs or test generation. Old<T> copies values only, not referenced graphs. Fault-injected transfer mutates state before detection, illustrating SC-047. Browser prototype is JavaScript rather than a C# runtime. C# has not been compiled in the original environment.
+\n## Milestone 1 progress\n\nRuntime unit tests, narrow Roslyn analyzer diagnostics SC1001-SC1003, CI workflow, and HTML analyzer explorer committed. Automatic method weaving, Roslyn code fixes and proof backends remain open.\n
