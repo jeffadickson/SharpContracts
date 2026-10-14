@@ -4,7 +4,7 @@
 <style>
 :root{font-family:system-ui,sans-serif;color-scheme:dark}body{max-width:900px;margin:3rem auto;padding:0 1.5rem;background:#101827;color:#e8eef9}h1{font-size:2.4rem}p{line-height:1.6;color:#b7c6da}.panel{padding:1.5rem;border:1px solid #42536d;border-radius:16px;background:#172439;margin:1rem 0}label{display:inline-grid;gap:.4rem;margin:0 .8rem 1rem 0}input,select,button{background:#21334d;color:white;padding:.7rem;border:1px solid #567090;border-radius:8px}button{cursor:pointer;background:#2563eb}pre{padding:1.3rem;white-space:pre-wrap;overflow:auto;background:#0c1320;border-radius:10px}.pass{color:#86efac}.fail{color:#fca5a5}a{color:#93c5fd}
 </style>
-<h1>SharpContracts <small>M7</small></h1>
+<h1>SharpContracts <small>M8</small></h1>
 <p>Design by Contract for C#: preconditions protect entry, postconditions define promised results, and invariants preserve object validity. This runnable browser simulation uses JavaScript, not .NET or formal proofs. Milestone 3 adds a typed symbolic expression tree and SMT-LIB exporter. Milestone 2 added reusable typed pre/postcondition definitions and synchronous automatic interface-result contracts, on top of the interface proxy, Roslyn analyzer, xUnit tests and .NET CI source.</p>
 <div class="panel"><h2>Experiment: transfer funds</h2>
 <label>Source balance ($)<input id="source" type="number" value="100" step=".01"></label>
@@ -20,6 +20,13 @@ from.Debit(amount);
 to.Credit(amount);
 Contract.Ensure(from.Balance == oldFrom - amount, "POST-001", "source delta");
 Contract.Ensure(to.Balance == oldTo + amount, "POST-002", "destination delta");</pre></div>
+<div class="panel"><h2>Milestone 8 — BV64 branch merge proof</h2>
+<p>New in the C# Z3 backend: branch assignments to one common variable are translated to an SMT <code>ite</code> expression. Toggle the defect and inspect the mathematical result below. This browser demonstration is not executing Z3.</p>
+<label><input id="bvBranchBug" type="checkbox"> Introduce bad else branch</label>
+<button onclick="inspectBvBranch()">Analyze both paths</button>
+<pre id="bvBranchOutput"></pre>
+<p>Restricted to a single assignment per branch and a common target. Checked arithmetic within branches is rejected rather than silently approximated.</p>
+</div>
 <div class="panel"><h2>Milestone 7 — real signed 64-bit overflow</h2>
 <p>Unchecked C# <code>long</code> addition wraps at the boundary; checked addition throws. Our new Z3 backend models signed 64-bit bit-vectors for a restricted straight-line method subset. The browser below illustrates the same boundary behavior using JavaScript BigInt, not Z3.</p>
 <label>Initial value <select id="overflowValue"><option value="max">long.MaxValue</option><option value="normal">42</option><option value="min">long.MinValue</option></select></label>
@@ -201,4 +208,11 @@ function runOverflow(){
  'CHECKED OVERFLOW: x + 1 exceeds Int64 range. Verification obligation fails.':
  'Result: '+BigInt.asIntN(64,raw).toString()+'; postcondition y > x: '+(BigInt.asIntN(64,raw)>x);
 }
+function inspectBvBranch(){
+const bug=document.getElementById('bvBranchBug').checked;
+document.getElementById('bvBranchOutput').textContent=bug?
+'Model: result = ite(x >= 0, x, x)\nCounterexample: x = -1, result = -1.\nContract result >= 0 is NOT proved.':
+'Model: result = ite(x >= 0, x, 0)\nFor every signed 64-bit x, result >= 0.\nContract is PROVABLE in the restricted model.';
+}
+inspectBvBranch();
 </script></html>
