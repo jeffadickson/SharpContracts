@@ -1,8 +1,8 @@
-# SharpContracts — Introduction (Milestone 2)
+# SharpContracts — Introduction (Milestone 3)
 
 SharpContracts is a C# Design by Contract toolkit inspired by Eiffel. Preconditions declare what callers must supply, postconditions declare what a method guarantees after a successful return, and invariants declare states that must hold at explicitly checked boundaries.
 
-## Implemented
+## Implemented\n\n- Symbolic expression tree: typed parameters, constants, Boolean connectives, arithmetic and comparisons.\n- Runtime evaluation from a supplied name/value environment and SMT-LIB assertion generation (no solver execution).
 
 - Typed `ContractDefinition<T>`, `ContractSet<T>` and `ContractBoundary.Invoke` for reusable runtime requirements and guarantees.
 - Automatic synchronous return-value checking through `[ContractNonNegativeResult]` on an interface method, using the proxy.
@@ -20,6 +20,18 @@ decimal before = Contract.Old(from.Balance);
 from.Debit(amount);
 Contract.Ensure(from.Balance == before - amount, "POST-001", "Correct debit");
 ```
+
+## Symbolic contracts
+
+```csharp
+using SharpContracts.Symbolic;
+var rule = Expr.Gt(Expr.Param("amount", SymbolicType.Decimal), Expr.Dec(0m));
+var environment = new Dictionary<string,object> { ["amount"] = 25m };
+bool accepted = ContractExprEvaluator.Check(rule, environment);
+string solverInput = SmtLibPrinter.Print(rule);
+```
+
+The expression is declarative, unlike a `Func<T,bool>` delegate, and can be inspected without executing arbitrary user code. `SmtLibPrinter` generates a satisfiability query for the predicate; it **does not prove** the predicate holds for every possible input. Proof obligations would need negated counterexample queries with assumptions and well-specified program semantics. Decimal values are exported as SMT Real, which does not automatically preserve .NET decimal overflow and rounding behavior.
 
 ## Reusable typed pre/postconditions
 
