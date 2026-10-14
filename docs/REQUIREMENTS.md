@@ -73,7 +73,11 @@ M0-Implemented means prototype support, not proof of verified coverage.
 ## M0 limitations
 
 Explicit Contract calls only; no automatic weaving, static proofs or test generation. Old<T> copies values only, not referenced graphs. Fault-injected transfer mutates state before detection, illustrating SC-047. Browser prototype is JavaScript rather than a C# runtime. C# has not been compiled in the original environment.
-\n## Milestone 6 progress
+\n## Milestone 7 progress
+
+Introduced separate signed 64-bit BV verifier using Z3, unchecked wrapping arithmetic and explicit checked add/sub overflow obligations. Added boundary tests. Older branch-sensitive verifier remains mathematical-integer based; unified compiler-aware semantics and CI verification are still open.
+
+## Milestone 6 progress
 
 Branch-sensitive `if/else` symbolic execution added, with independent path conditions, multi-path postcondition checks, parse-error handling, `AllProved` and failure-atomic reporting. New regression tests detect a defect in only one branch and reject unsupported loops even if earlier checks passed. Still uses ideal mathematical integer semantics; not proof of CLR execution. CI is not independently verified.
 
