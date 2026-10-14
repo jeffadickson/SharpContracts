@@ -1,8 +1,28 @@
-# SharpContracts — Introduction (Milestone 3)
+# SharpContracts — Introduction (Milestone 4)
 
 SharpContracts is a C# Design by Contract toolkit inspired by Eiffel. Preconditions declare what callers must supply, postconditions declare what a method guarantees after a successful return, and invariants declare states that must hold at explicitly checked boundaries.
 
-## Implemented\n\n- Symbolic expression tree: typed parameters, constants, Boolean connectives, arithmetic and comparisons.\n- Runtime evaluation from a supplied name/value environment and SMT-LIB assertion generation (no solver execution).
+## Actual solver integration (Milestone 4)
+
+`SharpContracts.Solver` now depends on `Microsoft.Z3` 4.12.2. The `Z3Verifier.Verify(assumptions, claim)` API asserts all assumptions plus the **negation** of the desired claim. Z3 returns:
+
+- `Proved` if the counterexample formula is UNSAT.
+- `Counterexample` and a model if SAT.
+- `Unknown` if the solver cannot decide, including timeout.
+
+Example:
+
+```csharp
+var n = Expr.Param("n", SymbolicType.Integer);
+var result = Z3Verifier.Verify(
+    new[] { Expr.Gt(n, Expr.Int(5)) },
+    Expr.Gt(n, Expr.Int(0)));
+Console.WriteLine(result.Status); // Proved (assuming solver completes)
+```
+
+A sample transfer conservation property also uses the solver over **unbounded mathematical integers**, not .NET overflow-sensitive integers. Decimal maps to mathematical Real, without .NET rounding/overflow. This is a proof of the provided formula **under the encoded assumptions**, not of arbitrary C# method bodies. There is not yet automatic VC extraction from C# code. The browser demo remains a teaching approximation and does not execute the solver; the actual Z3 integration lives in the .NET project and CI tests. Build and test execution have not been verified here.
+
+## Implemented\n\n- Symbolic expression tree: typed parameters, constants, Boolean connectives, arithmetic and comparisons.\n- Runtime evaluation from a supplied name/value environment and SMT-LIB assertion generation, and separate actual Z3 solver verification.
 
 - Typed `ContractDefinition<T>`, `ContractSet<T>` and `ContractBoundary.Invoke` for reusable runtime requirements and guarantees.
 - Automatic synchronous return-value checking through `[ContractNonNegativeResult]` on an interface method, using the proxy.
