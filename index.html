@@ -4,7 +4,7 @@
 <style>
 :root{font-family:system-ui,sans-serif;color-scheme:dark}body{max-width:900px;margin:3rem auto;padding:0 1.5rem;background:#101827;color:#e8eef9}h1{font-size:2.4rem}p{line-height:1.6;color:#b7c6da}.panel{padding:1.5rem;border:1px solid #42536d;border-radius:16px;background:#172439;margin:1rem 0}label{display:inline-grid;gap:.4rem;margin:0 .8rem 1rem 0}input,select,button{background:#21334d;color:white;padding:.7rem;border:1px solid #567090;border-radius:8px}button{cursor:pointer;background:#2563eb}pre{padding:1.3rem;white-space:pre-wrap;overflow:auto;background:#0c1320;border-radius:10px}.pass{color:#86efac}.fail{color:#fca5a5}a{color:#93c5fd}
 </style>
-<h1>SharpContracts <small>M3</small></h1>
+<h1>SharpContracts <small>M4</small></h1>
 <p>Design by Contract for C#: preconditions protect entry, postconditions define promised results, and invariants preserve object validity. This runnable browser simulation uses JavaScript, not .NET or formal proofs. Milestone 3 adds a typed symbolic expression tree and SMT-LIB exporter. Milestone 2 added reusable typed pre/postcondition definitions and synchronous automatic interface-result contracts, on top of the interface proxy, Roslyn analyzer, xUnit tests and .NET CI source.</p>
 <div class="panel"><h2>Experiment: transfer funds</h2>
 <label>Source balance ($)<input id="source" type="number" value="100" step=".01"></label>
@@ -20,6 +20,12 @@ from.Debit(amount);
 to.Credit(amount);
 Contract.Ensure(from.Balance == oldFrom - amount, "POST-001", "source delta");
 Contract.Ensure(to.Balance == oldTo + amount, "POST-002", "destination delta");</pre></div>
+<div class="panel"><h2>Milestone 4 — what Z3 proves</h2>
+<p>The actual C# backend now invokes Microsoft Z3. The browser below illustrates the difference between a valid implication and a counterexample, with a small arithmetic sample; it does <b>not</b> run Z3.</p>
+<label>Assume x ≥ <input type="number" id="proofMin" value="5"></label>
+<label>Prove x &gt; <input type="number" id="proofBound" value="0"></label>
+<button onclick="proveExample()">Analyze sample implication</button><pre id="proofOut"></pre>
+<p>The real verifier checks <code>assumptions AND NOT(claim)</code>. UNSAT means proved for the mathematical model; SAT means a counterexample exists; UNKNOWN means no conclusion. Use the .NET Z3 project for an actual solver result.</p></div>
 <div class="panel"><h2>Milestone 3 — symbolic expressions</h2>
 <p>Build a typed predicate representing <code>amount &gt; minimum</code>. Evaluate it, then inspect the SMT-LIB sent to an eventual theorem prover. The demo models the supported decimal comparison.</p>
 <label>Amount <input type="number" step=".01" id="symbolAmount" value="25"></label>
@@ -125,5 +131,12 @@ function runSymbolic(){
  output.textContent=(positive?'PASS: predicate evaluates true':'CONTRACT VIOLATION: predicate evaluates false')+
  '\\n\\nSMT-LIB (generated text, not solved):\\n(set-logic ALL)\\n(declare-const |amount| Real)\\n(assert (> |amount| '+decimal(m)+'))\\n(check-sat)';
  output.className=positive?'pass':'fail';
+}
+function proveExample(){
+const a=Number(document.getElementById('proofMin').value),b=Number(document.getElementById('proofBound').value);
+const p=document.getElementById('proofOut');
+if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)){p.textContent='Enter safe integers';return}
+if(a>b){p.textContent='PROVED in this arithmetic example: no integer x can satisfy x >= '+a+' AND x <= '+b+'. Actual Z3 integration is in C#.'}
+else{p.textContent='COUNTEREXAMPLE in this arithmetic example: x = '+a+' satisfies the assumption but violates x > '+b+'. Actual Z3 integration is in C#.'}
 }
 </script></html>
