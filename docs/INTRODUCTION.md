@@ -1,6 +1,20 @@
-# SharpContracts — Introduction (Milestone 4)
+# SharpContracts — Introduction (Milestone 5)
 
 SharpContracts is a C# Design by Contract toolkit inspired by Eiffel. Preconditions declare what callers must supply, postconditions declare what a method guarantees after a successful return, and invariants declare states that must hold at explicitly checked boundaries.
+
+## Roslyn-to-Z3 source verification — Milestone 5
+
+The new `SharpContracts.Verification.MethodVerifier.Verify(source, methodName)` parses a C# method with Roslyn, translates a restricted set of statements to symbolic expressions, and queries the real Z3 backend for each `Contract.Ensure`.
+
+Supported prototype: `long` parameters, initialized `long`/`var` locals, simple assignments, integer literals, addition, subtraction, Boolean comparisons, and positional `Contract.Require`/`Contract.Ensure` calls. Results include proof status, source line, contract ID, and raw counterexample model.
+
+Unsupported branches, loops, arbitrary calls, async methods, reference objects, and exceptions fail closed. **Crucial limitation:** integer expressions currently use unbounded SMT mathematical integers rather than 64-bit overflow semantics. Results do not establish correctness of all actual CLR executions. Compilation, symbol resolution, and checked/unchecked arithmetic modeling remain future work.
+
+```csharp
+var report = MethodVerifier.Verify(source, "Transfer");
+foreach (var check in report.Checks)
+    Console.WriteLine($"{check.Line}: {check.ContractId}: {check.Status}");
+```
 
 ## Actual solver integration (Milestone 4)
 
