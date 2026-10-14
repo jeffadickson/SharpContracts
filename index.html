@@ -4,7 +4,7 @@
 <style>
 :root{font-family:system-ui,sans-serif;color-scheme:dark}body{max-width:900px;margin:3rem auto;padding:0 1.5rem;background:#101827;color:#e8eef9}h1{font-size:2.4rem}p{line-height:1.6;color:#b7c6da}.panel{padding:1.5rem;border:1px solid #42536d;border-radius:16px;background:#172439;margin:1rem 0}label{display:inline-grid;gap:.4rem;margin:0 .8rem 1rem 0}input,select,button{background:#21334d;color:white;padding:.7rem;border:1px solid #567090;border-radius:8px}button{cursor:pointer;background:#2563eb}pre{padding:1.3rem;white-space:pre-wrap;overflow:auto;background:#0c1320;border-radius:10px}.pass{color:#86efac}.fail{color:#fca5a5}a{color:#93c5fd}
 </style>
-<h1>SharpContracts <small>M8</small></h1>
+<h1>SharpContracts <small>M9</small></h1>
 <p>Design by Contract for C#: preconditions protect entry, postconditions define promised results, and invariants preserve object validity. This runnable browser simulation uses JavaScript, not .NET or formal proofs. Milestone 3 adds a typed symbolic expression tree and SMT-LIB exporter. Milestone 2 added reusable typed pre/postcondition definitions and synchronous automatic interface-result contracts, on top of the interface proxy, Roslyn analyzer, xUnit tests and .NET CI source.</p>
 <div class="panel"><h2>Experiment: transfer funds</h2>
 <label>Source balance ($)<input id="source" type="number" value="100" step=".01"></label>
@@ -20,6 +20,18 @@ from.Debit(amount);
 to.Credit(amount);
 Contract.Ensure(from.Balance == oldFrom - amount, "POST-001", "source delta");
 Contract.Ensure(to.Balance == oldTo + amount, "POST-002", "destination delta");</pre></div>
+<div class="panel"><h2>Milestone 9 — custom C# numeric types</h2>
+<p>Roslyn now classifies primitive numeric types and flags user-defined operator implementations as requiring explicit verification. This educational example shows why a custom <code>Voltage</code> type cannot be treated as ordinary addition.</p>
+<label>Left voltage (mV) <input type="number" id="voltageA" value="2147483647"></label>
+<label>Right voltage (mV) <input type="number" id="voltageB" value="1"></label>
+<button onclick="demoVoltage()">Evaluate checked custom operator</button><pre id="voltageOutput" aria-live="polite"></pre>
+<pre>public readonly record struct Voltage(int Millivolts)
+{
+    public static Voltage operator +(Voltage a, Voltage b)
+        => new(checked(a.Millivolts + b.Millivolts));
+}</pre>
+<p>Custom operator proofs are <b>not implemented yet</b>; classification and fail-closed rejection are the current C# work. This browser example models only the illustrated checked 32-bit addition.</p>
+</div>
 <div class="panel"><h2>Milestone 8 — BV64 branch merge proof</h2>
 <p>New in the C# Z3 backend: branch assignments to one common variable are translated to an SMT <code>ite</code> expression. Toggle the defect and inspect the mathematical result below. This browser demonstration is not executing Z3.</p>
 <label><input id="bvBranchBug" type="checkbox"> Introduce bad else branch</label>
@@ -215,4 +227,16 @@ document.getElementById('bvBranchOutput').textContent=bug?
 'Model: result = ite(x >= 0, x, 0)\nFor every signed 64-bit x, result >= 0.\nContract is PROVABLE in the restricted model.';
 }
 inspectBvBranch();
+function demoVoltage(){
+  const a=Number(document.getElementById('voltageA').value);
+  const b=Number(document.getElementById('voltageB').value);
+  const out=document.getElementById('voltageOutput');
+  if(!Number.isSafeInteger(a)||!Number.isSafeInteger(b)||a < -2147483648||a > 2147483647||b < -2147483648||b > 2147483647){
+    out.textContent='Inputs must be 32-bit signed integer millivolts';return;
+  }
+  const result=a+b;
+  out.textContent=(result>2147483647||result< -2147483648)
+  ?'OverflowException: checked custom Voltage addition exceeds Int32 limits.'
+  :'Voltage result: '+result+' mV. This demonstration is not a formal proof.';
+}
 </script></html>
