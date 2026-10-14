@@ -26,7 +26,7 @@ M0-Implemented means prototype support, not proof of verified coverage.
 | ID | Requirement | Priority | Status |
 |---|---|---|---|
 | SC-015 | Roslyn analyzer with stable diagnostics and code fixes | P0 | Partial: SC1001–SC1003, no fixes |
-| SC-016 | Method injection via verified weaving or transformation | P0 | Planned |
+| SC-016 | Method injection via verified weaving or transformation | P0 | Partial: DispatchProxy interface checks; no general weaving |
 | SC-017 | Incremental source generation where additive code suffices | P1 | Planned |
 | SC-018 | xUnit automated behavioral tests and negative cases | P0 | Implemented: initial tests; CI pending verification |
 | SC-019 | NSubstitute sequence-sensitive dependency verification | P1 | Planned |
@@ -73,4 +73,4 @@ M0-Implemented means prototype support, not proof of verified coverage.
 ## M0 limitations
 
 Explicit Contract calls only; no automatic weaving, static proofs or test generation. Old<T> copies values only, not referenced graphs. Fault-injected transfer mutates state before detection, illustrating SC-047. Browser prototype is JavaScript rather than a C# runtime. C# has not been compiled in the original environment.
-\n## Milestone 1 progress\n\nRuntime unit tests, narrow Roslyn analyzer diagnostics SC1001-SC1003, CI workflow, and HTML analyzer explorer committed. Automatic method weaving, Roslyn code fixes and proof backends remain open.\n
+\n## Milestone 1 progress\n\nRuntime unit tests, interface-boundary attribute enforcement, narrow Roslyn analyzer diagnostics SC1001-SC1003, CI workflow, and HTML analyzer explorer committed. Automatic method weaving, Roslyn code fixes and proof backends remain open.\n
