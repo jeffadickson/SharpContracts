@@ -73,7 +73,11 @@ M0-Implemented means prototype support, not proof of verified coverage.
 ## M0 limitations
 
 Explicit Contract calls only; no automatic weaving, static proofs or test generation. Old<T> copies values only, not referenced graphs. Fault-injected transfer mutates state before detection, illustrating SC-047. Browser prototype is JavaScript rather than a C# runtime. C# has not been compiled in the original environment.
-\n## Milestone 5 progress
+\n## Milestone 6 progress
+
+Branch-sensitive `if/else` symbolic execution added, with independent path conditions, multi-path postcondition checks, parse-error handling, `AllProved` and failure-atomic reporting. New regression tests detect a defect in only one branch and reject unsupported loops even if earlier checks passed. Still uses ideal mathematical integer semantics; not proof of CLR execution. CI is not independently verified.
+
+## Milestone 5 progress
 
 Source-level method extraction and Z3 proof/counterexample reporting added; restricted straight-line long subset, mathematical-integer semantics (not CLR overflow), no verified build yet.
 
