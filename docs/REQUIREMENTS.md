@@ -1,3 +1,7 @@
+## Milestone 8 progress
+
+Added BV64 if/else joins through SMT ite, with tests for successful clamp, else-path counterexample, and unsupported patterns. Checked arithmetic within branches is explicitly rejected to prevent unsound overflow claims. Tests committed but .NET CI outcome not confirmed.
+
 # SharpContracts Requirements Baseline v0.1
 
 M0-Implemented means prototype support, not proof of verified coverage.
