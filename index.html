@@ -4,8 +4,8 @@
 <style>
 :root{font-family:system-ui,sans-serif;color-scheme:dark}body{max-width:900px;margin:3rem auto;padding:0 1.5rem;background:#101827;color:#e8eef9}h1{font-size:2.4rem}p{line-height:1.6;color:#b7c6da}.panel{padding:1.5rem;border:1px solid #42536d;border-radius:16px;background:#172439;margin:1rem 0}label{display:inline-grid;gap:.4rem;margin:0 .8rem 1rem 0}input,select,button{background:#21334d;color:white;padding:.7rem;border:1px solid #567090;border-radius:8px}button{cursor:pointer;background:#2563eb}pre{padding:1.3rem;white-space:pre-wrap;overflow:auto;background:#0c1320;border-radius:10px}.pass{color:#86efac}.fail{color:#fca5a5}a{color:#93c5fd}
 </style>
-<h1>SharpContracts <small>M2</small></h1>
-<p>Design by Contract for C#: preconditions protect entry, postconditions define promised results, and invariants preserve object validity. This runnable browser simulation uses JavaScript, not .NET or formal proofs. Milestone 2 adds reusable typed pre/postcondition definitions and synchronous automatic interface-result contracts, on top of the interface proxy, Roslyn analyzer, xUnit tests and .NET CI source.</p>
+<h1>SharpContracts <small>M3</small></h1>
+<p>Design by Contract for C#: preconditions protect entry, postconditions define promised results, and invariants preserve object validity. This runnable browser simulation uses JavaScript, not .NET or formal proofs. Milestone 3 adds a typed symbolic expression tree and SMT-LIB exporter. Milestone 2 added reusable typed pre/postcondition definitions and synchronous automatic interface-result contracts, on top of the interface proxy, Roslyn analyzer, xUnit tests and .NET CI source.</p>
 <div class="panel"><h2>Experiment: transfer funds</h2>
 <label>Source balance ($)<input id="source" type="number" value="100" step=".01"></label>
 <label>Destination balance ($)<input id="dest" type="number" value="50" step=".01"></label>
@@ -20,6 +20,18 @@ from.Debit(amount);
 to.Credit(amount);
 Contract.Ensure(from.Balance == oldFrom - amount, "POST-001", "source delta");
 Contract.Ensure(to.Balance == oldTo + amount, "POST-002", "destination delta");</pre></div>
+<div class="panel"><h2>Milestone 3 — symbolic expressions</h2>
+<p>Build a typed predicate representing <code>amount &gt; minimum</code>. Evaluate it, then inspect the SMT-LIB sent to an eventual theorem prover. The demo models the supported decimal comparison.</p>
+<label>Amount <input type="number" step=".01" id="symbolAmount" value="25"></label>
+<label>Minimum <input type="number" step=".01" id="symbolMinimum" value="0"></label>
+<button onclick="runSymbolic()">Evaluate &amp; generate SMT-LIB</button>
+<pre id="symbolicOut" aria-live="polite"></pre>
+<pre>var amount = Expr.Param("amount", SymbolicType.Decimal);
+var requirement = Expr.Gt(amount, Expr.Dec(0m));
+var valid = ContractExprEvaluator.Check(requirement, environment);
+var smt = SmtLibPrinter.Print(requirement);</pre>
+<p>The runtime evaluator operates on concrete values. The exporter describes a mathematical assertion over unbounded SMT Real values; C# decimal is finite and fixed precision, so these semantics are not yet equivalent for all arithmetic operations. There is no solver or proof execution.</p>
+</div>
 <div class="panel"><h2>Milestone 2 — typed contract boundary</h2>
 <p>Try a reusable typed contract set: the precondition rejects invalid input before work, and the postcondition checks the result after normal return. The JavaScript runner simulates the corresponding C# API.</p>
 <label>Input <input id="boundaryInput" type="number" value="3"></label>
@@ -102,5 +114,16 @@ function runBoundary(){
  const result=bad?n+1:n*n;
  if(result!==n*n){out.textContent='ENS-SQUARE: postcondition violation — action already executed; result='+result;out.className='fail';return}
  out.textContent='PASS: returned '+result+' and postcondition holds';out.className='pass';
+}
+function runSymbolic(){
+ const a=Number(document.getElementById('symbolAmount').value);
+ const m=Number(document.getElementById('symbolMinimum').value);
+ const output=document.getElementById('symbolicOut');
+ if(!Number.isFinite(a)||!Number.isFinite(m)){output.textContent='Enter finite numbers';output.className='fail';return}
+ const decimal=x=>{let s=String(x);if(s.includes('e'))return x.toFixed(8);return s.includes('.')?s:s+'.0'};
+ const positive=a>m;
+ output.textContent=(positive?'PASS: predicate evaluates true':'CONTRACT VIOLATION: predicate evaluates false')+
+ '\\n\\nSMT-LIB (generated text, not solved):\\n(set-logic ALL)\\n(declare-const |amount| Real)\\n(assert (> |amount| '+decimal(m)+'))\\n(check-sat)';
+ output.className=positive?'pass':'fail';
 }
 </script></html>
