@@ -40,9 +40,9 @@ M0-Implemented means prototype support, not proof of verified coverage.
 
 | ID | Requirement | Priority | Status |
 |---|---|---|---|
-| SC-025 | Typed contract IR and serialization | P0 | Partial: typed runtime definitions, NOT symbolic or serializable |
+| SC-025 | Typed contract IR and serialization | P0 | Partial: symbolic AST and runtime definitions; no stable serialization schema |
 | SC-026 | Explicitly documented verifiable C# subset | P0 | Planned |
-| SC-027 | Verification conditions from contract semantics | P0 | Planned |
+| SC-027 | Verification conditions from contract semantics | P0 | Partial foundation: SMT-LIB predicate rendering; no VCs |
 | SC-028 | Z3/SMT bounded verification integration | P0 | Planned |
 | SC-029 | Loop invariants and termination variants | P0 | Planned |
 | SC-030 | Quantifiers, arrays, collections, frame conditions | P1 | Planned |
@@ -73,4 +73,4 @@ M0-Implemented means prototype support, not proof of verified coverage.
 ## M0 limitations
 
 Explicit Contract calls only; no automatic weaving, static proofs or test generation. Old<T> copies values only, not referenced graphs. Fault-injected transfer mutates state before detection, illustrating SC-047. Browser prototype is JavaScript rather than a C# runtime. C# has not been compiled in the original environment.
-\n## Milestone 2 progress\n\nTyped reusable runtime contract definitions, explicit pre/postcondition wrapper, synchronous interface return-value postcondition, and related xUnit tests. Contract expressions are executable delegates rather than formal symbolic IR. Postconditions have no automatic rollback.\n\n## Milestone 1 progress\n\nRuntime unit tests, interface-boundary attribute enforcement, narrow Roslyn analyzer diagnostics SC1001-SC1003, CI workflow, and HTML analyzer explorer committed. Automatic method weaving, Roslyn code fixes and proof backends remain open.\n
+\n## Milestone 3 progress\n\nTyped symbolic expression AST, runtime evaluator, SMT-LIB rendering, and xUnit coverage added. SMT-LIB query asks satisfiability, not validity. No Z3 binding, formal proof, persistent IR schema, or fully aligned decimal/SMT arithmetic semantics.\n\n## Milestone 2 progress\n\nTyped reusable runtime contract definitions, explicit pre/postcondition wrapper, synchronous interface return-value postcondition, and related xUnit tests. Contract expressions are executable delegates rather than formal symbolic IR. Postconditions have no automatic rollback.\n\n## Milestone 1 progress\n\nRuntime unit tests, interface-boundary attribute enforcement, narrow Roslyn analyzer diagnostics SC1001-SC1003, CI workflow, and HTML analyzer explorer committed. Automatic method weaving, Roslyn code fixes and proof backends remain open.\n
