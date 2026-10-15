@@ -1,3 +1,9 @@
+# Milestone 13 — differential verification against C# execution
+
+Added `ClrDifferentialTests` to the verification test project. Tests compare Z3 outcomes with compiled C# behavior for signed 32-bit overflow, unsigned 64-bit wraparound, exhaustive byte addition promotion (256 × 256 input pairs), and checked overflow exceptions.
+
+These tests increase confidence in the encoded subset but are **not a proof of translator soundness**. CI still needs an observed green run. Current local execution environment lacks dotnet; verification tests were committed but not executed.
+
 # Milestone 12 — running the real verifier
 
 SharpContracts now includes `SharpContracts.Cli`, a small executable that reads a C# file and invokes the Roslyn-bound Z3 verifier. It reports contract IDs, source line numbers, solver status and counterexamples.
