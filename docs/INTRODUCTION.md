@@ -1,5 +1,8 @@
 # SharpContracts — Introduction (Milestone 11)
 
+**New to contracts or Z3?** Start with the [five-chapter interactive tutorial](../tutorial/index.html), which covers runtime checks, implication proofs, counterexamples, integer overflow, type promotion, and local .NET execution. Browser examples are educational simulations; the solver runs in the C# implementation.
+
+
 ## Compiler-bound Z3 numeric verifier
 
 `BoundNumericVerifier.Verify(source, methodName)` is a new **Roslyn IOperation-to-Z3** proof prototype for parameter-only, synchronous `void` methods containing `Contract.Require` and `Contract.Ensure` calls. It binds C# source against reference assemblies and obtains operand/result types and conversion operations from the compiler. Its lowering creates sized bit-vectors, sign/zero extensions for numeric conversions, and signed versus unsigned comparisons.
