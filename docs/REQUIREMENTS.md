@@ -1,3 +1,7 @@
+## Tutorial and documentation delivery
+
+Five-chapter standalone HTML tutorial added at `tutorial/index.html`, linked from README, main demo, and introduction. CI workflow checks tutorial JavaScript syntax. This is an educational frontend, not a browser-hosted solver.
+
 ## Milestone 11 progress — compiler-bound bit-vectors
 
 Introduced `BoundNumericVerifier`: actual `IOperation` lowering to Z3 bit-vector ASTs with bound primitive numeric widths, explicit sign/zero extension and signed/unsigned comparisons. Added tests for byte promotion, signed 32-bit overflow and unsigned 64-bit wraparound, and conservative checked-operation rejection. Parameter-only straight-line contract calls are supported; no general control flow or locals. Compilation and CI remain unverified.
