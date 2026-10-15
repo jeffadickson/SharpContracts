@@ -1,3 +1,13 @@
+## Milestone 13 — differential correctness tests
+
+Added CLR-versus-Z3 differential test suite for integer boundaries and exhaustive byte-pair promotion. CI now prints normal test output. Requirements for end-to-end semantic validation are partially addressed; successful .NET build and test runs remain unverified.
+
+| ID | Requirement | Priority | Status |
+|---|---|---|---|
+| SC-058 | Compare solver outcomes against compiled C# boundary cases | P0 | Tests committed; execution unverified |
+| SC-059 | Exhaustively validate byte addition promotion | P0 | 65,536 input combinations covered in test source |
+| SC-060 | Gate correctness claims on a successful CI run | P0 | Open; no green run confirmed |
+
 ## Milestone 12 — executable entry point
 
 Added a verification CLI, sample source files, and a GitHub Actions job that requires the safe example to exit 0 and the counterexample to exit 1. README, technical introduction, tutorial, and HTML demo are updated. This is implementation-complete in source but **not verified by a successful build or workflow run**.
