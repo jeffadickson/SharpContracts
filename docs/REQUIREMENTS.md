@@ -1,3 +1,10 @@
+## Milestone 11 progress — compiler-bound bit-vectors
+
+Introduced `BoundNumericVerifier`: actual `IOperation` lowering to Z3 bit-vector ASTs with bound primitive numeric widths, explicit sign/zero extension and signed/unsigned comparisons. Added tests for byte promotion, signed 32-bit overflow and unsigned 64-bit wraparound, and conservative checked-operation rejection. Parameter-only straight-line contract calls are supported; no general control flow or locals. Compilation and CI remain unverified.
+
+SC-049: semantic numeric descriptors now feed a limited solver backend (partial).
+SC-050: promotion-aware lowering added for supported integer conversions (partial); checked conversions and complete C# numeric rules remain open.
+
 ## Milestone 10 progress
 
 Added `NumericSemanticInspector`, using Roslyn `IBinaryOperation` and semantic type symbols to report promoted result widths, unsigned/signed types, checked expressions and user-defined operators. Added four regression tests. This is an audit/preflight, **not an integrated generalized solver**. No confirmed green .NET CI run.
