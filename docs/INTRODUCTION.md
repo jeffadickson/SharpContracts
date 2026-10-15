@@ -1,3 +1,16 @@
+# Milestone 12 — running the real verifier
+
+SharpContracts now includes `SharpContracts.Cli`, a small executable that reads a C# file and invokes the Roslyn-bound Z3 verifier. It reports contract IDs, source line numbers, solver status and counterexamples.
+
+```sh
+dotnet run --project SharpContracts.Cli -- examples/VerifiedByteAddition.cs Check
+dotnet run --project SharpContracts.Cli -- examples/OverflowCounterexample.cs Check
+```
+
+**Exit codes:** 0 means one or more contracts were proved with no verification errors, 1 means a counterexample or unknown solver result, and 2 means unsupported input, compilation failure, or no contracts.
+
+These examples exercise the actual .NET solver rather than the browser's illustrative JavaScript. CI includes a job that verifies both expected success and expected counterexample outcomes. Execution of the workflow has not yet been confirmed.
+
 # SharpContracts — Introduction (Milestone 11)
 
 **New to contracts or Z3?** Start with the [five-chapter interactive tutorial](../tutorial/index.html), which covers runtime checks, implication proofs, counterexamples, integer overflow, type promotion, and local .NET execution. Browser examples are educational simulations; the solver runs in the C# implementation.
