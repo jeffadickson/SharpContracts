@@ -1,3 +1,15 @@
+# SharpContracts — Introduction (Milestone 11)
+
+## Compiler-bound Z3 numeric verifier
+
+`BoundNumericVerifier.Verify(source, methodName)` is a new **Roslyn IOperation-to-Z3** proof prototype for parameter-only, synchronous `void` methods containing `Contract.Require` and `Contract.Ensure` calls. It binds C# source against reference assemblies and obtains operand/result types and conversion operations from the compiler. Its lowering creates sized bit-vectors, sign/zero extensions for numeric conversions, and signed versus unsigned comparisons.
+
+Unlike the earlier hardcoded `long` verifier, this can distinguish `byte + byte` (promoted to signed 32-bit), `int + int` (32-bit signed) and `ulong + ulong` (64-bit unsigned). Verification tests include proofs and overflow counterexamples. The verifier rejects checked arithmetic, user-defined operators, unsupported conversions, local mutation, control-flow statements, and other expressions rather than claiming a proof.
+
+**Validation status:** Source/tests are committed but have not been compiled or executed in this environment; CI status is not confirmed. No claim is made that the implementation is fully sound for all C# inputs. C# implicit conversion and overload corner cases, short-circuit exception semantics, and integration with a control-flow graph remain open.
+
+## Previous milestones
+
 # SharpContracts — Introduction (Milestone 10)
 
 SharpContracts is a C# Design by Contract toolkit inspired by Eiffel. Preconditions declare what callers must supply, postconditions declare what a method guarantees after a successful return, and invariants declare states that must hold at explicitly checked boundaries.
