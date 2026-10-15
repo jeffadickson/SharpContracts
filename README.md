@@ -1,5 +1,12 @@
 # SharpContracts — Milestone 11
 
+## Start here: interactive tutorial
+
+Open **[From C# Contracts to Z3 Proofs](tutorial/index.html)** for a five-chapter, browser-runnable introduction to contracts, counterexamples, overflow, C# numeric promotion, and running the .NET project. The tutorial uses JavaScript teaching demonstrations rather than executing Z3. 
+
+[Main interactive demo](index.html) · [Technical introduction](docs/INTRODUCTION.md) · [CI workflow](.github/workflows/ci.yml)
+
+
 A Design by Contract framework for C#.
 
 ## Milestone 1\n\nAdded Roslyn-to-Z3 verification for a restricted C# method subset. Previously added an actual Z3 verifier (SharpContracts.Solver) and dedicated solver tests. Previously added symbolic contract expressions, executable evaluator, and SMT-LIB export (with actual solver invocation via SharpContracts.Solver). Previously added reusable typed contract definitions and boundary wrappers plus synchronous return-value guarantees. Previously added interface-boundary automatic precondition enforcement (via `ContractProxy`), a Roslyn analyzer (SC1001–SC1003), xUnit tests, GitHub Actions CI and an interactive analyzer teaching exercise. See [introduction](docs/INTRODUCTION.md).\n\n## Interactive prototype
