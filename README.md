@@ -1,3 +1,39 @@
+# SharpContracts — Milestone 12
+
+A research-stage Design by Contract and SMT verification framework for C#.
+
+## Try the actual verification CLI
+
+```sh
+dotnet run --project SharpContracts.Cli -- examples/VerifiedByteAddition.cs Check
+dotnet run --project SharpContracts.Cli -- examples/OverflowCounterexample.cs Check
+```
+
+The first sample is expected to be provable and return exit code 0. The second intentionally violates its postcondition at signed 32-bit overflow and should return exit code 1. Unsupported expressions, compiler errors, or no checked contracts return code 2. These outcomes are **expected**, not confirmed: the .NET build and CI runs have not been verified.
+
+## Learn
+
+[Interactive five-chapter tutorial](tutorial/index.html) · [Main demo](index.html) · [Technical introduction](docs/INTRODUCTION.md) · [Requirements](docs/REQUIREMENTS.md) · [Actions](https://github.com/jeffadickson/SharpContracts/actions)
+
+## Verified subset and limitations
+
+`BoundNumericVerifier` uses Roslyn semantic operations and Z3 bit-vectors for a restricted parameter-only method subset. User-defined operators, checked arithmetic, local state, arbitrary control flow and many language features are not supported by this entry point. A mathematical-int model, BV64 prototype, and other experimental components also exist. Treat proofs as statements about the supported model only.
+
+## Build
+
+```sh
+dotnet test SharpContracts.Tests/SharpContracts.Tests.csproj
+dotnet test SharpContracts.Solver.Tests/SharpContracts.Solver.Tests.csproj
+dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj
+dotnet build SharpContracts.Cli/SharpContracts.Cli.csproj
+```
+
+CI is defined in `.github/workflows/ci.yml` for pushes, pull requests and manual dispatch. Check Actions for actual results; merely having a workflow file does not establish a green build.
+
+---
+
+## Historical milestone details
+
 # SharpContracts — Milestone 11
 
 ## Start here: interactive tutorial
