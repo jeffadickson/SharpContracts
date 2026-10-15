@@ -1,3 +1,10 @@
+## Milestone 10 progress
+
+Added `NumericSemanticInspector`, using Roslyn `IBinaryOperation` and semantic type symbols to report promoted result widths, unsigned/signed types, checked expressions and user-defined operators. Added four regression tests. This is an audit/preflight, **not an integrated generalized solver**. No confirmed green .NET CI run.
+
+Updated SC-049: Roslyn type classification plus operation binding implemented; verifier integration remains open.
+Updated SC-050: Promotion identification implemented; promotion-aware SMT lowering remains open.
+
 ## Milestone 9 progress — user-defined numeric types
 
 Implemented Roslyn semantic numeric-type descriptors and an explicit custom operator rejection policy, plus tests and the custom-types design document. Pending: integration into BV lowering, operator-body proofs, C# promotion/conversion rules, structs and generic math verification. Existing proof limitations and unverified CI remain in force.
