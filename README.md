@@ -1,4 +1,4 @@
-# SharpContracts — Milestone 12
+# SharpContracts — Milestone 13
 
 A research-stage Design by Contract and SMT verification framework for C#.
 
@@ -18,6 +18,10 @@ The first sample is expected to be provable and return exit code 0. The second i
 ## Verified subset and limitations
 
 `BoundNumericVerifier` uses Roslyn semantic operations and Z3 bit-vectors for a restricted parameter-only method subset. User-defined operators, checked arithmetic, local state, arbitrary control flow and many language features are not supported by this entry point. A mathematical-int model, BV64 prototype, and other experimental components also exist. Treat proofs as statements about the supported model only.
+
+## C# versus Z3 differential checks
+
+`ClrDifferentialTests` compares prover outcomes to compiled C# at `int.MaxValue`, `ulong.MaxValue`, and all 65,536 combinations of two `byte` inputs. Checked overflow must be rejected by the current verifier and throw in CLR execution. This is a regression suite, not a formal validation of all language semantics. GitHub CI execution has not yet been confirmed.
 
 ## Build
 
