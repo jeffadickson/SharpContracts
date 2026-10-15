@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SharpContracts Tutorial — From Contracts to Z3</title>
+<style>
+:root{color-scheme:dark;font:16px/1.6 system-ui,sans-serif}*{box-sizing:border-box}body{background:#0b1220;color:#e4edf8;max-width:1100px;margin:auto;padding:25px}a{color:#8bbcff}h1{font-size:clamp(2rem,5vw,3rem);line-height:1.1}h2{margin-top:0}p{color:#b8c8df}.hero,.card{border:1px solid #344966;background:#162238;border-radius:15px;padding:23px;margin:20px 0}.hero{background:linear-gradient(120deg,#152b4f,#17233b)}.pill{color:#b7d3ff;font-size:.8rem;letter-spacing:.12em;text-transform:uppercase}.steps{display:flex;flex-wrap:wrap;gap:9px}.steps button{flex:1;min-width:120px}button,select,input{background:#223653;color:#fff;border:1px solid #52749a;border-radius:8px;padding:10px;font:inherit}button{cursor:pointer}button:hover{background:#31547d}button.active{background:#3167ad;border-color:#8bc0ff}.row{display:grid;grid-template-columns:1fr 1fr;gap:15px}@media(max-width:750px){.row{grid-template-columns:1fr}}pre{background:#090f1b;border:1px solid #30435f;border-radius:9px;padding:17px;overflow-x:auto;white-space:pre-wrap;overflow-wrap:anywhere}label{display:block;margin:12px 0}.muted{font-size:.88rem;color:#adc1d8}.good{color:#88e7b4}.bad{color:#ffadad}.warn{color:#ffdc93}.hidden{display:none}.kpi{font-size:1.1rem;font-weight:700}code{color:#c2e0ff}.footer{padding:20px 0;color:#9eb1ca}
+</style></head><body>
+<nav><a href="../index.html">← SharpContracts interactive demo</a> · <a href="../docs/INTRODUCTION.md">Technical introduction</a> · <a href="../docs/REQUIREMENTS.md">Requirements</a></nav>
+<header class="hero"><div class="pill">Interactive lesson · v1.0 · Milestone 11</div>
+<h1>From C# Contracts to Z3 Proofs</h1><p>Specify an obligation, find a counterexample, constrain your inputs, and see why numeric types change what a verifier must prove.</p>
+<p><em>Preconditions guide the way<br>Bit-vectors expose the edge<br>Proof needs every path</em></p>
+<p class="muted">15–20 minute self-guided lesson. Browser exercises are deterministic JavaScript teaching models, <strong>not</strong> a live .NET or Z3 execution environment.</p></header>
+<div class="steps" role="navigation" aria-label="Tutorial chapters">
+<button onclick="go(0)" id="tab0">1 · Contracts</button><button onclick="go(1)" id="tab1">2 · Counterexamples</button><button onclick="go(2)" id="tab2">3 · Overflow</button><button onclick="go(3)" id="tab3">4 · C# Types</button><button onclick="go(4)" id="tab4">5 · Run .NET</button></div>
+<main>
+<section class="card" id="step0"><h2>1. What does a contract guarantee?</h2><p>A <strong>precondition</strong> describes what a caller must establish. A <strong>postcondition</strong> describes what a successful method execution must establish. An <strong>invariant</strong> describes a property that must hold at agreed object boundaries.</p>
+<div class="row"><div><pre>Contract.Require(amount &gt; 0,
+    "PRE-001", "Amount positive");
+Contract.Require(amount &lt;= balance,
+    "PRE-002", "Enough funds");
+long remaining = balance - amount;
+Contract.Ensure(remaining &gt;= 0,
+    "POST-001", "No overdraft");</pre></div>
+<div><label>Balance <input id="balance" type="number" value="100"></label><label>Amount <input id="amount" type="number" value="25"></label><button onclick="checkContract()">Run example</button><pre id="contractOutput" aria-live="polite">Choose Run example.</pre></div></div><p class="muted">Run-time checking examines one execution. Formal verification asks whether every permitted input can violate the claimed property.</p></section>
+<section class="card hidden" id="step1"><h2>2. How Z3 proves a contract</h2><p>To establish <code>assumptions ⇒ claim</code>, a verifier asks Z3 whether <code>assumptions ∧ ¬claim</code> has a solution. <strong>UNSAT</strong> means the implication is valid in the encoded model; <strong>SAT</strong> provides a counterexample; <strong>UNKNOWN</strong> gives no proof.</p>
+<label><input id="sufficient" type="checkbox" checked> Include precondition: balance ≥ amount</label>
+<button onclick="proof()">Analyze obligation</button><pre id="proofOutput" aria-live="polite"></pre>
+<p class="muted">This exercise uses a known mathematical-integer example. The repository's real Z3 solver is in <code>SharpContracts.Solver</code>.</p></section>
+<section class="card hidden" id="step2"><h2>3. The overflow trap</h2><p>Mathematical integers are unlimited. C# <code>int</code> and <code>long</code> are not. In unchecked contexts, integer addition wraps; in checked contexts it throws when it overflows.</p>
+<label>Value <select id="integerStart"><option value="max">int.MaxValue</option><option value="42">42</option></select></label>
+<label>Arithmetic mode <select id="arithMode"><option value="unchecked">Unchecked</option><option value="checked">Checked</option></select></label>
+<button onclick="overflow()">Calculate x + 1</button><pre id="overflowOutput" aria-live="polite"></pre><p class="muted">The current compiler-bound verifier models selected unchecked expressions. It rejects checked arithmetic rather than claiming an unsound proof.</p></section>
+<section class="card hidden" id="step3"><h2>4. The C# type system matters</h2><p>Roslyn resolves promotions and overloaded operators. <code>byte + byte</code> actually produces an <code>int</code>, while an overloaded custom type can perform arbitrary code.</p><label>Expression <select id="typeChoice"><option value="byte">byte + byte</option><option value="ulong">ulong + ulong</option><option value="custom">Voltage + Voltage</option></select></label><button onclick="types()">Inspect semantics</button><pre id="typesOutput" aria-live="polite"></pre>
+<p>Custom numeric types must be proven by analyzing their operator implementation or using a clearly identified trusted specification. An operator named <code>+</code> is not automatically ordinary addition.</p></section>
+<section class="card hidden" id="step4"><h2>5. Run the real implementation</h2><p>The following commands execute the repository's C# runtime and tests using .NET 8 or newer with suitable native Z3 dependencies.</p><pre>git clone https://github.com/jeffadickson/SharpContracts.git
+cd SharpContracts
+dotnet restore SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj
+dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj
+dotnet test SharpContracts.Solver.Tests/SharpContracts.Solver.Tests.csproj
+dotnet run --project SharpContracts.Demo</pre>
+<p>Inspect <code>BoundNumericVerifier.Verify(source, methodName)</code> in <code>SharpContracts.Verification/BoundNumericVerifier.cs</code>. The binder uses Roslyn <code>IOperation</code> to determine numeric types and constructs Z3 bit-vectors. Unsupported features are rejected.</p>
+<h3>Where the implementation stands</h3><p>Implemented in source: runtime checks, typed symbolic expressions, Z3 implication queries, restricted source verification, and an experimental Roslyn-bound numeric verifier. Not established: a passing .NET CI build, complete numeric conversion rules, general control-flow support, verification of user-defined operators, or soundness for all C# code.</p>
+<p><a href="https://github.com/jeffadickson/SharpContracts/actions">Review CI on GitHub</a></p></section>
+</main><div class="steps"><button id="prev" onclick="go(current-1)">← Previous</button><button id="next" onclick="go(current+1)">Next →</button></div>
+<footer class="footer">SharpContracts educational tutorial · Contracts describe obligations; a proof is only as sound as its model.</footer>
+<script>
+let current=0;function go(i){current=Math.max(0,Math.min(4,i));for(let j=0;j<5;j++){document.getElementById('step'+j).classList.toggle('hidden',j!==current);document.getElementById('tab'+j).classList.toggle('active',j===current)}prev.disabled=current===0;next.disabled=current===4;window.scrollTo?.({top:0,behavior:'smooth'})}
+function checkContract(){const b=Number(balance.value),a=Number(amount.value);const out=contractOutput;if(!Number.isSafeInteger(b)||!Number.isSafeInteger(a)){out.textContent='Use safe integers';return}out.textContent=a<=0?'PRE-001 failed: amount is not positive':a>b?'PRE-002 failed: insufficient balance':'PASS: remaining = '+(b-a)+' and remaining ≥ 0'}
+function proof(){proofOutput.textContent=sufficient.checked?'UNSAT: balance ≥ amount and amount ≥ 0 make balance - amount < 0 impossible (over mathematical integers).':'SAT: counterexample balance = 0, amount = 1 produces remaining = -1. The postcondition is not implied.'}
+function overflow(){const x=integerStart.value==='max'?2147483647:42;const result=x+1;overflowOutput.textContent=arithMode.value==='checked'&&result>2147483647?'OverflowException: checked 32-bit addition overflows.':'Unchecked result: '+(result|0)+'; guarantee result > x is '+((result|0)>x)}
+function types(){typesOutput.textContent={byte:'Result: signed Int32 (32 bits), due to integer promotion.',ulong:'Result: unsigned UInt64 (64 bits), with unsigned comparison and wrapping.',custom:'Result: custom Voltage struct; '+'operator implementation must be analyzed. No verified numeric meaning is assumed.'}[typeChoice.value]}
+go(0);
+</script></body></html>
