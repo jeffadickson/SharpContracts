@@ -2,6 +2,7 @@ name: CI
 on:
   push:
   pull_request:
+  workflow_dispatch:
 permissions:
   contents: read
 jobs:
@@ -40,3 +41,13 @@ jobs:
           dotnet-version: '8.0.x'
       - run: sudo apt-get update && sudo apt-get install -y libgomp1
       - run: dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj --configuration Release
+
+  tutorial-smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Validate embedded tutorial and demo JavaScript
+        run: python3 scripts/check_html.py
