@@ -4,7 +4,7 @@
 <style>
 :root{font-family:system-ui,sans-serif;color-scheme:dark}body{max-width:900px;margin:3rem auto;padding:0 1.5rem;background:#101827;color:#e8eef9}h1{font-size:2.4rem}p{line-height:1.6;color:#b7c6da}.panel{padding:1.5rem;border:1px solid #42536d;border-radius:16px;background:#172439;margin:1rem 0}label{display:inline-grid;gap:.4rem;margin:0 .8rem 1rem 0}input,select,button{background:#21334d;color:white;padding:.7rem;border:1px solid #567090;border-radius:8px}button{cursor:pointer;background:#2563eb}pre{padding:1.3rem;white-space:pre-wrap;overflow:auto;background:#0c1320;border-radius:10px}.pass{color:#86efac}.fail{color:#fca5a5}a{color:#93c5fd}
 </style>
-<h1>SharpContracts <small>M10</small></h1>
+<h1>SharpContracts <small>M11</small></h1>
 <p>Design by Contract for C#: preconditions protect entry, postconditions define promised results, and invariants preserve object validity. This runnable browser simulation uses JavaScript, not .NET or formal proofs. Milestone 3 adds a typed symbolic expression tree and SMT-LIB exporter. Milestone 2 added reusable typed pre/postcondition definitions and synchronous automatic interface-result contracts, on top of the interface proxy, Roslyn analyzer, xUnit tests and .NET CI source.</p>
 <div class="panel"><h2>Experiment: transfer funds</h2>
 <label>Source balance ($)<input id="source" type="number" value="100" step=".01"></label>
@@ -20,6 +20,12 @@ from.Debit(amount);
 to.Credit(amount);
 Contract.Ensure(from.Balance == oldFrom - amount, "POST-001", "source delta");
 Contract.Ensure(to.Balance == oldTo + amount, "POST-002", "destination delta");</pre></div>
+<div class="panel"><h2>Milestone 11 — bound numeric Z3 proof cases</h2>
+<p>The new .NET verifier lowers Roslyn-bound operations directly to width-correct Z3 bit-vectors. Select a case to inspect the expected outcome. This page illustrates the expected logic and does not execute the native Z3 solver.</p>
+<label>Verification case <select id="boundProofCase"><option value="byte">byte a + byte b ≥ a</option><option value="int">int x + 1 &gt; x</option><option value="ulong">ulong x + 1UL &gt; x</option><option value="checked">checked(int x + 1) &gt; x</option></select></label>
+<button onclick="showBoundProof()">Inspect proof case</button><pre id="boundProofResult" aria-live="polite"></pre>
+<p>Proof support is limited to parameter-only straight-line contracts; checked operations currently reject as unsupported. The CI test suite must pass before solver correctness is independently established.</p>
+</div>
 <div class="panel"><h2>Milestone 10 — C# numeric promotion explorer</h2>
 <p>Roslyn-based type inspection now records the resolved expression type, width, signedness, checked context and custom operator dispatch. Choose an expression to see the language rule. This browser walkthrough is explanatory; compiler binding and tests run in .NET.</p>
 <label>Expression <select id="promotionExample"><option value="bytes">byte + byte</option><option value="ulong">ulong + ulong</option><option value="checked">checked(int + int)</option><option value="custom">Voltage + Voltage (custom operator)</option></select></label>
@@ -255,4 +261,14 @@ custom:'Roslyn result: Voltage | custom operator implementation | verification U
 document.getElementById('promotionOut').textContent=messages[v];
 }
 showPromotion();
+function showBoundProof(){
+const cases={
+byte:'EXPECTED PROVED: byte operands promote to signed Int32; the sum of two nonnegative bytes does not overflow Int32.',
+int:'EXPECTED COUNTEREXAMPLE: x = 2147483647 (Int32.MaxValue) gives x+1 = -2147483648 in unchecked arithmetic.',
+ulong:'EXPECTED COUNTEREXAMPLE: x = 18446744073709551615 (UInt64.MaxValue) wraps to zero.',
+checked:'UNSUPPORTED: checked overflow exceptional behavior is not yet lowered by this compiler-bound verifier.'
+};
+document.getElementById('boundProofResult').textContent=cases[document.getElementById('boundProofCase').value];
+}
+showBoundProof();
 </script></html>
