@@ -1,3 +1,13 @@
+## Milestone 12 — executable entry point
+
+Added a verification CLI, sample source files, and a GitHub Actions job that requires the safe example to exit 0 and the counterexample to exit 1. README, technical introduction, tutorial, and HTML demo are updated. This is implementation-complete in source but **not verified by a successful build or workflow run**.
+
+| ID | Requirement | Priority | Status |
+|---|---|---|---|
+| SC-055 | CLI for verifying a source method and reporting outcomes | P0 | Implemented in source; build unverified |
+| SC-056 | CI smoke tests for proof and counterexample CLI outcomes | P0 | Workflow committed; run unverified |
+| SC-057 | Contract exit statuses distinguish proved, counterexample and unsupported | P0 | Implemented in source; tests pending |
+
 ## Tutorial and documentation delivery
 
 Five-chapter standalone HTML tutorial added at `tutorial/index.html`, linked from README, main demo, and introduction. CI workflow checks tutorial JavaScript syntax. This is an educational frontend, not a browser-hosted solver.
