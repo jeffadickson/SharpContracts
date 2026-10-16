@@ -1,3 +1,7 @@
+# CI aggregate gate
+
+The `CI Gate` job now runs after all six workflow jobs and fails if any compilation, test, CLI, solver or tutorial job failed, was skipped or was cancelled. It is a single status-check target for future branch protection. GitHub Actions run status remains unverified.
+
 # Verification soundness fix
 
 Compiler-bound verification now rejects dynamic contract message expressions and blank IDs, preventing unmodeled calls in contract arguments from being silently treated as pure. Tests are committed but not executed locally; passing CI remains unconfirmed.
