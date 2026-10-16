@@ -1,3 +1,7 @@
+# Milestone 18 — CI proof-result contract
+
+The CLI smoke test now validates the actual JSON protocol, not merely process exit status. It executes the proven byte example and the signed-overflow counterexample using the .NET CLI, checks schema version 1, outcome category, nonempty checks and exit codes. The Python test is in `scripts/check_cli_report.py` and runs in GitHub Actions. The local environment has no .NET SDK; a passing CI run remains unconfirmed.
+
 # Milestone 17 — structured proof reports
 
 Use `ProofReport.From(BoundNumericVerifier.Verify(source, method))` to obtain a schema-versioned result and `ToJson()` to serialize it. Outcomes: Proved, Counterexample, Unknown, InconsistentAssumptions, Unsupported, NoContracts. CLI option `--json` emits the report. Exit codes: 0/1/3/4 respectively, with 2 for unsupported/no contracts. Machine-readable results are suitable for future CI quality gates; no green build has been confirmed.
