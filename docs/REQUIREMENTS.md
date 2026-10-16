@@ -1,3 +1,7 @@
+## Proof showcase — midpoint overflow
+
+A concrete C# binary-search midpoint bug and corrected version are recorded in `examples/BinarySearchMidpoint.cs`. `SharpContracts.Solver.Tests/MidpointProofTests.cs` contains concrete regression cases and a BV32 Z3 proof obligation over all unsigned input pairs with `low<=high`. The tutorial and main HTML page include a matching interactive example. Source/solver equivalence must be confirmed in CI. Automatic proof-condition extraction for division and local state is still open.
+
 ## CI status visibility repair
 
 SC-068: Aggregate CI Gate must identify each required dependency and conclusion in the Actions job summary. Implemented in workflow; run verification pending. Legacy GitHub commit statuses and Actions check runs are distinct, so no-run conclusions must not be drawn from empty legacy status results.
