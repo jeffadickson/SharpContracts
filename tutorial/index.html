@@ -45,7 +45,13 @@ dotnet run --project SharpContracts.Cli -- examples/OverflowCounterexample.cs Ch
 <p>CI now runs a script that parses the actual CLI JSON output and checks expected outcomes. Results are not yet independently confirmed. The CLI returns 0 proved, 1 counterexample, 2 unsupported or no contracts, 3 solver unknown, and 4 inconsistent assumptions. The overflow example is expected to exit 1. Inspect <code>BoundNumericVerifier.Verify(source, methodName)</code> in <code>SharpContracts.Verification/BoundNumericVerifier.cs</code>. The binder uses Roslyn <code>IOperation</code> to determine numeric types and constructs Z3 bit-vectors. Unsupported features are rejected.</p>
 <h3>Where the implementation stands</h3><p>Implemented in source: runtime checks, typed symbolic expressions, Z3 implication queries, restricted source verification, and an experimental Roslyn-bound numeric verifier. Not established: a passing .NET CI build, complete numeric conversion rules, general control-flow support, verification of user-defined operators, or soundness for all C# code.</p>
 <p><a href="https://github.com/jeffadickson/SharpContracts/actions">Review CI on GitHub (open the CI Gate job summary for named upstream status results) (complete build and per-project pass/fail summary logs plus TRX test artifacts are retained for diagnosis)</a></p></section>
-<section class="card"><h2>New example: unary negation at the boundary</h2><p>Unchecked <code>-int.MinValue</code> returns <code>int.MinValue</code>, not a positive value. SharpContracts now lowers unary negation to Z3 bit-vectors. Checked unary negation still fails closed. The regression tests are committed, but their .NET execution has not been confirmed.</p></section></main><div class="steps"><button id="prev" onclick="go(current-1)">← Previous</button><button id="next" onclick="go(current+1)">Next →</button></div>
+<section class="card"><h2>New example: unary negation at the boundary</h2><p>Unchecked <code>-int.MinValue</code> returns <code>int.MinValue</code>, not a positive value. SharpContracts now lowers unary negation to Z3 bit-vectors. Checked unary negation still fails closed. The regression tests are committed, but their .NET execution has not been confirmed.</p></section><section class="card" id="midpoint-lesson">
+<h2>Case study — the binary-search midpoint that overflows</h2>
+<p>Two implementations appear equivalent on small inputs. The first wraps when the unsigned 32-bit sum exceeds its maximum; the corrected form avoids an overflowing sum when <code>low ≤ high</code>.</p>
+<div class="row"><div><label>Low <input id="midLow" type="number" min="0" max="4294967295" step="1" value="3000000000"></label><label>High <input id="midHigh" type="number" min="0" max="4294967295" step="1" value="4000000000"></label><button onclick="showMidpoint()">Compare methods</button></div><div><pre id="midResult" aria-live="polite"></pre></div></div>
+<pre>uint Buggy(uint low, uint high) => unchecked((low + high) / 2u);
+uint Correct(uint low, uint high) => unchecked(low + (high - low) / 2u);</pre>
+<p><strong>Formal property:</strong> for every 32-bit unsigned pair satisfying <code>low ≤ high</code>, the midpoint remains in <code>[low, high]</code>. Z3 should find a counterexample to the buggy form and UNSAT for the negation of the corrected property. These are added as real Z3 tests in <code>SharpContracts.Solver.Tests/MidpointProofTests.cs</code>; the browser calculation itself is JavaScript, not Z3.</p></section></main><div class="steps"><button id="prev" onclick="go(current-1)">← Previous</button><button id="next" onclick="go(current+1)">Next →</button></div>
 <footer class="footer">SharpContracts educational tutorial · Contracts describe obligations; a proof is only as sound as its model.</footer>
 <script>
 let current=0;function go(i){current=Math.max(0,Math.min(4,i));for(let j=0;j<5;j++){document.getElementById('step'+j).classList.toggle('hidden',j!==current);document.getElementById('tab'+j).classList.toggle('active',j===current)}prev.disabled=current===0;next.disabled=current===4;window.scrollTo?.({top:0,behavior:'smooth'})}
@@ -54,4 +60,14 @@ function proof(){proofOutput.textContent=sufficient.checked?'UNSAT: balance ≥ 
 function overflow(){const x=integerStart.value==='max'?2147483647:42;const result=x+1;overflowOutput.textContent=arithMode.value==='checked'&&result>2147483647?'OverflowException: checked 32-bit addition overflows.':'Unchecked result: '+(result|0)+'; guarantee result > x is '+((result|0)>x)}
 function types(){typesOutput.textContent={byte:'Result: signed Int32 (32 bits), due to integer promotion.',ulong:'Result: unsigned UInt64 (64 bits), with unsigned comparison and wrapping.',custom:'Result: custom Voltage struct; '+'operator implementation must be analyzed. No verified numeric meaning is assumed.'}[typeChoice.value]}
 go(0);
+</script><script>
+function showMidpoint(){
+const l=Number(document.getElementById('midLow').value),h=Number(document.getElementById('midHigh').value),o=document.getElementById('midResult');
+if(!Number.isSafeInteger(l)||!Number.isSafeInteger(h)||l<0||h>4294967295||l>h){o.textContent='Enter unsigned 32-bit integers with low <= high.';return}
+const low=BigInt(l),high=BigInt(h),limit=4294967296n;
+const bad=((low+high)%limit)/2n;
+const good=low+(high-low)/2n;
+o.textContent='Buggy: '+bad+' '+(bad<low||bad>high?'(OUT OF BOUNDS)':'(in bounds)')+'\nCorrect: '+good+' (in bounds)';
+}
+showMidpoint();
 </script></body></html>
