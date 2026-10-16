@@ -1,3 +1,7 @@
+# SharpContracts — Milestone 14
+
+**Milestone 14:** Fixed UINT64 literal lowering above long.MaxValue and added boundary proof/counterexample tests. Build and CI remain unverified.
+
 # SharpContracts — Milestone 13
 
 A research-stage Design by Contract and SMT verification framework for C#.
