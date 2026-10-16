@@ -62,6 +62,8 @@ public static class InlineContractVerifier
 
             Microsoft.Z3.Expr Lower(IOperation operation)
             {
+                if (operation is IParenthesizedOperation parenthesized)
+                    return Lower(parenthesized.Operand);
                 if (operation is IConversionOperation conversion)
                 {
                     if (conversion.IsChecked || conversion.OperatorMethod is not null ||
