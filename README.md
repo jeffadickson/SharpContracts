@@ -1,3 +1,7 @@
+## CI Gate status debugging
+
+`CI Gate` now prints each of its six dependencies by name and writes a per-job table into the GitHub Actions job summary. For actual results, open [Actions](https://github.com/jeffadickson/SharpContracts/actions) → latest CI run → **CI Gate**. An empty legacy commit-status API response is not evidence of no GitHub Actions runs; Actions check runs are a separate API. This change is committed but has not yet been observed executing.
+
 
 ## Unary negation increment
 
