@@ -1,3 +1,7 @@
+# SharpContracts — CI diagnostics increment
+
+GitHub Actions now writes `.trx` test reports for the runtime, Z3 solver, and source verifier jobs and uploads them as artifacts even when tests fail. Open [Actions](https://github.com/jeffadickson/SharpContracts/actions), select a CI run, and download `sharpcontracts-runtime-test-results`, `sharpcontracts-solver-test-results`, or `sharpcontracts-verification-test-results`. This does **not** establish a passing build; these artifacts are intended to expose the exact failing tests.
+
 # SharpContracts — Milestone 18: CI report validation
 
 The CI CLI smoke job now runs `scripts/check_cli_report.py`, which invokes the compiled .NET verification CLI and validates JSON schema version, outcome, nonempty checks, and exit codes for both a proof and an overflow counterexample. **Workflow execution is not yet confirmed**, so CI is not claimed green.
