@@ -1,3 +1,9 @@
+## Featured example: binary-search midpoint overflow
+
+[Interactive walkthrough](tutorial/index.html#midpoint-lesson) · [C# sample](examples/BinarySearchMidpoint.cs) · [Z3 proof regression](SharpContracts.Solver.Tests/MidpointProofTests.cs)
+
+The expression `unchecked((low + high) / 2u)` can overflow before division. For `low=3,000,000,000` and `high=4,000,000,000` it incorrectly returns `1,352,516,352`. The corrected `low + (high-low)/2u` returns `3,500,000,000`. Z3 checks whether the midpoint is inside the range for **all** valid UInt32 pairs. These tests are committed but have not been observed passing in CI.
+
 ## CI Gate status debugging
 
 `CI Gate` now prints each of its six dependencies by name and writes a per-job table into the GitHub Actions job summary. For actual results, open [Actions](https://github.com/jeffadickson/SharpContracts/actions) → latest CI run → **CI Gate**. An empty legacy commit-status API response is not evidence of no GitHub Actions runs; Actions check runs are a separate API. This change is committed but has not yet been observed executing.
