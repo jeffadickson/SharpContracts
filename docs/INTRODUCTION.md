@@ -1,3 +1,8 @@
+
+## Signed unary negation
+
+Unchecked unary minus is lowered via Z3 BVNeg, preserving fixed-width wraparound, including negation of `int.MinValue`. Checked unary minus remains unsupported and fails closed. Tests cover both cases; execution is unverified.
+
 # Aggregate CI Gate
 
 A new `ci-gate` job depends on `compile-all`, runtime/analyzer tests, solver tests, source-verification tests, CLI smoke and HTML tutorial smoke. It runs even when dependencies fail and only succeeds if every dependency finished `success`. This provides one required check for branch protection; the repository branch-protection setting has not been changed. A successful CI run is not yet confirmed.
