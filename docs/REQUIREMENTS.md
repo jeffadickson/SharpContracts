@@ -1,3 +1,7 @@
+## Milestone 16 — contract feasibility
+
+SC-061 (P0): Check joint precondition satisfiability and reject vacuous proof success. Implementation and regression tests committed; CI execution unverified.
+
 ## Milestone 15 — solver hardening
 
 Bound proof queries have a five-second solver timeout. Numeric conversion/comparison lowering now checks for supported signed/unsigned bit-vectors; decimal and custom overloaded operator rejection tests added. Verification status remains **not independently compiled or executed**.
