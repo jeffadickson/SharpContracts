@@ -31,17 +31,29 @@ jobs:
             SharpContracts.Solver.Tests/SharpContracts.Solver.Tests.csproj
             SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj
           )
+          failures=0
           for project in "${projects[@]}"; do
             echo "::group::Building $project"
-            dotnet build "$project" --configuration Release --nologo 2>&1 | tee -a artifacts/build/build.log
+            echo "===== $project =====" >> artifacts/build/build.log
+            if dotnet build "$project" --configuration Release --nologo 2>&1 | tee -a artifacts/build/build.log; then
+              echo "PASS: $project" | tee -a artifacts/build/summary.log
+            else
+              echo "FAIL: $project" | tee -a artifacts/build/summary.log
+              failures=$((failures + 1))
+            fi
             echo "::endgroup::"
           done
+          cat artifacts/build/summary.log
+          if [ "$failures" -ne 0 ]; then
+            echo "::error::$failures project(s) failed compilation"
+            exit 1
+          fi
       - name: Upload build output
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sharpcontracts-build-log
-          path: artifacts/build/build.log
+          path: artifacts/build/*.log
           if-no-files-found: ignore
           retention-days: 14
 
