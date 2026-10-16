@@ -1,3 +1,7 @@
+# CI compilation gate
+
+A dedicated `compile-all` GitHub Actions job now builds all nine production/test `.csproj` projects on .NET 8 and uploads `sharpcontracts-build-log` (14 days) even if compilation fails. This exposes compile errors before solver-runtime investigation. Successful CI execution is still unverified.
+
 # SharpContracts — CI diagnostics increment
 
 GitHub Actions now writes `.trx` test reports for the runtime, Z3 solver, and source verifier jobs and uploads them as artifacts even when tests fail. Open [Actions](https://github.com/jeffadickson/SharpContracts/actions), select a CI run, and download `sharpcontracts-runtime-test-results`, `sharpcontracts-solver-test-results`, or `sharpcontracts-verification-test-results`. This does **not** establish a passing build; these artifacts are intended to expose the exact failing tests.
