@@ -1,3 +1,7 @@
+## Milestone 15 — solver hardening
+
+Bound proof queries have a five-second solver timeout. Numeric conversion/comparison lowering now checks for supported signed/unsigned bit-vectors; decimal and custom overloaded operator rejection tests added. Verification status remains **not independently compiled or executed**.
+
 ## Milestone 14
 
 Fixed unsigned 64-bit literal lowering and added two regression tests. Build and test execution are still unverified. Numeric semantics remain partially implemented.
