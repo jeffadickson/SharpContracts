@@ -1,10 +1,14 @@
-# SharpContracts — Milestone 14
+# SharpContracts — Milestone 15
 
 **Milestone 14:** Fixed UINT64 literal lowering above long.MaxValue and added boundary proof/counterexample tests. Build and CI remain unverified.
 
 # SharpContracts — Milestone 13
 
 A research-stage Design by Contract and SMT verification framework for C#.
+
+## Milestone 15 — verification guardrails
+
+The compiler-bound solver now has a five-second per-query timeout. Numeric conversion and comparison lowering rejects unsupported numeric representations instead of assuming built-in integer bit-vector behavior. Negative regression tests cover decimal and custom overloaded operators. These are source changes; .NET compilation and CI remain unverified.
 
 ## Try the actual verification CLI
 
