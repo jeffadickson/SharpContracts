@@ -1,3 +1,33 @@
+# Inline contracts — source-derived proofs
+
+The midpoint example now demonstrates the desired C# authoring model:
+
+```csharp
+[Verify]
+public static uint Correct(uint low, uint high)
+{
+    Contract.Require(low <= high, "MID-PRE", "Valid search interval");
+    uint midpoint = unchecked(low + (high - low) / 2u);
+    Contract.Assert(midpoint >= low, "MID-LOW", "Not below low");
+    Contract.Ensure(midpoint <= high, "MID-HIGH", "Not above high");
+    return midpoint;
+}
+```
+
+A corresponding `Buggy` method uses `unchecked((low + high) / 2u)`. **Both proofs are generated from the actual annotated C# source file**, using `InlineContractVerifier` (Roslyn operations to Z3 BV32), not handwritten solver expressions.
+
+Try:
+
+```sh
+dotnet run --project SharpContracts.Cli -- --inline examples/BinarySearchMidpoint.cs Correct
+dotnet run --project SharpContracts.Cli -- --inline --json examples/BinarySearchMidpoint.cs Buggy
+dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj
+```
+
+Expected correct method: Proved (exit 0). Expected buggy method: Counterexample (exit 1). No successful .NET build or CI run has been independently verified.
+
+The current `Ensure` means an inline assertion **at its source location**, not a postcondition automatically enforced after arbitrary returns. The verifier currently supports a deliberately limited UInt32 method subset; see [full design and limitations](INLINE_CONTRACT_DESIGN.md).
+
 ## Case study: a real arithmetic bug hidden by ordinary tests
 
 Binary-search midpoint computation can overflow with unsigned integer indexes. An incorrect midpoint is `unchecked((low+high)/2u)`; a corrected midpoint for `low<=high` is `unchecked(low+(high-low)/2u)`. A dedicated Z3 test asserts `low<=high` and negates the midpoint-range guarantee. It should find SAT for the buggy expression and UNSAT for the corrected expression. The tests also check ordinary and boundary CLR examples. This is a direct, self-contained Z3 bit-vector proof test, **not** verification automatically extracted from the C# implementation. Compilation and execution remain unverified.
