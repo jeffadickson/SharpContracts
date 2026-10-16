@@ -156,7 +156,7 @@ jobs:
 
   ci-gate:
     name: CI Gate
-    if: always()
+    if: ${{ always() }}
     needs:
       - compile-all
       - build-test
@@ -166,21 +166,32 @@ jobs:
       - cli-smoke
     runs-on: ubuntu-latest
     steps:
-      - name: Require all upstream jobs to succeed
-        env:
-          JOB_RESULTS: ${{ join(needs.*.result, ',') }}
+      - name: Report all required job conclusions
         shell: bash
+        env:
+          COMPILE_ALL: ${{ needs.compile-all.result }}
+          BUILD_TEST: ${{ needs.build-test.result }}
+          SOLVER_TESTS: ${{ needs.solver-tests.result }}
+          VERIFIER_TESTS: ${{ needs.source-verification-tests.result }}
+          TUTORIAL_SMOKE: ${{ needs.tutorial-smoke.result }}
+          CLI_SMOKE: ${{ needs.cli-smoke.result }}
         run: |
-          echo "Upstream job results: $JOB_RESULTS"
-          IFS=',' read -ra statuses <<< "$JOB_RESULTS"
-          if [ "${#statuses[@]}" -ne 6 ]; then
-            echo "::error::Expected six upstream CI jobs"
-            exit 1
-          fi
-          for status in "${statuses[@]}"; do
-            if [ "$status" != "success" ]; then
-              echo "::error::CI dependency ended with status '$status'"
-              exit 1
+          failures=0
+          echo '### SharpContracts CI Gate' >> "$GITHUB_STEP_SUMMARY"
+          echo '| Required job | Conclusion |' >> "$GITHUB_STEP_SUMMARY"
+          echo '|---|---|' >> "$GITHUB_STEP_SUMMARY"
+          for entry in "compile-all:$COMPILE_ALL" "build-test:$BUILD_TEST" "solver-tests:$SOLVER_TESTS" "source-verification-tests:$VERIFIER_TESTS" "tutorial-smoke:$TUTORIAL_SMOKE" "cli-smoke:$CLI_SMOKE"; do
+            name="${entry%%:*}"
+            status="${entry#*:}"
+            echo "| $name | $status |" >> "$GITHUB_STEP_SUMMARY"
+            echo "$name: $status"
+            if [[ "$status" != "success" ]]; then
+              echo "::error title=Required CI job failed::$name finished '$status'"
+              failures=$((failures + 1))
             fi
           done
-          echo "All six upstream CI jobs succeeded"
+          if (( failures > 0 )); then
+            echo "### FAILED: $failures required job(s) did not succeed" >> "$GITHUB_STEP_SUMMARY"
+            exit 1
+          fi
+          echo '### PASSED: all required jobs succeeded' >> "$GITHUB_STEP_SUMMARY"
