@@ -143,6 +143,16 @@ jobs:
         run: dotnet build SharpContracts.Cli/SharpContracts.Cli.csproj --configuration Release
       - name: Prove safe byte promotion
         run: dotnet run --no-build --configuration Release --project SharpContracts.Cli -- examples/VerifiedByteAddition.cs Check
+      - name: Prove corrected annotated midpoint from C# source
+        run: dotnet run --no-build --configuration Release --project SharpContracts.Cli -- --inline examples/BinarySearchMidpoint.cs Correct
+      - name: Detect buggy annotated midpoint from C# source
+        shell: bash
+        run: |
+          set +e
+          dotnet run --no-build --configuration Release --project SharpContracts.Cli -- --inline examples/BinarySearchMidpoint.cs Buggy
+          code=$?
+          set -e
+          test "$code" -eq 1
       - name: Validate machine-readable proof report and exit codes
         run: python3 scripts/check_cli_report.py
       - name: Counterexample must exit nonzero (code 1)
