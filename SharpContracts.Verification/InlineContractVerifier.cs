@@ -87,12 +87,11 @@ public static class InlineContractVerifier
                     // SMT bit-vector division is total; C# division by zero throws.
                     // Admit only a nonzero compile-time UInt32 divisor until exceptional
                     // proof obligations are implemented.
-                    if(binary.OperatorKind==BinaryOperatorKind.Divide &&
-                       binary.RightOperand.ConstantValue.Value is not uint divisor)
-                        throw new NotSupportedException("Division requires a constant uint divisor");
-                    if(binary.OperatorKind==BinaryOperatorKind.Divide &&
-                       divisor==0u)
-                        throw new NotSupportedException("Division by zero is not verifiable");
+                    if(binary.OperatorKind==BinaryOperatorKind.Divide)
+                    {
+                        if(binary.RightOperand.ConstantValue.Value is not uint divisor || divisor==0u)
+                            throw new NotSupportedException("Division requires nonzero constant uint divisor");
+                    }
                     var l=Lower(binary.LeftOperand);
                     var r=Lower(binary.RightOperand);
                     if (binary.OperatorKind is BinaryOperatorKind.Equals) return ctx.MkEq(l,r);
