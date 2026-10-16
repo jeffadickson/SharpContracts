@@ -1,3 +1,7 @@
+# Build-stabilization update — complete compilation report
+
+GitHub Actions `compile-all` iterates over all nine SharpContracts projects, records individual pass/fail statuses to `artifacts/build/summary.log`, captures full compiler output in `artifacts/build/build.log`, and returns failure after completing the entire matrix if any build fails. Both logs are uploaded with `if: always()`. This is diagnostic infrastructure, not evidence that current code compiles.
+
 # CI build diagnostics
 
 The workflow now has a dedicated `compile-all` job that executes `dotnet build` for each production and test project, records the console output to a persisted log artifact, and prints `dotnet --info` for SDK diagnostics. Separate runtime, solver, verifier, CLI, and HTML checks remain. This adds diagnosability, not proof that builds pass.
