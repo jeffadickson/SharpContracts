@@ -1,3 +1,7 @@
+# SharpContracts — Milestone 16
+
+**Proof-soundness improvement:** the compiler-bound verifier checks that preconditions are jointly satisfiable before accepting an implication proof. Contradictory assumptions now fail rather than yield a misleading vacuous proof. Regression tests cover contradictory and feasible preconditions. Test execution remains unverified.
+
 # SharpContracts — Milestone 15
 
 **Milestone 14:** Fixed UINT64 literal lowering above long.MaxValue and added boundary proof/counterexample tests. Build and CI remain unverified.
