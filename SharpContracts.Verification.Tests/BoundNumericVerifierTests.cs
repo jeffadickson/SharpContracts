@@ -203,4 +203,52 @@ public sealed class BoundNumericVerifierTests
         Assert.Empty(report.Checks);
     }
 
+    [Fact]
+    public void UncheckedUnaryNegationCanOverflowAtIntMin()
+    {
+        const string source = """
+        class C {
+            void Check(int x) {
+                SharpContracts.Contract.Ensure(-x >= 0, "NEG", "negation is nonnegative");
+            }
+        }
+        """;
+        var report=BoundNumericVerifier.Verify(source,"Check");
+        Assert.Empty(report.Errors);
+        Assert.Equal(VerificationStatus.Counterexample,Assert.Single(report.Checks).Status);
+    }
+
+    [Fact]
+    public void NegationUnderNonpositiveNonminimumPreconditionIsSafe()
+    {
+        const string source = """
+        class C {
+            void Check(int x) {
+                SharpContracts.Contract.Require(x <= 0, "PRE1", "nonpositive");
+                SharpContracts.Contract.Require(x > int.MinValue, "PRE2", "exclude minimum");
+                SharpContracts.Contract.Ensure(-x >= 0, "POST", "negation is nonnegative");
+            }
+        }
+        """;
+        // Static field access (int.MinValue) is deliberately unsupported by this narrow verifier.
+        var report=BoundNumericVerifier.Verify(source,"Check");
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
+    }
+
+    [Fact]
+    public void CheckedUnaryNegationFailsClosed()
+    {
+        const string source = """
+        class C {
+            void Check(int x) {
+                SharpContracts.Contract.Ensure(checked(-x) >= 0, "POST", "checked negation");
+            }
+        }
+        """;
+        var report=BoundNumericVerifier.Verify(source,"Check");
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
+    }
+
 }
