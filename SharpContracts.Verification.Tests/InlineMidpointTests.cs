@@ -66,4 +66,58 @@ public sealed class InlineMidpointTests
         Assert.NotEmpty(result.Errors);
         Assert.Empty(result.Checks);
     }
+    [Fact]
+    public void ArbitraryDivisorIsRejectedRatherThanModeledAsTotal()
+    {
+        const string source = """
+            using SharpContracts;
+            class C {
+                [Verify] static uint M(uint a, uint d) {
+                    uint mid = a / d;
+                    Contract.Ensure(mid <= a, "P", "must fit");
+                    return mid;
+                }
+            }
+            """;
+        var report=InlineContractVerifier.Verify(source,"M");
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
+    }
+
+    [Fact]
+    public void DynamicMessageIsRejectedRatherThanExecutedDuringProof()
+    {
+        const string source = """
+            using SharpContracts;
+            class C {
+                static string Message() => "dynamic";
+                [Verify] static uint M(uint a) {
+                    Contract.Ensure(a == a, "P", Message());
+                    return a;
+                }
+            }
+            """;
+        var report=InlineContractVerifier.Verify(source,"M");
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
+    }
+
+    [Fact]
+    public void CheckedArithmeticIsRejected()
+    {
+        const string source = """
+            using SharpContracts;
+            class C {
+                [Verify] static uint M(uint a) {
+                    uint mid = checked(a + 1u);
+                    Contract.Ensure(mid >= a, "P", "increases");
+                    return mid;
+                }
+            }
+            """;
+        var report=InlineContractVerifier.Verify(source,"M");
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
+    }
+
 }
