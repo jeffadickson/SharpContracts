@@ -1,3 +1,7 @@
+## CI status visibility repair
+
+SC-068: Aggregate CI Gate must identify each required dependency and conclusion in the Actions job summary. Implemented in workflow; run verification pending. Legacy GitHub commit statuses and Actions check runs are distinct, so no-run conclusions must not be drawn from empty legacy status results.
+
 
 ## Unary operation progress
 
