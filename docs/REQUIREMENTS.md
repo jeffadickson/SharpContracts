@@ -1,3 +1,7 @@
+## Verification argument evaluation guard
+
+SC-066 (P0): Reject unmodeled argument evaluation in runtime contract calls. Current implementation requires compile-time constant messages and nonblank constant IDs; regression tests committed, execution unverified. Broader argument purity verification remains open.
+
 ## CI diagnostics correction
 
 SC-065 updated: the compile-all job must attempt all nine projects and must not stop after the first compiler failure. Status: workflow change committed; successful execution unverified. `build.log` and `summary.log` are retained in the artifact.
