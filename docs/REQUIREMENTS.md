@@ -1,3 +1,20 @@
+# Inline contract verification — implementation milestone
+
+Canonical design: [INLINE_CONTRACT_DESIGN.md](INLINE_CONTRACT_DESIGN.md).
+
+| ID | Requirement | Priority | Status |
+|---|---|---|---|
+| SC-069 | Opt-in C# verification with [Verify] metadata | P0 | Implemented in source |
+| SC-070 | Inline Require, Assert and Ensure contracts using typed C# expressions | P0 | Implemented in source for supported subset |
+| SC-071 | Extract proof obligations directly from the annotated C# method, not handwritten Z3 formulas | P0 | Implemented in source for UInt32 midpoint subset |
+| SC-072 | Translate local declaration and final return via Roslyn semantic operations | P0 | Implemented in source; broader control flow open |
+| SC-073 | Prove corrected midpoint and detect buggy midpoint from the same annotated file | P0 | xUnit and CLI CI gates committed; actual run unverified |
+| SC-074 | Reject unmodeled exceptions (zero divisor, checked arithmetic) and unsupported C# constructs | P0 | Implemented for modeled operations; soundness audit pending |
+| SC-075 | Support true method-level postconditions across every return/exception path | P0 | Open |
+| SC-076 | Integrate attribute-driven verification into compiler/IDE diagnostics automatically | P0 | Open; --inline CLI opt-in only |
+
+**Acceptance currently pending:** a successful compile and Z3 test run in GitHub Actions. Do not mark this entire feature production-complete until that evidence exists.
+
 ## Proof showcase — midpoint overflow
 
 A concrete C# binary-search midpoint bug and corrected version are recorded in `examples/BinarySearchMidpoint.cs`. `SharpContracts.Solver.Tests/MidpointProofTests.cs` contains concrete regression cases and a BV32 Z3 proof obligation over all unsigned input pairs with `low<=high`. The tutorial and main HTML page include a matching interactive example. Source/solver equivalence must be confirmed in CI. Automatic proof-condition extraction for division and local state is still open.
