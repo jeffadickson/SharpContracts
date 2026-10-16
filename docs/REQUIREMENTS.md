@@ -1,3 +1,8 @@
+
+## Unary operation progress
+
+Unary negation is supported in the restricted unchecked bit-vector verifier; checked unary negation is rejected. Regression tests added, CI unverified.
+
 ## CI aggregate quality gate
 
 SC-067 (P0): A single CI result must enforce successful completion of all six compilation, runtime, solver, verifier, CLI and HTML checks. Configured as `ci-gate`, awaiting verified execution. No branch-protection rule has been applied.
