@@ -1,3 +1,7 @@
+# Verification soundness fix
+
+Compiler-bound verification now rejects dynamic contract message expressions and blank IDs, preventing unmodeled calls in contract arguments from being silently treated as pure. Tests are committed but not executed locally; passing CI remains unconfirmed.
+
 # CI stabilization — complete build diagnostics
 
 The `compile-all` job now attempts **all nine projects**, even if an earlier build fails. It captures `build.log` and `summary.log`, uploads both as the `sharpcontracts-build-log` artifact, and fails the workflow if any project fails. This fixes early termination of diagnostic collection; passing CI has **not** been confirmed.
