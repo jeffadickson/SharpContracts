@@ -1,16 +1,32 @@
+using SharpContracts;
+
 namespace SharpContracts.Examples;
 
 /// <summary>
-/// Binary search midpoint arithmetic for unsigned 32-bit offsets.
-/// Precondition: low &lt;= high. Both methods operate in unchecked arithmetic.
+/// Inline-verifiable binary-search midpoint implementations.
+/// Explicitly models unchecked UInt32 arithmetic; valid interval is low less than or equal to high.
 /// </summary>
 public static class BinarySearchMidpoint
 {
-    /// <summary>Incorrect: low + high can wrap before division by two.</summary>
-    public static uint Buggy(uint low, uint high) =>
-        unchecked((low + high) / 2u);
+    /// <summary>Buggy because low + high can overflow before unsigned division.</summary>
+    [Verify]
+    public static uint Buggy(uint low, uint high)
+    {
+        Contract.Require(low <= high, "MID-PRE", "Valid search interval");
+        uint midpoint = unchecked((low + high) / 2u);
+        Contract.Ensure(midpoint >= low, "MID-LOW", "Midpoint cannot be below low");
+        Contract.Ensure(midpoint <= high, "MID-HIGH", "Midpoint cannot exceed high");
+        return midpoint;
+    }
 
-    /// <summary>Correct for low &lt;= high: subtraction cannot underflow, and addition cannot overflow.</summary>
-    public static uint Correct(uint low, uint high) =>
-        unchecked(low + (high - low) / 2u);
+    /// <summary>Correct for all UInt32 low and high with low less than or equal to high.</summary>
+    [Verify]
+    public static uint Correct(uint low, uint high)
+    {
+        Contract.Require(low <= high, "MID-PRE", "Valid search interval");
+        uint midpoint = unchecked(low + (high - low) / 2u);
+        Contract.Assert(midpoint >= low, "MID-LOW", "Midpoint cannot be below low");
+        Contract.Ensure(midpoint <= high, "MID-HIGH", "Midpoint cannot exceed high");
+        return midpoint;
+    }
 }
