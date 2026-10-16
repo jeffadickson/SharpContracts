@@ -97,4 +97,42 @@ public sealed class BoundNumericVerifierTests
         Assert.Equal(VerificationStatus.Counterexample,Assert.Single(report.Checks).Status);
     }
 
+    [Fact]
+    public void DecimalContractCannotBeMistakenForBitVector()
+    {
+        const string source = """
+        class C {
+            void Check(decimal x) {
+                SharpContracts.Contract.Ensure(x + 1m > x, "DECIMAL", "monotonic");
+            }
+        }
+        """;
+        var report=BoundNumericVerifier.Verify(source,"Check");
+        Assert.NotEmpty(report.Errors);
+        Assert.False(report.AllProved);
+        Assert.Empty(report.Checks);
+    }
+
+    [Fact]
+    public void CustomNumericOperatorCannotBeAssumedBuiltIn()
+    {
+        const string source = """
+        struct Voltage {
+            public int Millivolts;
+            public static Voltage operator +(Voltage x, Voltage y) => x;
+            public static bool operator >(Voltage x, Voltage y) => true;
+            public static bool operator <(Voltage x, Voltage y) => false;
+        }
+        class C {
+            void Check(Voltage x, Voltage y) {
+                SharpContracts.Contract.Ensure(x + y > x, "CUSTOM", "operator contract");
+            }
+        }
+        """;
+        var report=BoundNumericVerifier.Verify(source,"Check");
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
+        Assert.False(report.AllProved);
+    }
+
 }
