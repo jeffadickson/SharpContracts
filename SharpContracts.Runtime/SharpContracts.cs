@@ -16,6 +16,8 @@ public static class Contract
 {
     public static void Require(bool condition, string id, string message) => Check(condition, ContractKind.Precondition, id, message);
     public static void Ensure(bool condition, string id, string message) => Check(condition, ContractKind.Postcondition, id, message);
+    /// <summary>Checks an intermediate property at the current execution point.</summary>
+    public static void Assert(bool condition, string id, string message) => Check(condition, ContractKind.Postcondition, id, message);
     public static void Invariant(bool condition, string id, string message) => Check(condition, ContractKind.Invariant, id, message);
     public static T Old<T>(T value) => value; // Value copy, not a deep snapshot of reference objects.
     private static void Check(bool condition, ContractKind kind, string id, string message)
