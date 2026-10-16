@@ -1,3 +1,16 @@
+# SharpContracts — Inline C# Contracts
+
+**New primary example:** [annotated binary-search midpoint source](examples/BinarySearchMidpoint.cs) verified without handwritten SMT expressions.
+
+```sh
+dotnet run --project SharpContracts.Cli -- --inline examples/BinarySearchMidpoint.cs Correct
+dotnet run --project SharpContracts.Cli -- --inline --json examples/BinarySearchMidpoint.cs Buggy
+```
+
+The runtime library now provides `[Verify]` and `Contract.Assert` alongside `Require` and `Ensure`. The experimental inline Roslyn-to-Z3 backend handles the documented UInt32 subset. Its tests read the same annotated source file. **CI compilation and solver execution remain unconfirmed.**
+
+Read the [authoring and verification design](docs/INLINE_CONTRACT_DESIGN.md) and [interactive tutorial](tutorial/index.html).
+
 ## Featured example: binary-search midpoint overflow
 
 [Interactive walkthrough](tutorial/index.html#midpoint-lesson) · [C# sample](examples/BinarySearchMidpoint.cs) · [Z3 proof regression](SharpContracts.Solver.Tests/MidpointProofTests.cs)
