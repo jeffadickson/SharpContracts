@@ -160,8 +160,11 @@ public static class BoundNumericVerifier
         {
             if(unary.OperatorMethod is not null) throw new NotSupportedException("Custom unary operator");
             var operand=Lower(unary.Operand,c,vars);
+            if (unary.IsChecked)
+                throw new NotSupportedException("Checked unary arithmetic requires overflow verification");
             return unary.OperatorKind switch {
                 UnaryOperatorKind.Not when operand is BoolExpr b=>c.MkNot(b),
+                UnaryOperatorKind.Minus when operand is BitVecExpr bv=>c.MkBVNeg(bv),
                 _=>throw new NotSupportedException("Unary operator unsupported")
             };
         }
