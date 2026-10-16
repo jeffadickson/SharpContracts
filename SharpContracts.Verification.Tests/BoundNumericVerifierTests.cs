@@ -65,4 +65,36 @@ public sealed class BoundNumericVerifierTests
         Assert.NotEmpty(report.Errors);
         Assert.Empty(report.Checks);
     }
+    [Fact]
+    public void ULongMaxLiteralDoesNotOverflowHostConversion()
+    {
+        const string source = """
+        class C {
+            void Check(ulong x) {
+                SharpContracts.Contract.Ensure(x <= 18446744073709551615UL,
+                    "ULONG-MAX", "All UInt64 values are at most UInt64.MaxValue");
+            }
+        }
+        """;
+        var report=BoundNumericVerifier.Verify(source,"Check");
+        Assert.Empty(report.Errors);
+        Assert.True(report.AllProved);
+    }
+
+    [Fact]
+    public void ULongMaxLiteralCanProvideCounterexample()
+    {
+        const string source = """
+        class C {
+            void Check(ulong x) {
+                SharpContracts.Contract.Ensure(x < 18446744073709551615UL,
+                    "ULONG-STRICT", "All values are below UInt64.MaxValue");
+            }
+        }
+        """;
+        var report=BoundNumericVerifier.Verify(source,"Check");
+        Assert.Empty(report.Errors);
+        Assert.Equal(VerificationStatus.Counterexample,Assert.Single(report.Checks).Status);
+    }
+
 }
