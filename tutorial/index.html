@@ -70,4 +70,23 @@ const good=low+(high-low)/2n;
 o.textContent='Buggy: '+bad+' '+(bad<low||bad>high?'(OUT OF BOUNDS)':'(in bounds)')+'\nCorrect: '+good+' (in bounds)';
 }
 showMidpoint();
-</script></body></html>
+</script><section class="card" id="inline-contracts">
+<h2>Inline contracts: prove the real C# method</h2>
+<p>Opt in with <code>[Verify]</code>. The method contains both its implementation and its ordinary C# contract expressions. The new Roslyn-to-Z3 engine extracts the proof conditions from that method; no separate handwritten solver test formula is needed.</p>
+<pre>using SharpContracts;
+
+[Verify]
+public static uint Correct(uint low, uint high)
+{
+    Contract.Require(low &lt;= high, "MID-PRE", "Valid interval");
+    uint midpoint = unchecked(low + (high - low) / 2u);
+    Contract.Assert(midpoint &gt;= low, "MID-LOW", "Lower bound");
+    Contract.Ensure(midpoint &lt;= high, "MID-HIGH", "Upper bound");
+    return midpoint;
+}</pre>
+<p>Change the initializer to <code>unchecked((low + high) / 2u)</code> and the proof engine should find an unsigned-overflow counterexample.</p>
+<pre>dotnet run --project SharpContracts.Cli -- --inline examples/BinarySearchMidpoint.cs Correct
+dotnet run --project SharpContracts.Cli -- --inline --json examples/BinarySearchMidpoint.cs Buggy</pre>
+<p><b>Execution status:</b> tests and CLI gates are committed but no green .NET CI run has been confirmed. This browser page illustrates the example; actual Z3 runs in .NET. The initial verifier supports a restricted uint subset and checks inline Ensures at their source location.</p>
+<p><a href="../docs/INLINE_CONTRACT_DESIGN.md">Verification design and limitations</a></p>
+</section></body></html>
