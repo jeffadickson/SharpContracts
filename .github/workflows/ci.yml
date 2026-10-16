@@ -153,3 +153,34 @@ jobs:
           code=$?
           set -e
           test "$code" -eq 1
+
+  ci-gate:
+    name: CI Gate
+    if: always()
+    needs:
+      - compile-all
+      - build-test
+      - solver-tests
+      - source-verification-tests
+      - tutorial-smoke
+      - cli-smoke
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require all upstream jobs to succeed
+        env:
+          JOB_RESULTS: ${{ join(needs.*.result, ',') }}
+        shell: bash
+        run: |
+          echo "Upstream job results: $JOB_RESULTS"
+          IFS=',' read -ra statuses <<< "$JOB_RESULTS"
+          if [ "${#statuses[@]}" -ne 6 ]; then
+            echo "::error::Expected six upstream CI jobs"
+            exit 1
+          fi
+          for status in "${statuses[@]}"; do
+            if [ "$status" != "success" ]; then
+              echo "::error::CI dependency ended with status '$status'"
+              exit 1
+            fi
+          done
+          echo "All six upstream CI jobs succeeded"
