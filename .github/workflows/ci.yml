@@ -16,8 +16,17 @@ jobs:
       - name: Restore
         run: dotnet restore SharpContracts.Tests/SharpContracts.Tests.csproj
       - name: Test runtime and compile analyzer
-        run: dotnet test SharpContracts.Tests/SharpContracts.Tests.csproj --no-restore --configuration Release
+        run: dotnet test SharpContracts.Tests/SharpContracts.Tests.csproj --configuration Release --logger 'trx;LogFileName=runtime.trx' --results-directory artifacts/test-results/runtime
+      - name: Upload runtime results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharpcontracts-runtime-test-results
+          path: artifacts/test-results/runtime/**/*.trx
+          if-no-files-found: ignore
+          retention-days: 14
       - name: Build runnable example
+
         run: dotnet build SharpContracts.Demo/SharpContracts.Demo.csproj --configuration Release
 
   solver-tests:
@@ -30,7 +39,16 @@ jobs:
       - name: Native Z3 Linux runtime dependency
         run: sudo apt-get update && sudo apt-get install -y libgomp1
       - name: Run actual Z3 solver tests
-        run: dotnet test SharpContracts.Solver.Tests/SharpContracts.Solver.Tests.csproj --configuration Release
+        run: dotnet test SharpContracts.Solver.Tests/SharpContracts.Solver.Tests.csproj --configuration Release --logger 'trx;LogFileName=solver.trx' --results-directory artifacts/test-results/solver
+
+      - name: Upload solver results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharpcontracts-solver-test-results
+          path: artifacts/test-results/solver/**/*.trx
+          if-no-files-found: ignore
+          retention-days: 14
 
   source-verification-tests:
     runs-on: ubuntu-latest
@@ -40,7 +58,16 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - run: sudo apt-get update && sudo apt-get install -y libgomp1
-      - run: dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj --configuration Release --logger 'console;verbosity=normal'
+      - run: dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj --configuration Release --logger 'trx;LogFileName=verification.trx' --results-directory artifacts/test-results/verification
+
+      - name: Upload verification results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharpcontracts-verification-test-results
+          path: artifacts/test-results/verification/**/*.trx
+          if-no-files-found: ignore
+          retention-days: 14
 
   tutorial-smoke:
     runs-on: ubuntu-latest
