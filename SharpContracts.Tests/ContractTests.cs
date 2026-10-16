@@ -66,4 +66,14 @@ public sealed class ContractTests
         var error = Assert.Throws<ContractViolationException>(() => new Account("A", -1m));
         Assert.Equal("ACC-002", error.ContractId);
     }
+    [Fact]
+    public void InlineAssertThrowsAtRuntimeOnFailure()
+    {
+        Contract.Assert(true, "ASSERT-PASS", "valid");
+        var exception = Assert.Throws<ContractViolationException>(
+            () => Contract.Assert(false, "ASSERT-FAIL", "invalid"));
+        Assert.Equal("ASSERT-FAIL", exception.ContractId);
+        Assert.Equal(ContractKind.Postcondition, exception.Kind);
+    }
+
 }
