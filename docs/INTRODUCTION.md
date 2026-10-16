@@ -1,3 +1,9 @@
+# Milestone 16 — avoiding vacuous proofs
+
+Z3 considers `P => Q` true whenever `P` is impossible. For developer-facing contracts that is dangerous: `Require(x > 5)` and `Require(x < 0)` jointly admit no values, so even an arbitrary postcondition follows vacuously. The compiler-bound verifier now checks precondition satisfiability before verifying the first postcondition and rejects UNSAT or UNKNOWN feasibility. Regression tests cover contradictory and feasible preconditions.
+
+The mathematical implication remains formally valid, but SharpContracts reports an inconsistent specification rather than a useful program proof. Builds and CI results remain unverified.
+
 # Milestone 15 — solver timeout and numeric-model guards
 
 BoundNumericVerifier now limits each Z3 query to 5 seconds. Verification results can remain Unknown when Z3 times out; Unknown is not proof. Numeric conversion and comparison paths reject unsupported representations rather than silently lowering decimal, floating-point, or custom operator semantics to integer bit-vectors. Negative regression tests cover decimal and custom overloaded operators. Compilation and CI have not been confirmed.
