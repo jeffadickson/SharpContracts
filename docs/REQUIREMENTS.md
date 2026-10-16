@@ -1,3 +1,7 @@
+## CI diagnostic artifact milestone
+
+Added TRX output and failure-tolerant artifact collection to runtime, solver, and verification test jobs. This enables independent inspection of test failures without inferring success from committed source. Status: CI configured; green run unverified.
+
 ## Milestone 18 — verified-report CI gate
 
 SC-064 (P0): CI must parse JSON output and verify version, classification and exit status for positive and negative proof cases. Implemented in workflow/scripts; execution still unverified.
