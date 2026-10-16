@@ -1,3 +1,7 @@
+## Milestone 18 — verified-report CI gate
+
+SC-064 (P0): CI must parse JSON output and verify version, classification and exit status for positive and negative proof cases. Implemented in workflow/scripts; execution still unverified.
+
 ## Milestone 17 — structured report contract
 
 Added `ProofReport` schema v1, distinct outcome taxonomy, JSON CLI flag, and report unit tests. SC-062 structured machine-readable reporting: implementation committed; CI verification outstanding. SC-063 distinct exit codes for UNKNOWN and contradictory assumptions: implementation committed.
