@@ -1,3 +1,7 @@
+# Milestone 15 — solver timeout and numeric-model guards
+
+BoundNumericVerifier now limits each Z3 query to 5 seconds. Verification results can remain Unknown when Z3 times out; Unknown is not proof. Numeric conversion and comparison paths reject unsupported representations rather than silently lowering decimal, floating-point, or custom operator semantics to integer bit-vectors. Negative regression tests cover decimal and custom overloaded operators. Compilation and CI have not been confirmed.
+
 # Milestone 14: UInt64 literal correctness
 
 The bound numeric verifier previously converted integer literals through signed Int64 before creating Z3 bit vectors. This fails for UInt64 literals above long.MaxValue. Lowering now preserves the full unsigned 64-bit pattern. Two new regression tests use ulong.MaxValue (18446744073709551615UL) for proof and counterexample checks. These tests have not yet been executed successfully in CI.
