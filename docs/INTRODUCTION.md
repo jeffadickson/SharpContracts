@@ -1,3 +1,7 @@
+# Source-verification hardening: contract arguments
+
+The compiler-bound verifier now requires both a nonblank constant contract ID and a compile-time constant message. A dynamic message such as `GetMessage()` may invoke arbitrary C# code, which the parameter-only proof model does not execute; it must therefore be rejected rather than silently omitted. Regression tests cover dynamic messages and blank IDs. Build/CI success is not confirmed.
+
 # Build-stabilization update — complete compilation report
 
 GitHub Actions `compile-all` iterates over all nine SharpContracts projects, records individual pass/fail statuses to `artifacts/build/summary.log`, captures full compiler output in `artifacts/build/build.log`, and returns failure after completing the entire matrix if any build fails. Both logs are uploaded with `if: always()`. This is diagnostic infrastructure, not evidence that current code compiles.
