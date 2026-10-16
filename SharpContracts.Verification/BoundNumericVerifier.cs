@@ -122,8 +122,22 @@ public static class BoundNumericVerifier
             var d=NumericTypeDescriptor.FromSymbol(lit.Type);
             if(d.Width is null || d.Kind is not (NumericModelKind.SignedBitVector or NumericModelKind.UnsignedBitVector))
                 throw new NotSupportedException("Unsupported literal");
-            long number=Convert.ToInt64(lit.ConstantValue.Value,System.Globalization.CultureInfo.InvariantCulture);
-            return c.MkBV(unchecked((ulong)number),(uint)d.Width.Value);
+            // Converting an unsigned 64-bit literal through Int64 throws for values above long.MaxValue.
+            // Preserve its raw two's-complement bit pattern instead.
+            ulong bits = lit.ConstantValue.Value switch
+            {
+                ulong n => n,
+                long n => unchecked((ulong)n),
+                uint n => n,
+                int n => unchecked((ulong)n),
+                ushort n => n,
+                short n => unchecked((ulong)n),
+                byte n => n,
+                sbyte n => unchecked((ulong)n),
+                char n => n,
+                _ => throw new NotSupportedException("Unsupported integer literal value")
+            };
+            return c.MkBV(bits,(uint)d.Width.Value);
         }
         if(op is IUnaryOperation unary)
         {
