@@ -1,3 +1,7 @@
+# Milestone 17 — structured proof reports
+
+Use `ProofReport.From(BoundNumericVerifier.Verify(source, method))` to obtain a schema-versioned result and `ToJson()` to serialize it. Outcomes: Proved, Counterexample, Unknown, InconsistentAssumptions, Unsupported, NoContracts. CLI option `--json` emits the report. Exit codes: 0/1/3/4 respectively, with 2 for unsupported/no contracts. Machine-readable results are suitable for future CI quality gates; no green build has been confirmed.
+
 # Milestone 16 — avoiding vacuous proofs
 
 Z3 considers `P => Q` true whenever `P` is impossible. For developer-facing contracts that is dangerous: `Require(x > 5)` and `Require(x < 0)` jointly admit no values, so even an arbitrary postcondition follows vacuously. The compiler-bound verifier now checks precondition satisfiability before verifying the first postcondition and rejects UNSAT or UNKNOWN feasibility. Regression tests cover contradictory and feasible preconditions.
