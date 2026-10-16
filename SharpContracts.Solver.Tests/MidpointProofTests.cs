@@ -17,7 +17,7 @@ public sealed class MidpointProofTests
     {
         Assert.Equal(15u, Buggy(10u, 20u));
         Assert.Equal(15u, Correct(10u, 20u));
-        Assert.Equal(352_516_352u, Buggy(Low, High));
+        Assert.Equal(1_352_516_352u, Buggy(Low, High));
         Assert.Equal(3_500_000_000u, Correct(Low, High));
         Assert.True(Buggy(Low, High) < Low);
     }
