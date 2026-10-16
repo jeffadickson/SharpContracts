@@ -1,3 +1,7 @@
+# SharpContracts — Milestone 17
+
+ProofReport adds versioned JSON results and a richer CLI exit-code contract: 0 proved, 1 counterexample, 2 unsupported/no contracts, 3 unknown, 4 inconsistent assumptions. Use `dotnet run --project SharpContracts.Cli -- --json examples/VerifiedByteAddition.cs Check`. This remains unverified by a successful .NET build.
+
 # SharpContracts — Milestone 16
 
 **Proof-soundness improvement:** the compiler-bound verifier checks that preconditions are jointly satisfiable before accepting an implication proof. Contradictory assumptions now fail rather than yield a misleading vacuous proof. Regression tests cover contradictory and feasible preconditions. Test execution remains unverified.
