@@ -1,3 +1,7 @@
+# CI stabilization — complete build diagnostics
+
+The `compile-all` job now attempts **all nine projects**, even if an earlier build fails. It captures `build.log` and `summary.log`, uploads both as the `sharpcontracts-build-log` artifact, and fails the workflow if any project fails. This fixes early termination of diagnostic collection; passing CI has **not** been confirmed.
+
 # CI compilation gate
 
 A dedicated `compile-all` GitHub Actions job now builds all nine production/test `.csproj` projects on .NET 8 and uploads `sharpcontracts-build-log` (14 days) even if compilation fails. This exposes compile errors before solver-runtime investigation. Successful CI execution is still unverified.
