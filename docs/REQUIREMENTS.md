@@ -1,3 +1,7 @@
+## Milestone 17 — structured report contract
+
+Added `ProofReport` schema v1, distinct outcome taxonomy, JSON CLI flag, and report unit tests. SC-062 structured machine-readable reporting: implementation committed; CI verification outstanding. SC-063 distinct exit codes for UNKNOWN and contradictory assumptions: implementation committed.
+
 ## Milestone 16 — contract feasibility
 
 SC-061 (P0): Check joint precondition satisfiability and reject vacuous proof success. Implementation and regression tests committed; CI execution unverified.
