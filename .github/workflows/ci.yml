@@ -65,6 +65,8 @@ jobs:
         run: dotnet build SharpContracts.Cli/SharpContracts.Cli.csproj --configuration Release
       - name: Prove safe byte promotion
         run: dotnet run --no-build --configuration Release --project SharpContracts.Cli -- examples/VerifiedByteAddition.cs Check
+      - name: Validate machine-readable proof report and exit codes
+        run: python3 scripts/check_cli_report.py
       - name: Counterexample must exit nonzero (code 1)
         shell: bash
         run: |
