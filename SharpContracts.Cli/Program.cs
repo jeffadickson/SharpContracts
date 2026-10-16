@@ -1,37 +1,33 @@
 using SharpContracts.Verification;
-using SharpContracts.Solver;
 
-if (args.Length != 2 || args[0] is "--help" or "-h")
+bool json = args.Length == 3 && args[0] == "--json";
+int offset = json ? 1 : 0;
+if(args.Length-offset != 2)
 {
-    Console.Error.WriteLine("Usage: dotnet run --project SharpContracts.Cli -- <source.cs> <methodName>");
+    Console.Error.WriteLine("Usage: SharpContracts.Cli [--json] <source.cs> <methodName>");
     return 2;
 }
-
 try
 {
-    string source = await File.ReadAllTextAsync(args[0]);
-    MethodVerification report = BoundNumericVerifier.Verify(source, args[1]);
-    foreach (string error in report.Errors)
-        Console.Error.WriteLine("UNSUPPORTED/ERROR: " + error);
-    foreach (var check in report.Checks)
+    string source=await File.ReadAllTextAsync(args[offset]);
+    ProofReport report=ProofReport.From(BoundNumericVerifier.Verify(source,args[offset+1]));
+    if(json)
+        Console.WriteLine(report.ToJson());
+    else
     {
-        Console.WriteLine($"{args[0]}:{check.Line}: {check.ContractId}: {check.Status}");
-        if (check.Counterexample is not null)
-            Console.WriteLine("Counterexample: " + check.Counterexample);
-        if (check.Reason is not null)
-            Console.WriteLine("Reason: " + check.Reason);
+        Console.WriteLine("Outcome: "+report.Outcome);
+        foreach(var error in report.Diagnostics) Console.Error.WriteLine("DIAGNOSTIC: "+error);
+        foreach(var check in report.Checks)
+        {
+            Console.WriteLine($"{args[offset]}:{check.Line}: {check.ContractId}: {check.Status}");
+            if(check.Counterexample is not null) Console.WriteLine(check.Counterexample);
+            if(check.Reason is not null) Console.WriteLine(check.Reason);
+        }
     }
-    if (report.AllProved)
-    {
-        Console.WriteLine("ALL CHECKS PROVED under the supported bit-vector model.");
-        return 0;
-    }
-    if (report.Errors.Count != 0 || report.Checks.Count == 0)
-        return 2; // unsupported, invalid, or no contracts
-    return 1; // counterexample or unknown
+    return report.ExitCode;
 }
-catch (Exception e) when (e is IOException or UnauthorizedAccessException)
+catch(Exception ex) when(ex is IOException or UnauthorizedAccessException)
 {
-    Console.Error.WriteLine(e.Message);
+    Console.Error.WriteLine(ex.Message);
     return 2;
 }
