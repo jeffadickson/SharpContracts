@@ -1,3 +1,7 @@
+# SharpContracts — Milestone 18: CI report validation
+
+The CI CLI smoke job now runs `scripts/check_cli_report.py`, which invokes the compiled .NET verification CLI and validates JSON schema version, outcome, nonempty checks, and exit codes for both a proof and an overflow counterexample. **Workflow execution is not yet confirmed**, so CI is not claimed green.
+
 # SharpContracts — Milestone 17
 
 ProofReport adds versioned JSON results and a richer CLI exit-code contract: 0 proved, 1 counterexample, 2 unsupported/no contracts, 3 unknown, 4 inconsistent assumptions. Use `dotnet run --project SharpContracts.Cli -- --json examples/VerifiedByteAddition.cs Check`. This remains unverified by a successful .NET build.
