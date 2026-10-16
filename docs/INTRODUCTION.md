@@ -1,3 +1,7 @@
+## Case study: a real arithmetic bug hidden by ordinary tests
+
+Binary-search midpoint computation can overflow with unsigned integer indexes. An incorrect midpoint is `unchecked((low+high)/2u)`; a corrected midpoint for `low<=high` is `unchecked(low+(high-low)/2u)`. A dedicated Z3 test asserts `low<=high` and negates the midpoint-range guarantee. It should find SAT for the buggy expression and UNSAT for the corrected expression. The tests also check ordinary and boundary CLR examples. This is a direct, self-contained Z3 bit-vector proof test, **not** verification automatically extracted from the C# implementation. Compilation and execution remain unverified.
+
 ## Diagnosing CI Gate status
 
 The aggregate gate now reads each `needs.<job>.result` separately and reports the job name plus GitHub Actions conclusion in `$GITHUB_STEP_SUMMARY`. A failed, cancelled or skipped dependency makes the gate fail. Open the CI Gate job summary to identify which upstream job to inspect. GitHub Actions checks are separate from legacy GitHub commit statuses; absence of legacy statuses cannot establish Actions availability or health.
