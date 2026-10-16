@@ -1,3 +1,7 @@
+# Milestone 14: UInt64 literal correctness
+
+The bound numeric verifier previously converted integer literals through signed Int64 before creating Z3 bit vectors. This fails for UInt64 literals above long.MaxValue. Lowering now preserves the full unsigned 64-bit pattern. Two new regression tests use ulong.MaxValue (18446744073709551615UL) for proof and counterexample checks. These tests have not yet been executed successfully in CI.
+
 # Milestone 13 — differential verification against C# execution
 
 Added `ClrDifferentialTests` to the verification test project. Tests compare Z3 outcomes with compiled C# behavior for signed 32-bit overflow, unsigned 64-bit wraparound, exhaustive byte addition promotion (256 × 256 input pairs), and checked overflow exceptions.
