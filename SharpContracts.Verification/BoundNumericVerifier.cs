@@ -77,6 +77,13 @@ public static class BoundNumericVerifier
                 if(invocation.TargetMethod.Name=="Require") solver.Assert(predicate);
                 else
                 {
+                    // An unsatisfiable precondition set proves implications only vacuously.
+                    // Refuse to classify such a contract as an actionable proof.
+                    var feasibility=solver.Check();
+                    if(feasibility==Status.UNSATISFIABLE)
+                        throw new NotSupportedException("Inconsistent preconditions: no permitted inputs");
+                    if(feasibility==Status.UNKNOWN)
+                        throw new NotSupportedException("Precondition feasibility unknown: "+solver.ReasonUnknown);
                     hasEnsure=true;
                     solver.Push();
                     solver.Assert(ctx.MkNot(predicate));
