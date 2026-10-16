@@ -1,3 +1,7 @@
+## Milestone 14
+
+Fixed unsigned 64-bit literal lowering and added two regression tests. Build and test execution are still unverified. Numeric semantics remain partially implemented.
+
 ## Milestone 13 — differential correctness tests
 
 Added CLR-versus-Z3 differential test suite for integer boundaries and exhaustive byte-pair promotion. CI now prints normal test output. Requirements for end-to-end semantic validation are partially addressed; successful .NET build and test runs remain unverified.
