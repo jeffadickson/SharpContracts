@@ -170,4 +170,37 @@ public sealed class BoundNumericVerifierTests
         Assert.True(report.AllProved);
     }
 
+    [Fact]
+    public void DynamicMessageCannotBeSilentlyIgnored()
+    {
+        const string source = """
+        class C {
+            static string GetMessage() => "side effect possible";
+            void Check(int x) {
+                SharpContracts.Contract.Ensure(x == x, "POST", GetMessage());
+            }
+        }
+        """;
+        var report=BoundNumericVerifier.Verify(source,"Check");
+        Assert.False(report.AllProved);
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
+    }
+
+    [Fact]
+    public void BlankContractIdCannotBeProved()
+    {
+        const string source = """
+        class C {
+            void Check(int x) {
+                SharpContracts.Contract.Ensure(x == x, "   ", "unusable identifier");
+            }
+        }
+        """;
+        var report=BoundNumericVerifier.Verify(source,"Check");
+        Assert.False(report.AllProved);
+        Assert.NotEmpty(report.Errors);
+        Assert.Empty(report.Checks);
+    }
+
 }
