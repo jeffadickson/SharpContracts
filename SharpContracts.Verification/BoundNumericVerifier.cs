@@ -42,6 +42,9 @@ public static class BoundNumericVerifier
         {
             using var ctx=new Context();
             using var solver=ctx.MkSolver();
+            using var options=ctx.MkParams();
+            options.Add("timeout",5000u);
+            solver.Parameters=options;
             var parameters = new Dictionary<ISymbol,BitVecExpr>(SymbolEqualityComparer.Default);
             foreach(var p in method[0].ParameterList.Parameters)
             {
@@ -103,11 +106,14 @@ public static class BoundNumericVerifier
             var operand=Lower(convert.Operand,c,vars);
             if(convert.Type is null || operand is not BitVecExpr bv)
                 throw new NotSupportedException("Unsupported conversion");
-            if(convert.OperatorMethod is not null || !convert.Conversion.IsNumeric && !convert.Conversion.IsIdentity)
+            if(convert.OperatorMethod is not null || (!convert.Conversion.IsNumeric && !convert.Conversion.IsIdentity))
                 throw new NotSupportedException("User-defined or nonnumeric conversion");
             var source=NumericTypeDescriptor.FromSymbol(convert.Operand.Type!);
             var dest=NumericTypeDescriptor.FromSymbol(convert.Type);
-            if(source.Width is null || dest.Width is null) throw new NotSupportedException("Conversion type");
+            if(source.Kind is not (NumericModelKind.SignedBitVector or NumericModelKind.UnsignedBitVector) ||
+               dest.Kind is not (NumericModelKind.SignedBitVector or NumericModelKind.UnsignedBitVector) ||
+               source.Width is null || dest.Width is null)
+                throw new NotSupportedException("Conversion type unsupported");
             uint from=(uint)source.Width.Value, to=(uint)dest.Width.Value;
             if(convert.IsChecked) throw new NotSupportedException("Checked conversions require exception verification");
             if(to==from) return bv;
@@ -164,6 +170,8 @@ public static class BoundNumericVerifier
             if(left is not BitVecExpr a || right is not BitVecExpr b)
                 throw new NotSupportedException("Expected bit-vector operands");
             var type=NumericTypeDescriptor.FromSymbol(binary.LeftOperand.Type!);
+            if (type.Kind is not (NumericModelKind.SignedBitVector or NumericModelKind.UnsignedBitVector))
+                throw new NotSupportedException("Comparison requires supported integral type");
             bool signed=type.Kind==NumericModelKind.SignedBitVector;
             return binary.OperatorKind switch {
                 BinaryOperatorKind.Add=>c.MkBVAdd(a,b),
