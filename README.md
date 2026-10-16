@@ -1,3 +1,8 @@
+
+## Unary negation increment
+
+The Roslyn-bound verifier now lowers unchecked unary minus to Z3 bit-vector negation and rejects checked unary negation until exceptional behavior is modeled. Regression tests cover counterexamples and unsupported syntax. Build/CI results are not confirmed.
+
 # CI aggregate gate
 
 The `CI Gate` job now runs after all six workflow jobs and fails if any compilation, test, CLI, solver or tutorial job failed, was skipped or was cancelled. It is a single status-check target for future branch protection. GitHub Actions run status remains unverified.
