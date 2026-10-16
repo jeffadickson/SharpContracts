@@ -1,3 +1,7 @@
+## CI diagnostics correction
+
+SC-065 updated: the compile-all job must attempt all nine projects and must not stop after the first compiler failure. Status: workflow change committed; successful execution unverified. `build.log` and `summary.log` are retained in the artifact.
+
 ## Build stabilization increment
 
 SC-065: Explicitly compile every production and test project in CI and retain compiler output as an artifact (implemented in workflow; successful execution unverified). All previous requirements remain open until green build evidence exists.
