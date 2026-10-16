@@ -1,3 +1,7 @@
+## CI aggregate quality gate
+
+SC-067 (P0): A single CI result must enforce successful completion of all six compilation, runtime, solver, verifier, CLI and HTML checks. Configured as `ci-gate`, awaiting verified execution. No branch-protection rule has been applied.
+
 ## Verification argument evaluation guard
 
 SC-066 (P0): Reject unmodeled argument evaluation in runtime contract calls. Current implementation requires compile-time constant messages and nonblank constant IDs; regression tests committed, execution unverified. Broader argument purity verification remains open.
