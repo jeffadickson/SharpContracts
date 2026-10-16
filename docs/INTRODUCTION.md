@@ -1,3 +1,7 @@
+# CI troubleshooting — test evidence
+
+The three .NET test jobs now emit TRX reports using `dotnet test --logger trx` and retain their results in GitHub Actions artifacts for 14 days. The artifact upload step uses `if: always()` to collect results following a failed test step. If restoration or compilation stops before test discovery, no TRX file is generated; the job console log remains the source for that failure. This environment has no installed .NET SDK or network access, so the CI status is not independently verified.
+
 # Milestone 18 — CI proof-result contract
 
 The CLI smoke test now validates the actual JSON protocol, not merely process exit status. It executes the proven byte example and the signed-overflow counterexample using the .NET CLI, checks schema version 1, outcome category, nonempty checks and exit codes. The Python test is in `scripts/check_cli_report.py` and runs in GitHub Actions. The local environment has no .NET SDK; a passing CI run remains unconfirmed.
