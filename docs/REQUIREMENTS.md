@@ -1,3 +1,7 @@
+## Build stabilization increment
+
+SC-065: Explicitly compile every production and test project in CI and retain compiler output as an artifact (implemented in workflow; successful execution unverified). All previous requirements remain open until green build evidence exists.
+
 ## CI diagnostic artifact milestone
 
 Added TRX output and failure-tolerant artifact collection to runtime, solver, and verification test jobs. This enables independent inspection of test failures without inferring success from committed source. Status: CI configured; green run unverified.
