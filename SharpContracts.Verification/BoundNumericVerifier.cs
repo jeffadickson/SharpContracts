@@ -67,9 +67,13 @@ public static class BoundNumericVerifier
                     throw new NotSupportedException("Only Contract.Require/Ensure statements are supported");
                 var inputs=invocation.Arguments.ToDictionary(x=>x.Parameter!.Name,x=>x.Value);
                 if(!inputs.TryGetValue("condition",out var condition) ||
-                   !inputs.TryGetValue("id",out var id) || id.ConstantValue.Value is not string label ||
-                   !inputs.TryGetValue("message",out var message))
-                    throw new NotSupportedException("Contract must have constant ID and all arguments");
+                   !inputs.TryGetValue("id",out var id) || !id.ConstantValue.HasValue ||
+                   id.ConstantValue.Value is not string label || string.IsNullOrWhiteSpace(label) ||
+                   !inputs.TryGetValue("message",out var message) ||
+                   !message.ConstantValue.HasValue || message.ConstantValue.Value is not string)
+                    throw new NotSupportedException("Contract requires nonblank constant ID and constant message");
+                // The source verifier is pure and parameter-only. Reject any annotation expression
+                // that could execute code, throw, or mutate state outside the modeled predicate.
                 if(hasEnsure && invocation.TargetMethod.Name=="Require")
                     throw new NotSupportedException("Require after Ensure unsupported");
                 var lowered=Lower(condition,ctx,parameters);
