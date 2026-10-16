@@ -1,3 +1,7 @@
+## Diagnosing CI Gate status
+
+The aggregate gate now reads each `needs.<job>.result` separately and reports the job name plus GitHub Actions conclusion in `$GITHUB_STEP_SUMMARY`. A failed, cancelled or skipped dependency makes the gate fail. Open the CI Gate job summary to identify which upstream job to inspect. GitHub Actions checks are separate from legacy GitHub commit statuses; absence of legacy statuses cannot establish Actions availability or health.
+
 
 ## Signed unary negation
 
