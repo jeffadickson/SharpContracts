@@ -1,3 +1,7 @@
+# CI build diagnostics
+
+The workflow now has a dedicated `compile-all` job that executes `dotnet build` for each production and test project, records the console output to a persisted log artifact, and prints `dotnet --info` for SDK diagnostics. Separate runtime, solver, verifier, CLI, and HTML checks remain. This adds diagnosability, not proof that builds pass.
+
 # CI troubleshooting — test evidence
 
 The three .NET test jobs now emit TRX reports using `dotnet test --logger trx` and retain their results in GitHub Actions artifacts for 14 days. The artifact upload step uses `if: always()` to collect results following a failed test step. If restoration or compilation stops before test discovery, no TRX file is generated; the job console log remains the source for that failure. This environment has no installed .NET SDK or network access, so the CI status is not independently verified.
