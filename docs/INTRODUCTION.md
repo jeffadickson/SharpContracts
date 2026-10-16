@@ -1,3 +1,7 @@
+# Aggregate CI Gate
+
+A new `ci-gate` job depends on `compile-all`, runtime/analyzer tests, solver tests, source-verification tests, CLI smoke and HTML tutorial smoke. It runs even when dependencies fail and only succeeds if every dependency finished `success`. This provides one required check for branch protection; the repository branch-protection setting has not been changed. A successful CI run is not yet confirmed.
+
 # Source-verification hardening: contract arguments
 
 The compiler-bound verifier now requires both a nonblank constant contract ID and a compile-time constant message. A dynamic message such as `GetMessage()` may invoke arbitrary C# code, which the parameter-only proof model does not execute; it must therefore be rejected rather than silently omitted. Regression tests cover dynamic messages and blank IDs. Build/CI success is not confirmed.
