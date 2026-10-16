@@ -6,6 +6,34 @@ on:
 permissions:
   contents: read
 jobs:
+  compile-all:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Show SDK and environment
+        run: dotnet --info
+      - name: Build all production and test projects
+        shell: bash
+        run: |
+          set -o pipefail
+          mkdir -p artifacts/build
+          for project in             SharpContracts.Runtime/SharpContracts.Runtime.csproj             SharpContracts.Analyzers/SharpContracts.Analyzers.csproj             SharpContracts.Solver/SharpContracts.Solver.csproj             SharpContracts.Verification/SharpContracts.Verification.csproj             SharpContracts.Cli/SharpContracts.Cli.csproj             SharpContracts.Demo/SharpContracts.Demo.csproj             SharpContracts.Tests/SharpContracts.Tests.csproj             SharpContracts.Solver.Tests/SharpContracts.Solver.Tests.csproj             SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj; do
+            echo "::group::Building $project"
+            dotnet build "$project" --configuration Release --nologo 2>&1 | tee -a artifacts/build/build.log
+            echo "::endgroup::"
+          done
+      - name: Upload build output
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharpcontracts-build-log
+          path: artifacts/build/build.log
+          if-no-files-found: ignore
+          retention-days: 14
+
   build-test:
     runs-on: ubuntu-latest
     steps:
