@@ -1,3 +1,10 @@
+## Language specifications (version controlled)
+
+- [SharpContracts C# contract language — draft v0.1](docs/LANGUAGE_SPEC.md)
+- [VeloFormal temporal contract language — v0.2](https://github.com/jeffadickson/VeloFormal/blob/main/docs/contract-language-v0.2.md)
+
+These are distinct authoring languages with a proposed shared typed IR, not a merged syntax. The documented SharpContracts verifier subset is experimental.
+
 ## 100-case CLR + source-derived Z3 acceptance gate
 
 The archived 100-case regression corpus is now in `SharpContracts.Verification.Tests/Corpus100Tests.cs` with its original JSON data preserved as a gzip/base64 fixture. The test project also compiles the three annotated C# showcase methods and checks their actual runtime contract failures. CI explicitly runs the corpus and the source-derived Z3 proof tests for midpoint, payment splitting, and buffer admission.
