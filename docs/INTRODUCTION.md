@@ -1,3 +1,7 @@
+## Language specification
+
+The canonical [SharpContracts language specification](LANGUAGE_SPEC.md) defines inline C# contract syntax, current semantics and proposed extensions. The separate [VeloFormal v0.2 language specification](https://github.com/jeffadickson/VeloFormal/blob/main/docs/contract-language-v0.2.md) remains authoritative for temporal RTL contracts.
+
 ## Verified-core acceptance test integration
 
 Three separate evidence layers now exist in the xUnit verification project:
