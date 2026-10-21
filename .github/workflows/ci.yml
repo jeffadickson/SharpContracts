@@ -111,12 +111,19 @@ jobs:
       - run: sudo apt-get update && sudo apt-get install -y libgomp1
       - run: dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj --configuration Release --logger 'trx;LogFileName=verification.trx' --results-directory artifacts/test-results/verification
 
+      - name: Run archived 100-case CLR regression corpus
+        run: dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj --configuration Release --filter FullyQualifiedName~Corpus100Tests --logger 'trx;LogFileName=corpus100.trx' --results-directory artifacts/test-results/corpus100
+      - name: Run source-derived Z3 proof and counterexample cases
+        run: dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj --configuration Release --filter 'FullyQualifiedName~InlineMidpointTests|FullyQualifiedName~SalesShowcaseTests' --logger 'trx;LogFileName=inline-proofs.trx' --results-directory artifacts/test-results/inline-proofs
       - name: Upload verification results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sharpcontracts-verification-test-results
-          path: artifacts/test-results/verification/**/*.trx
+          path: |
+            artifacts/test-results/verification/**/*.trx
+            artifacts/test-results/corpus100/**/*.trx
+            artifacts/test-results/inline-proofs/**/*.trx
           if-no-files-found: ignore
           retention-days: 14
 
