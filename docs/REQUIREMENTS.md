@@ -1,3 +1,10 @@
+## Verified-core acceptance gate — 100 archived vectors
+
+- SC-077 (P0): Execute all 100 archived arithmetic vectors as CLR xUnit cases. **Integrated in source; execution pending**.
+- SC-078 (P0): Execute the actual annotated C# midpoint/payment/buffer methods and check contract exceptions. **Integrated in source; execution pending**.
+- SC-079 (P0): Require Z3 source-derived proof for each corrected method and counterexample for each defective method. **CI steps and tests committed; solver results pending**.
+- SC-080 (P0): Publish successful GitHub CI Gate run with commit SHA, logs and TRX artifacts before declaring the verified core complete. **Open**.
+
 # Inline contract verification — implementation milestone
 
 Canonical design: [INLINE_CONTRACT_DESIGN.md](INLINE_CONTRACT_DESIGN.md).
