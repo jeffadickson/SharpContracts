@@ -1,3 +1,9 @@
+## 100-case CLR + source-derived Z3 acceptance gate
+
+The archived 100-case regression corpus is now in `SharpContracts.Verification.Tests/Corpus100Tests.cs` with its original JSON data preserved as a gzip/base64 fixture. The test project also compiles the three annotated C# showcase methods and checks their actual runtime contract failures. CI explicitly runs the corpus and the source-derived Z3 proof tests for midpoint, payment splitting, and buffer admission.
+
+These are **committed acceptance tests, not observed passing results**. A green CI Gate run is still required before calling the milestone verified. [Actions](https://github.com/jeffadickson/SharpContracts/actions).
+
 # SharpContracts — Inline C# Contracts
 
 **New primary example:** [annotated binary-search midpoint source](examples/BinarySearchMidpoint.cs) verified without handwritten SMT expressions.
