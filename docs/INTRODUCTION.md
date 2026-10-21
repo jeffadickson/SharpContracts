@@ -1,3 +1,13 @@
+## Verified-core acceptance test integration
+
+Three separate evidence layers now exist in the xUnit verification project:
+
+1. `Corpus100Tests` runs 100 archived concrete UInt32 vectors against CLR arithmetic.
+2. `ShowcaseClrExecutionTests` executes the actual annotated midpoint/payment/buffer methods and checks runtime contract violations.
+3. `InlineMidpointTests` and `SalesShowcaseTests` invoke the source-derived Roslyn-to-Z3 verifier, expecting corrected methods to prove and defective methods to produce counterexamples.
+
+The corpus is stored losslessly as `fixtures/corpus100.json.gz.b64`; the test decompresses it at runtime. CI executes the suites explicitly and uploads TRX files. **No successful CI execution has been observed through the available GitHub connector.** The legacy status endpoint and PR-only run lookup cannot establish the status of push-triggered Actions jobs.
+
 # Inline contracts — source-derived proofs
 
 The midpoint example now demonstrates the desired C# authoring model:
