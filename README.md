@@ -1,3 +1,8 @@
+## Counterexample replay and report hardening — 2026-10-20
+
+The first stabilization commit `360efa09eca8679ea23e8c3f56663b64e27705be` passed [all seven GitHub Actions jobs, including CI Gate](https://github.com/jeffadickson/SharpContracts/actions/runs/39549650831). Local regression coverage now totals 193 passing xUnit cases, zero failures/skips, including eight new tests for solver-input replay, inconsistent inline preconditions, by-reference rejection, and checked/unchecked return wrappers.
+
+Inline counterexamples now include decimal-string `counterexampleInputs` keyed by parameter name alongside the Z3 model, contract ID and source line. Tests replay actual solver inputs against the exact compiled annotated C# examples. Inline feasibility distinguishes inconsistent assumptions (exit 4) from solver UNKNOWN (exit 3); unsupported translation still clears every partial proof. By-reference parameters/returns are explicitly unsupported. CLI validation executes all six flagship source/method combinations plus the two numeric examples. Broader typed-IR consolidation, branches, assignments and modeled checked exceptions remain open in Issue #2.
 ## Executed stabilization baseline — 2026-10-20
 
 Windows x64, .NET SDK 8.0.132: all nine projects compile; 185 xUnit tests pass (16 runtime, 6 solver, 163 verification), zero failures/skips. The archived corpus separately passes 100 vectors plus its integrity test. Native Z3 4.12.2 executes; the three corrected annotated examples prove their four obligations and all three defective examples yield counterexamples. CLI JSON/exit-code validation and embedded HTML script syntax checks pass.

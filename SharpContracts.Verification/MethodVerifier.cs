@@ -9,7 +9,8 @@ using SharpContracts.Solver;
 
 namespace SharpContracts.Verification;
 
-public sealed record MethodCheck(string ContractId, int Line, VerificationStatus Status, string? Counterexample, string? Reason);
+public sealed record MethodCheck(string ContractId, int Line, VerificationStatus Status, string? Counterexample, string? Reason,
+    IReadOnlyDictionary<string, string>? CounterexampleInputs = null);
 public sealed record MethodVerification(IReadOnlyList<MethodCheck> Checks, IReadOnlyList<string> Errors)
 {
     public bool AllProved => Errors.Count == 0 && Checks.Count > 0 &&

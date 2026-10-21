@@ -76,3 +76,7 @@ The inline source verifier currently targets uniquely selected synchronous metho
 - SharpContracts inline implementation scope: [INLINE_CONTRACT_DESIGN.md](INLINE_CONTRACT_DESIGN.md)
 - SharpContracts requirements: [REQUIREMENTS.md](REQUIREMENTS.md)
 - VeloFormal temporal contract language: [VeloFormal v0.2 specification](https://github.com/jeffadickson/VeloFormal/blob/main/docs/contract-language-v0.2.md)
+
+## Stabilization report details (2026-10-20)
+
+Inline `uint` parameters and returns must be passed by value; `ref`, `in`, `out` and by-reference returns are unsupported. Schema v1 reports add optional `counterexampleInputs`: parameter names mapped to invariant decimal strings representing UInt32 solver values. SAT witnesses include all parameters, using model completion for unconstrained values. Inconsistent inline preconditions produce InconsistentAssumptions/exit 4; feasibility UNKNOWN produces Unknown/exit 3. Neither result is a proof. No authoring syntax changes are introduced.

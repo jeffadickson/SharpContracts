@@ -17,7 +17,7 @@ public static class BufferAdmission
     }
 
     /// <summary>Correct admission check expressed as a property about the requested batch.
-    /// This pedagogical method returns remaining capacity, not a write action.</summary>
+    /// This pedagogical method returns total requested usage, not a write action.</summary>
     [Verify]
     public static uint Correct(uint used, uint incoming, uint capacity)
     {

@@ -46,7 +46,8 @@ public static class InlineContractVerifier
                 a.AttributeClass?.ToDisplayString()=="SharpContracts.VerifyAttribute"))
             return new(Array.Empty<MethodCheck>(),new[]{"Method must have [Verify] attribute"});
         if (method.Body is null || symbol.ReturnType.SpecialType!=SpecialType.System_UInt32 ||
-            symbol.IsAsync || symbol.Parameters.Any(p=>p.Type.SpecialType!=SpecialType.System_UInt32))
+            symbol.IsAsync || symbol.ReturnsByRef || symbol.ReturnsByRefReadonly ||
+            symbol.Parameters.Any(p=>p.Type.SpecialType!=SpecialType.System_UInt32 || p.RefKind!=RefKind.None))
             return new(Array.Empty<MethodCheck>(),
                 new[]{"Supported subset: synchronous uint-return method with uint parameters and block body"});
         try
@@ -159,8 +160,11 @@ public static class InlineContractVerifier
                     else
                     {
                         seenNonrequire=true;
-                        if(solver.Check()!=Status.SATISFIABLE)
-                            throw new NotSupportedException("Preconditions inconsistent or solver unknown");
+                        var feasibility=solver.Check();
+                        if(feasibility==Status.UNSATISFIABLE)
+                            throw new NotSupportedException("Inconsistent preconditions: no permitted inputs");
+                        if(feasibility==Status.UNKNOWN)
+                            throw new NotSupportedException("Precondition feasibility unknown: "+solver.ReasonUnknown);
                         solver.Push();
                         solver.Assert(ctx.MkNot(predicate));
                         var answer=solver.Check();
@@ -168,7 +172,11 @@ public static class InlineContractVerifier
                             answer==Status.UNSATISFIABLE?VerificationStatus.Proved:
                             answer==Status.SATISFIABLE?VerificationStatus.Counterexample:VerificationStatus.Unknown,
                             answer==Status.SATISFIABLE?solver.Model.ToString():null,
-                            answer==Status.UNKNOWN?solver.ReasonUnknown:null));
+                            answer==Status.UNKNOWN?solver.ReasonUnknown:null,
+                            answer==Status.SATISFIABLE ? symbol.Parameters.ToDictionary(
+                                p=>p.Name,
+                                p=>((BitVecNum)solver.Model.Evaluate(values[p],true)).UInt64
+                                    .ToString(System.Globalization.CultureInfo.InvariantCulture)) : null));
                         solver.Pop();
                         solver.Assert(predicate);
                     }
