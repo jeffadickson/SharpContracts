@@ -132,7 +132,7 @@ public static class InlineContractVerifier
                         model.GetDeclaredSymbol(variable) is not ILocalSymbol localSymbol ||
                         localSymbol.Type.SpecialType!=SpecialType.System_UInt32)
                         throw new NotSupportedException("Initialized uint local required");
-                    var op=model.GetOperation(variable.Initializer.Value)
+                    var op=(model.GetOperation(variable.Initializer) as IVariableInitializerOperation)?.Value
                         ?? throw new NotSupportedException("Unbound local initializer");
                     var value=Lower(op) as BitVecExpr
                         ?? throw new NotSupportedException("Local initializer not BV32");
@@ -175,7 +175,7 @@ public static class InlineContractVerifier
                 }
                 else if (statement is ReturnStatementSyntax {Expression: not null} ret)
                 {
-                    var operation=model.GetOperation(ret.Expression)
+                    var operation=(model.GetOperation(ret) as IReturnOperation)?.ReturnedValue
                         ?? throw new NotSupportedException("Unbound return expression");
                     if(Lower(operation) is not BitVecExpr)
                         throw new NotSupportedException("Return value must be BV32");

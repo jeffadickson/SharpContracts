@@ -1,3 +1,8 @@
+## Executed stabilization baseline — 2026-10-20
+
+Windows x64, .NET SDK 8.0.132: all nine projects compile; 185 xUnit tests pass (16 runtime, 6 solver, 163 verification), zero failures/skips. The archived corpus separately passes 100 vectors plus its integrity test. Native Z3 4.12.2 executes; the three corrected annotated examples prove their four obligations and all three defective examples yield counterexamples. CLI JSON/exit-code validation and embedded HTML script syntax checks pass.
+
+Fixed Roslyn metadata-reference overload inference and semantic operation lookup for checked/unchecked initializer and return wrappers. `SharpContracts.sln` supports root restore/build/test. Linux CI now selects the matching upstream Z3 4.12.2 native library using a pinned SHA-256 because the NuGet package ships no Linux library. Linux execution and a green CI Gate remain pending; this local evidence does not establish general C# soundness or architecture consolidation. The symbolic expression model remains in `SharpContracts.Runtime/Symbolic`.
 ## Language specification
 
 The canonical [SharpContracts language specification](LANGUAGE_SPEC.md) defines inline C# contract syntax, current semantics and proposed extensions. The separate [VeloFormal v0.2 language specification](https://github.com/jeffadickson/VeloFormal/blob/main/docs/contract-language-v0.2.md) remains authoritative for temporal RTL contracts.

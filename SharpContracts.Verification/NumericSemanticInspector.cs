@@ -32,7 +32,7 @@ public static class NumericSemanticInspector
             typeof(object).Assembly.Location,
             typeof(Console).Assembly.Location,
             typeof(System.Runtime.CompilerServices.IsExternalInit).Assembly.Location
-        }.Distinct().Select(MetadataReference.CreateFromFile).ToArray();
+        }.Distinct().Select(path => MetadataReference.CreateFromFile(path)).ToArray();
 
         var compilation = CSharpCompilation.Create("SharpContracts.NumericPreflight",
             new[] { tree }, references,
