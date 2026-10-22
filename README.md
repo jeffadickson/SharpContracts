@@ -1,160 +1,68 @@
-## Counterexample replay and report hardening — 2026-10-20
+# SharpContracts
 
-The first stabilization commit `360efa09eca8679ea23e8c3f56663b64e27705be` passed [all seven GitHub Actions jobs, including CI Gate](https://github.com/jeffadickson/SharpContracts/actions/runs/39549650831). Local regression coverage now totals 193 passing xUnit cases, zero failures/skips, including eight new tests for solver-input replay, inconsistent inline preconditions, by-reference rejection, and checked/unchecked return wrappers.
+Design by Contract and experimental formal verification for ordinary C# using Roslyn and Microsoft Z3.
 
-Inline counterexamples now include decimal-string `counterexampleInputs` keyed by parameter name alongside the Z3 model, contract ID and source line. Tests replay actual solver inputs against the exact compiled annotated C# examples. Inline feasibility distinguishes inconsistent assumptions (exit 4) from solver UNKNOWN (exit 3); unsupported translation still clears every partial proof. By-reference parameters/returns are explicitly unsupported. CLI validation executes all six flagship source/method combinations plus the two numeric examples. Broader typed-IR consolidation, branches, assignments and modeled checked exceptions remain open in Issue #2.
-## Executed stabilization baseline — 2026-10-20
-
-Windows x64, .NET SDK 8.0.132: all nine projects compile; 185 xUnit tests pass (16 runtime, 6 solver, 163 verification), zero failures/skips. The archived corpus separately passes 100 vectors plus its integrity test. Native Z3 4.12.2 executes; the three corrected annotated examples prove their four obligations and all three defective examples yield counterexamples. CLI JSON/exit-code validation and embedded HTML script syntax checks pass.
-
-Fixed Roslyn metadata-reference overload inference and semantic operation lookup for checked/unchecked initializer and return wrappers. `SharpContracts.sln` supports root restore/build/test. Linux CI now selects the matching upstream Z3 4.12.2 native library using a pinned SHA-256 because the NuGet package ships no Linux library. Linux execution and a green CI Gate remain pending; this local evidence does not establish general C# soundness or architecture consolidation. The symbolic expression model remains in `SharpContracts.Runtime/Symbolic`.
-## Language specifications (version controlled)
-
-- [SharpContracts C# contract language — draft v0.1](docs/LANGUAGE_SPEC.md)
-- [VeloFormal temporal contract language — v0.2](https://github.com/jeffadickson/VeloFormal/blob/main/docs/contract-language-v0.2.md)
-
-These are distinct authoring languages with a proposed shared typed IR, not a merged syntax. The documented SharpContracts verifier subset is experimental.
-
-## 100-case CLR + source-derived Z3 acceptance gate
-
-The archived 100-case regression corpus is now in `SharpContracts.Verification.Tests/Corpus100Tests.cs` with its original JSON data preserved as a gzip/base64 fixture. The test project also compiles the three annotated C# showcase methods and checks their actual runtime contract failures. CI explicitly runs the corpus and the source-derived Z3 proof tests for midpoint, payment splitting, and buffer admission.
-
-These are **committed acceptance tests, not observed passing results**. A green CI Gate run is still required before calling the milestone verified. [Actions](https://github.com/jeffadickson/SharpContracts/actions).
-
-# SharpContracts — Inline C# Contracts
-
-**New primary example:** [annotated binary-search midpoint source](examples/BinarySearchMidpoint.cs) verified without handwritten SMT expressions.
-
-```sh
-dotnet run --project SharpContracts.Cli -- --inline examples/BinarySearchMidpoint.cs Correct
-dotnet run --project SharpContracts.Cli -- --inline --json examples/BinarySearchMidpoint.cs Buggy
+```csharp
+[Verify]
+public static uint Midpoint(uint low, uint high)
+{
+    Contract.Require(low <= high, "MID-PRE", "Valid interval");
+    uint midpoint = unchecked(low + (high - low) / 2u);
+    Contract.Assert(midpoint >= low, "MID-LOW", "Lower bound");
+    Contract.Ensure(midpoint <= high, "MID-HIGH", "Upper bound");
+    return midpoint;
+}
 ```
 
-The runtime library now provides `[Verify]` and `Contract.Assert` alongside `Require` and `Ensure`. The experimental inline Roslyn-to-Z3 backend handles the documented UInt32 subset. Its tests read the same annotated source file. **CI compilation and solver execution remain unconfirmed.**
+Attributes configure verification. C# expressions define contracts alongside the implementation. `Ensure` checks its call site; automatic method-exit postconditions are not implemented.
 
-Read the [authoring and verification design](docs/INLINE_CONTRACT_DESIGN.md) and [interactive tutorial](tutorial/index.html).
+## Build and verify
 
-## Featured example: binary-search midpoint overflow
-
-[Interactive walkthrough](tutorial/index.html#midpoint-lesson) · [C# sample](examples/BinarySearchMidpoint.cs) · [Z3 proof regression](SharpContracts.Solver.Tests/MidpointProofTests.cs)
-
-The expression `unchecked((low + high) / 2u)` can overflow before division. For `low=3,000,000,000` and `high=4,000,000,000` it incorrectly returns `1,352,516,352`. The corrected `low + (high-low)/2u` returns `3,500,000,000`. Z3 checks whether the midpoint is inside the range for **all** valid UInt32 pairs. These tests are committed but have not been observed passing in CI.
-
-## CI Gate status debugging
-
-`CI Gate` now prints each of its six dependencies by name and writes a per-job table into the GitHub Actions job summary. For actual results, open [Actions](https://github.com/jeffadickson/SharpContracts/actions) → latest CI run → **CI Gate**. An empty legacy commit-status API response is not evidence of no GitHub Actions runs; Actions check runs are a separate API. This change is committed but has not yet been observed executing.
-
-
-## Unary negation increment
-
-The Roslyn-bound verifier now lowers unchecked unary minus to Z3 bit-vector negation and rejects checked unary negation until exceptional behavior is modeled. Regression tests cover counterexamples and unsupported syntax. Build/CI results are not confirmed.
-
-# CI aggregate gate
-
-The `CI Gate` job now runs after all six workflow jobs and fails if any compilation, test, CLI, solver or tutorial job failed, was skipped or was cancelled. It is a single status-check target for future branch protection. GitHub Actions run status remains unverified.
-
-# Verification soundness fix
-
-Compiler-bound verification now rejects dynamic contract message expressions and blank IDs, preventing unmodeled calls in contract arguments from being silently treated as pure. Tests are committed but not executed locally; passing CI remains unconfirmed.
-
-# CI stabilization — complete build diagnostics
-
-The `compile-all` job now attempts **all nine projects**, even if an earlier build fails. It captures `build.log` and `summary.log`, uploads both as the `sharpcontracts-build-log` artifact, and fails the workflow if any project fails. This fixes early termination of diagnostic collection; passing CI has **not** been confirmed.
-
-# CI compilation gate
-
-A dedicated `compile-all` GitHub Actions job now builds all nine production/test `.csproj` projects on .NET 8 and uploads `sharpcontracts-build-log` (14 days) even if compilation fails. This exposes compile errors before solver-runtime investigation. Successful CI execution is still unverified.
-
-# SharpContracts — CI diagnostics increment
-
-GitHub Actions now writes `.trx` test reports for the runtime, Z3 solver, and source verifier jobs and uploads them as artifacts even when tests fail. Open [Actions](https://github.com/jeffadickson/SharpContracts/actions), select a CI run, and download `sharpcontracts-runtime-test-results`, `sharpcontracts-solver-test-results`, or `sharpcontracts-verification-test-results`. This does **not** establish a passing build; these artifacts are intended to expose the exact failing tests.
-
-# SharpContracts — Milestone 18: CI report validation
-
-The CI CLI smoke job now runs `scripts/check_cli_report.py`, which invokes the compiled .NET verification CLI and validates JSON schema version, outcome, nonempty checks, and exit codes for both a proof and an overflow counterexample. **Workflow execution is not yet confirmed**, so CI is not claimed green.
-
-# SharpContracts — Milestone 17
-
-ProofReport adds versioned JSON results and a richer CLI exit-code contract: 0 proved, 1 counterexample, 2 unsupported/no contracts, 3 unknown, 4 inconsistent assumptions. Use `dotnet run --project SharpContracts.Cli -- --json examples/VerifiedByteAddition.cs Check`. This remains unverified by a successful .NET build.
-
-# SharpContracts — Milestone 16
-
-**Proof-soundness improvement:** the compiler-bound verifier checks that preconditions are jointly satisfiable before accepting an implication proof. Contradictory assumptions now fail rather than yield a misleading vacuous proof. Regression tests cover contradictory and feasible preconditions. Test execution remains unverified.
-
-# SharpContracts — Milestone 15
-
-**Milestone 14:** Fixed UINT64 literal lowering above long.MaxValue and added boundary proof/counterexample tests. Build and CI remain unverified.
-
-# SharpContracts — Milestone 13
-
-A research-stage Design by Contract and SMT verification framework for C#.
-
-## Milestone 15 — verification guardrails
-
-The compiler-bound solver now has a five-second per-query timeout. Numeric conversion and comparison lowering rejects unsupported numeric representations instead of assuming built-in integer bit-vector behavior. Negative regression tests cover decimal and custom overloaded operators. These are source changes; .NET compilation and CI remain unverified.
-
-## Try the actual verification CLI
+Use a .NET 8 SDK. Older SDKs such as 8.0.132 compile the solution but warn that the demonstration analyzer targets a newer Roslyn compiler; CI uses the latest .NET 8 SDK.
 
 ```sh
-dotnet run --project SharpContracts.Cli -- examples/VerifiedByteAddition.cs Check
-dotnet run --project SharpContracts.Cli -- examples/OverflowCounterexample.cs Check
+dotnet restore SharpContracts.sln
+dotnet build SharpContracts.sln --configuration Release
+dotnet test SharpContracts.sln --configuration Release
+
+dotnet run --project SharpContracts.Cli -- --inline --json examples/BinarySearchMidpoint.cs Correct
+dotnet run --project SharpContracts.Cli -- --inline --json examples/PaymentSplit.cs Buggy
+dotnet run --project SharpContracts.Cli -- --inline --json examples/BufferAdmission.cs Correct
 ```
 
-The first sample is expected to be provable and return exit code 0. The second intentionally violates its postcondition at signed 32-bit overflow and should return exit code 1. Unsupported expressions, compiler errors, or no checked contracts return code 2. These outcomes are **expected**, not confirmed: the .NET build and CI runs have not been verified.
+Windows x64 uses the native library from Microsoft.Z3 4.12.2. Linux x64 needs the matching upstream library; GitHub Actions uses the checksum-pinned `scripts/setup-z3-linux.sh`. An older system `libz3` is not interchangeable with the managed package.
 
-## Learn
+## Executed evidence
 
-[Interactive five-chapter tutorial](tutorial/index.html) · [Main demo](index.html) · [Technical introduction](docs/INTRODUCTION.md) · [Requirements](docs/REQUIREMENTS.md) · [Actions](https://github.com/jeffadickson/SharpContracts/actions)
+The previous stabilized code revision `15ece33cb2e6b6fcccdcf7bc483c0f059015af65` passed [all seven CI jobs](https://github.com/jeffadickson/SharpContracts/actions/runs/39549862533), including CI Gate, with 193 passing tests.
 
-## Verified subset and limitations
+The current local suite passes **322 tests, zero failures/skips**: 16 runtime, 32 solver, 274 verification. This increment adds 100 named source-to-Z3/CLR cases, three corpus/path tests and 26 typed-IR backend tests. Build checkpoints at iterations 10 through 100 and semantic reviews at 15 through 90 are recorded in [the iteration ledger](docs/ITERATION_LOG.md). Current-increment CI must be checked separately from that previous green revision; final execution evidence is recorded in the engineering report.
 
-`BoundNumericVerifier` uses Roslyn semantic operations and Z3 bit-vectors for a restricted parameter-only method subset. User-defined operators, checked arithmetic, local state, arbitrary control flow and many language features are not supported by this entry point. A mathematical-int model, BV64 prototype, and other experimental components also exist. Treat proofs as statements about the supported model only.
+| Annotated source | Defective method | Corrected method |
+|---|---|---|
+| [Binary-search midpoint](examples/BinarySearchMidpoint.cs) | Wrapped sum produces an out-of-range midpoint | Both range obligations proved |
+| [Payment split](examples/PaymentSplit.cs) | Odd cents lose a cent | Conservation proved |
+| [Buffer admission](examples/BufferAdmission.cs) | Wrapped request can be admitted | Accepted usage stays within capacity |
 
-## C# versus Z3 differential checks
+These outcomes are covered by executed source-derived Z3 tests. Solver-generated inputs are replayed against the exact compiled annotated methods. Corrected proofs quantify over all permitted inputs in the documented model. Concrete CLR replay and browser exercises supplement those proofs; they do not establish general translator soundness.
 
-`ClrDifferentialTests` compares prover outcomes to compiled C# at `int.MaxValue`, `ulong.MaxValue`, and all 65,536 combinations of two `byte` inputs. Checked overflow must be rejected by the current verifier and throw in CLR execution. This is a regression suite, not a formal validation of all language semantics. GitHub CI execution has not yet been confirmed.
+## Shared compiler-bound pipeline
 
-## Build
+C# source -> Roslyn IOperation -> typed symbolic CLR expressions -> shared verification queries -> Z3 -> structured ProofReport.
 
-```sh
-dotnet test SharpContracts.Tests/SharpContracts.Tests.csproj
-dotnet test SharpContracts.Solver.Tests/SharpContracts.Solver.Tests.csproj
-dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj
-dotnet build SharpContracts.Cli/SharpContracts.Cli.csproj
-```
+`BoundNumericVerifier` and `InlineContractVerifier` now share expression lowering, bit-vector encoding, feasibility checks and counterexample extraction. The IR extends the original `ContractExpr` model with explicit widths, signedness, conversions and source spans. The mathematical Int/Real and BV64 prototypes remain available as separate experimental models; their capabilities have not all migrated.
 
-CI is defined in `.github/workflows/ci.yml` for pushes, pull requests and manual dispatch. Check Actions for actual results; merely having a workflow file does not establish a green build.
+Supported scalar expressions include unchecked integral conversions, addition/subtraction/multiplication, comparisons, unary operations, pure Boolean/bitwise operations and unsigned division by a nonzero constant. Entry-point restrictions and unsupported features are listed in [the inline design](docs/INLINE_CONTRACT_DESIGN.md).
 
----
+Branches, assignments, loops, checked exceptions, heap state, custom operators, generic math and true method-level postconditions remain open in [Issue #2](https://github.com/jeffadickson/SharpContracts/issues/2). Unsupported translation clears partial proofs. Impossible preconditions never become a successful proof. Unreachable later contracts are UNKNOWN and retain earlier counterexamples.
 
-## Historical milestone details
+JSON exit codes: 0 proved, 1 counterexample, 2 unsupported/no contracts, 3 unknown, 4 inconsistent assumptions. Counterexamples include a contract ID, line, Z3 model and decimal-string input values; signed parameters retain their signed interpretation.
 
-# SharpContracts — Milestone 11
+## Language designs and learning
 
-## Start here: interactive tutorial
+- [SharpContracts C# language specification](docs/LANGUAGE_SPEC.md)
+- [Separate VeloFormal temporal language v0.2](https://github.com/jeffadickson/VeloFormal/blob/main/docs/contract-language-v0.2.md)
+- [Requirements](docs/REQUIREMENTS.md) - [Technical introduction](docs/INTRODUCTION.md) - [Custom types](docs/CUSTOM_TYPES.md)
+- [Interactive introduction](index.html) - [Guided tutorial](tutorial/index.html) - [GitHub Actions](https://github.com/jeffadickson/SharpContracts/actions)
 
-Open **[From C# Contracts to Z3 Proofs](tutorial/index.html)** for a five-chapter, browser-runnable introduction to contracts, counterexamples, overflow, C# numeric promotion, and running the .NET project. The tutorial uses JavaScript teaching demonstrations rather than executing Z3. 
-
-[Main interactive demo](index.html) · [Technical introduction](docs/INTRODUCTION.md) · [CI workflow](.github/workflows/ci.yml)
-
-
-A Design by Contract framework for C#.
-
-## Milestone 1\n\nAdded Roslyn-to-Z3 verification for a restricted C# method subset. Previously added an actual Z3 verifier (SharpContracts.Solver) and dedicated solver tests. Previously added symbolic contract expressions, executable evaluator, and SMT-LIB export (with actual solver invocation via SharpContracts.Solver). Previously added reusable typed contract definitions and boundary wrappers plus synchronous return-value guarantees. Previously added interface-boundary automatic precondition enforcement (via `ContractProxy`), a Roslyn analyzer (SC1001–SC1003), xUnit tests, GitHub Actions CI and an interactive analyzer teaching exercise. See [introduction](docs/INTRODUCTION.md).\n\n## Interactive prototype
-Open `index.html` from the downloadable Milestone 0 package in the ChatGPT project conversation. Browser prototype runs a JavaScript semantic model, not compiled C#.
-
-## .NET example
-Requires .NET 8 SDK or newer:
-
-```sh
-dotnet run --project SharpContracts.Demo
-```
-
-The runtime currently requires explicit calls to `Contract.Require`, `Contract.Ensure`, and `Contract.Invariant`. General method weaving, complete Roslyn coverage, solver integration and transactional rollback are planned, not implemented. CI workflow is committed; check Actions for build results.
-
-See `docs/REQUIREMENTS.md` for requirements and limitations.\n\nTo reference the experimental analyzer, add it as an Analyzer project reference (instructions in `docs/INTRODUCTION.md`).
-
-
-## Custom numeric types
-
-[Design and current support](docs/CUSTOM_TYPES.md). User-defined operator semantics are not yet verified; they must not be assumed to be built-in arithmetic.
+VeloFormal's clocked RTL syntax is independent of SharpContracts' inline C#. The original symbolic expression model is preserved; no shared cross-project IR serialization format is claimed.

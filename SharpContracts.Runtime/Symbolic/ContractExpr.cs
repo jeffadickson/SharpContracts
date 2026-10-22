@@ -4,7 +4,7 @@ using System.Globalization;
 
 namespace SharpContracts.Symbolic;
 
-public enum SymbolicType { Boolean, Integer, Decimal }
+public enum SymbolicType { Boolean, Integer, Decimal, BitVector }
 public enum SymbolicOperator { Add, Subtract, Equal, NotEqual, GreaterThan, GreaterOrEqual, LessThan, LessOrEqual, And, Or }
 public abstract record ContractExpr(SymbolicType Type);
 public sealed record ConstantExpr(object Value, SymbolicType ConstantType) : ContractExpr(ConstantType);

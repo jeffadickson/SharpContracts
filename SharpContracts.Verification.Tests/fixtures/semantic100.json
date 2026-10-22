@@ -1,0 +1,702 @@
+[
+  {
+    "Iteration": 1,
+    "Name": "Int32 addition wraps",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) {  Contract.Ensure(unchecked(x + 1) > x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 2,
+    "Name": "UInt32 addition wraps",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) {  Contract.Ensure(unchecked(x + 1u) > x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 3,
+    "Name": "Int64 addition wraps",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) {  Contract.Ensure(unchecked(x + 1L) > x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 4,
+    "Name": "UInt64 addition wraps",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x) {  Contract.Ensure(unchecked(x + 1UL) > x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 5,
+    "Name": "SByte addition promotes",
+    "Source": "using SharpContracts; public static class Cases { public static void M(sbyte x) {  Contract.Ensure(x + 1 > x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 6,
+    "Name": "Byte addition promotes",
+    "Source": "using SharpContracts; public static class Cases { public static void M(byte x) {  Contract.Ensure(x + 1 > x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 7,
+    "Name": "Int16 addition promotes",
+    "Source": "using SharpContracts; public static class Cases { public static void M(short x) {  Contract.Ensure(x + 1 > x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 8,
+    "Name": "UInt16 addition promotes",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ushort x) {  Contract.Ensure(x + 1 > x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 9,
+    "Name": "Additive identity",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) {  Contract.Ensure(x + 0 == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 10,
+    "Name": "Subtractive cancellation",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) {  Contract.Ensure(unchecked(x + 1u - 1u) == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 11,
+    "Name": "Signed Int32 comparison excludes unsigned reinterpretation",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) {  Contract.Ensure(x >= 0, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 12,
+    "Name": "Unsigned UInt32 values nonnegative",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) {  Contract.Ensure(x >= 0u, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 13,
+    "Name": "Signed Int64 comparison excludes unsigned reinterpretation",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) {  Contract.Ensure(x >= 0L, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 14,
+    "Name": "Unsigned UInt64 comparison",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x) {  Contract.Ensure(x >= 0UL, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 15,
+    "Name": "Byte to Int32 comparison promotion",
+    "Source": "using SharpContracts; public static class Cases { public static void M(byte x) {  Contract.Ensure(x >= 0, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 16,
+    "Name": "Int16 sign extension preserves negatives",
+    "Source": "using SharpContracts; public static class Cases { public static void M(short x) { Contract.Ensure(x < 0, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 17,
+    "Name": "UInt16 zero extension preserves positives",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ushort x) { Contract.Ensure(x <= 65535, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 18,
+    "Name": "Signed comparison partition",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure(x < 0 || x >= 0, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 19,
+    "Name": "Unsigned comparison partition",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(x == 0u || x > 0u, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 20,
+    "Name": "Int64 bound includes its minimum",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) { Contract.Ensure(x >= -9223372036854775807L - 1L, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 21,
+    "Name": "Signed widening to Int64",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((long)x == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 22,
+    "Name": "Unsigned widening to UInt64",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((ulong)x == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 23,
+    "Name": "Int32 to UInt64 sign extension",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure(unchecked((ulong)x) < 4294967296UL, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 24,
+    "Name": "UInt32 to Int64 zero extension",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((long)x >= 0L, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 25,
+    "Name": "Int32 narrowing to byte",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure(unchecked((byte)x) == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 26,
+    "Name": "UInt64 narrowing wrap",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x) { Contract.Ensure(unchecked((uint)x) == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 27,
+    "Name": "Same-width signed cast changes ordering",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(unchecked((int)x) >= 0, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 28,
+    "Name": "Signed byte narrowing roundtrip",
+    "Source": "using SharpContracts; public static class Cases { public static void M(sbyte x) { Contract.Ensure(unchecked((sbyte)(int)x) == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 29,
+    "Name": "UInt16 widening roundtrip",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ushort x) { Contract.Ensure((uint)x == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 30,
+    "Name": "Negative narrow cast retains low bits",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure(unchecked((byte)x) <= 255, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 31,
+    "Name": "Unary plus preserves value",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure(+x == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 32,
+    "Name": "Double negation wraps consistently",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure(unchecked(-(-x)) == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 33,
+    "Name": "Int32 negation minimum overflow",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure(-x >= 0, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 34,
+    "Name": "UInt32 unary minus promotes Int64",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(-x <= 0L, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 35,
+    "Name": "Bitwise complement involution",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(~~x == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 36,
+    "Name": "Bitwise AND identity",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x) { Contract.Ensure((x & 18446744073709551615UL) == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 37,
+    "Name": "Bitwise OR identity",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((x | 0) == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 38,
+    "Name": "Bitwise XOR self zero",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) { Contract.Ensure((x ^ x) == 0L, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 39,
+    "Name": "Boolean NOT over comparison",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure(!(x < 0) == (x >= 0), \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 40,
+    "Name": "Boolean bitwise conjunction is pure",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(((x == 0u) & (x > 0u)) == false, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 41,
+    "Name": "Multiplication by zero",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(x * 0u == 0u, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 42,
+    "Name": "Multiplication by one",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) { Contract.Ensure(x * 1L == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 43,
+    "Name": "Multiplication wraparound counterexample",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(unchecked(x * 2u) >= x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 44,
+    "Name": "UInt32 division by one",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(x / 1u == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 45,
+    "Name": "UInt64 division nonincreasing",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x) { Contract.Ensure(x / 2UL <= x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 46,
+    "Name": "Unsigned constant-expression divisor",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(x / (1u + 1u) <= x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 47,
+    "Name": "Division truncation loses odd remainder",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(x / 2u + x / 2u == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 48,
+    "Name": "UInt64 maximum constant retained",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x) { Contract.Ensure(x <= 18446744073709551615UL, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 49,
+    "Name": "Pure Boolean XOR partition",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((x < 0) ^ (x >= 0), \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 50,
+    "Name": "Narrow operand multiplication promotes",
+    "Source": "using SharpContracts; public static class Cases { public static void M(byte x) { Contract.Ensure(x * x <= 65025, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 51,
+    "Name": "Inline initialized local substitution",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { uint y = x; Contract.Ensure(y == x, \"P\", \"identity\"); return y; } }",
+    "Inline": true,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 52,
+    "Name": "Inline implicit constant conversion",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { uint y = 1; Contract.Ensure(y == 1u, \"P\", \"constant\"); return y; } }",
+    "Inline": true,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 53,
+    "Name": "Inline widening and narrowing identity",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { uint y = (uint)(ulong)x; Contract.Ensure(y == x, \"P\", \"roundtrip\"); return y; } }",
+    "Inline": true,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 54,
+    "Name": "Inline unchecked same-width signed conversion",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { uint y = unchecked((uint)(int)x); Contract.Ensure(y == x, \"P\", \"bits\"); return y; } }",
+    "Inline": true,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 55,
+    "Name": "Inline unsigned complement",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { uint y = ~x; Contract.Ensure((y ^ x) == 4294967295u, \"P\", \"complement\"); return y; } }",
+    "Inline": true,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 56,
+    "Name": "Inline local wrap counterexample",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { uint y = unchecked(x + 1u); Contract.Ensure(y > x, \"P\", \"increase\"); return y; } }",
+    "Inline": true,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 57,
+    "Name": "Inline contract supports signed widening",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { Contract.Ensure((long)x >= 0L, \"P\", \"widen\"); return x; } }",
+    "Inline": true,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 58,
+    "Name": "Inline pure Boolean conjunction",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { Contract.Assert(x >= 0u && x <= 4294967295u, \"P\", \"range\"); return x; } }",
+    "Inline": true,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 59,
+    "Name": "Inline local multiplication zero",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { uint y = x * 0u; Contract.Ensure(y == 0u, \"P\", \"zero\"); return y; } }",
+    "Inline": true,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 60,
+    "Name": "Inline multiple initialized locals",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { uint a = x / 2u; uint b = x - a; Contract.Ensure(a + b == x, \"P\", \"conserve\"); return a; } }",
+    "Inline": true,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 61,
+    "Name": "Checked Int32 add rejected",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) {  Contract.Ensure(checked(x + 1) > x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 62,
+    "Name": "Checked UInt32 subtract rejected",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) {  Contract.Ensure(checked(x - 1u) < x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 63,
+    "Name": "Checked Int64 multiply rejected",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) {  Contract.Ensure(checked(x * 2L) >= x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 64,
+    "Name": "Checked Int32 negate rejected",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) {  Contract.Ensure(checked(-x) >= 0, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 65,
+    "Name": "Checked narrowing conversion rejected",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) {  Contract.Ensure(checked((byte)x) >= 0, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 66,
+    "Name": "Unsigned zero divisor rejected",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) {  Contract.Ensure(x / 0u == x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 67,
+    "Name": "Variable divisor rejected",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) {  Contract.Ensure(x / x == 1u, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 68,
+    "Name": "Signed division overflow not silently modeled",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) {  Contract.Ensure(unchecked(x / -1) >= 0, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 69,
+    "Name": "Signed constant division not modeled",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) {  Contract.Ensure(x / 2L <= x, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 70,
+    "Name": "Exception in short circuit remains unsupported",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) {  Contract.Ensure(x == 0u || x / x == 1u, \"P\", \"semantic case\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 71,
+    "Name": "Inline assignment fails closed",
+    "Source": "using SharpContracts; public static class Cases {  [Verify] public static uint M(uint x) { uint y = x; y = 0u; Contract.Ensure(y == 0u, \"P\", \"assignment\"); return y; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 72,
+    "Name": "Inline branch fails closed",
+    "Source": "using SharpContracts; public static class Cases {  [Verify] public static uint M(uint x) { if (x == 0u) return 1u; Contract.Ensure(x > 0u, \"P\", \"branch\"); return x; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 73,
+    "Name": "Inline loop fails closed",
+    "Source": "using SharpContracts; public static class Cases {  [Verify] public static uint M(uint x) { while (x > 0u) x--; Contract.Ensure(x == 0u, \"P\", \"loop\"); return x; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 74,
+    "Name": "Unmodeled invocation in predicate rejected",
+    "Source": "using SharpContracts; public static class Cases { static bool Pure(uint x) => true; [Verify] public static uint M(uint x) { Contract.Ensure(Pure(x), \"P\", \"call\"); return x; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 75,
+    "Name": "Dynamic contract message rejected",
+    "Source": "using SharpContracts; public static class Cases { static string Message() => \"dynamic\"; [Verify] public static uint M(uint x) { Contract.Ensure(x == x, \"P\", Message()); return x; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 76,
+    "Name": "Unsupported suffix discards earlier proof",
+    "Source": "using SharpContracts; public static class Cases {  [Verify] public static uint M(uint x) { Contract.Ensure(x == x, \"P\", \"identity\"); x++; return x; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 77,
+    "Name": "Late precondition rejected",
+    "Source": "using SharpContracts; public static class Cases {  [Verify] public static uint M(uint x) { uint y = x; Contract.Require(y > 0u, \"A\", \"late\"); Contract.Ensure(y > 0u, \"P\", \"positive\"); return y; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 78,
+    "Name": "Post-return statements rejected",
+    "Source": "using SharpContracts; public static class Cases {  [Verify] public static uint M(uint x) { return x; Contract.Ensure(x == x, \"P\", \"unreachable\"); } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 79,
+    "Name": "Uninitialized local rejected",
+    "Source": "using SharpContracts; public static class Cases {  [Verify] public static uint M(uint x) { uint y; Contract.Ensure(y == x, \"P\", \"uninitialized\"); return y; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 80,
+    "Name": "Unmodeled decimal conversion rejected",
+    "Source": "using SharpContracts; public static class Cases {  [Verify] public static uint M(uint x) { uint y = (uint)(1m + x); Contract.Ensure(y >= x, \"P\", \"decimal\"); return y; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 81,
+    "Name": "Bound inconsistent assumptions distinct",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Require(x > 5u, \"A\", \"large\"); Contract.Require(x < 3u, \"B\", \"small\"); Contract.Ensure(x == x, \"P\", \"identity\"); } }",
+    "Inline": false,
+    "Expected": "InconsistentAssumptions"
+  },
+  {
+    "Iteration": 82,
+    "Name": "Inline inconsistent assumptions distinct",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { Contract.Require(x > 5u, \"A\", \"large\"); Contract.Require(x < 3u, \"B\", \"small\"); Contract.Ensure(x == x, \"P\", \"identity\"); return x; } }",
+    "Inline": true,
+    "Expected": "InconsistentAssumptions"
+  },
+  {
+    "Iteration": 83,
+    "Name": "No-contract method never proved",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) {  } }",
+    "Inline": false,
+    "Expected": "NoContracts"
+  },
+  {
+    "Iteration": 84,
+    "Name": "Inline no-contract method unsupported",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) {  return x; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 85,
+    "Name": "Source-defined Contract lookalike rejected by bound engine",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(x == x,\"P\",\"fake\"); } } namespace SharpContracts { public static class Contract { public static void Ensure(bool condition, string id, string message) { } } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 86,
+    "Name": "Source-defined Contract lookalike rejected by inline engine",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { Contract.Ensure(x == x,\"P\",\"fake\"); return x; } } namespace SharpContracts { public static class Contract { public static void Ensure(bool condition, string id, string message) { } } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 87,
+    "Name": "Source-defined VerifyAttribute rejected",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { Contract.Ensure(x == x,\"P\",\"fake\"); return x; } } namespace SharpContracts { public sealed class VerifyAttribute : System.Attribute { } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 88,
+    "Name": "Bound unreachable check preserves earlier failure",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(false,\"P\",\"always fails\"); Contract.Ensure(true,\"Q\",\"unreachable\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 89,
+    "Name": "Inline unreachable check preserves earlier failure",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { Contract.Ensure(false,\"P\",\"always fails\"); Contract.Ensure(true,\"Q\",\"unreachable\"); return x; } }",
+    "Inline": true,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 90,
+    "Name": "Precondition after postcondition discards partial proof",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure(x == x,\"P\",\"identity\"); Contract.Require(x > 0u,\"A\",\"late\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 91,
+    "Name": "Char witness uses promoted unsigned code unit",
+    "Source": "using SharpContracts; public static class Cases { public static void M(char x) { Contract.Ensure(x > '\\0',\"P\",\"nonzero\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 92,
+    "Name": "Custom overloaded operators not primitive",
+    "Source": "using SharpContracts; public struct V { public static bool operator >(V a,V b)=>true; public static bool operator <(V a,V b)=>false; } public static class Cases { public static void M(V x) { Contract.Ensure(x > x,\"P\",\"custom\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 93,
+    "Name": "Floating-point parameter not a bit vector",
+    "Source": "using SharpContracts; public static class Cases { public static void M(double x) { Contract.Ensure(x == x,\"P\",\"float\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 94,
+    "Name": "Nullable lifted arithmetic not modeled",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int? x) { Contract.Ensure(x + 1 > x,\"P\",\"nullable\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 95,
+    "Name": "Dynamic binding never approximated",
+    "Source": "using SharpContracts; public static class Cases { public static void M(dynamic x) { Contract.Ensure(x > 0,\"P\",\"dynamic\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 96,
+    "Name": "Reference heap access never approximated",
+    "Source": "using SharpContracts; public static class Cases { public static void M(string x) { Contract.Ensure(x.Length >= 0,\"P\",\"heap\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 97,
+    "Name": "Optional parameters rejected",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x = 1) { Contract.Ensure(x == x,\"P\",\"optional\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 98,
+    "Name": "Inline by-reference parameters rejected",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(ref uint x) { Contract.Ensure(x == x,\"P\",\"ref\"); return x; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 99,
+    "Name": "Checked statement block not silently flattened",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { checked { uint y=x+1u; Contract.Ensure(y>x,\"P\",\"checked block\"); return y; } } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 100,
+    "Name": "Mixed UInt32 Int32 promotes to Int64",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x, int y) { Contract.Ensure(x + y == (long)x + y,\"P\",\"mixed promotion\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  }
+]

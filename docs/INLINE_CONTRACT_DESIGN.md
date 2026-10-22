@@ -1,3 +1,30 @@
+# Current inline verification implementation - 2026-10-22
+
+Both compiler-bound entry points now lower Roslyn `IOperation` into `ClrExpression`, a typed extension of the original `ContractExpr` AST. `ClrScalarType` preserves Boolean identity or 8/16/32/64-bit integral width and signedness. Nodes carry source spans; conversions, unary/binary operations and overflow context are explicit. `ClrExpressionEncoder` validates types before producing Z3 expressions, and `ProofQuery` provides the common feasibility/status/model policy.
+
+Unchecked conversions narrow by extraction and widen by source-appropriate sign/zero extension. C# promotions come from Roslyn, including byte addition and mixed uint/int addition to long. Multiplication and bitwise operations wrap at the promoted width. Division accepts only unsigned operands and a compile-time nonzero unsigned divisor. Checked operations, signed/variable division, custom operators, lifted nullable operations, heap access and unsupported statements fail closed.
+
+Both entry points reject source-defined lookalikes of the runtime contract API. Initial inconsistent requirements produce exit 4. A later contract unreachable because an earlier check always throws is UNKNOWN, while the earlier counterexample is retained. Feasibility UNKNOWN is a check result with a reason and cannot yield overall Proved. Counterexample strings preserve signed parameter values and support executable CLR replay.
+
+The [100-case iteration ledger](ITERATION_LOG.md) records the source-to-Z3/CLR corpus, build cadence, reviews and limitations. Full control-flow and legacy-engine migration remain open. Older milestone notes below are historical; their unverified-status statements describe earlier revisions.
+
+## Current supported-language matrix
+
+| Capability | Numeric entry point | Inline entry point |
+|---|---|---|
+| Method | Unique synchronous void block method | Unique synchronous uint block method with runtime VerifyAttribute |
+| Parameters | Ordinary integral 8/16/32/64-bit parameters, including char | Ordinary uint parameters |
+| Contract calls | Runtime Require/Ensure | Runtime Require/Assert/Ensure |
+| Locals and return | No local statements or return values | One initialized uint local per declaration; one final uint return |
+| Expressions | Shared typed integral/Boolean model | Same expression model, including compiler conversions in predicates |
+| Total operators | +, -, *, comparisons, unary + / - / ~ / !, pure Boolean and bitwise AND/OR/XOR | Same |
+| Division | Unsigned operands with a nonzero compile-time unsigned divisor | Same |
+| Preconditions | Before postcondition checks | Before executable statements |
+| Rejection | Checked arithmetic/conversions, signed/variable division, shifts, remainder, nullable/custom operators, side effects, heap state and unsupported statements | Same; assignments/branches/loops remain unsupported |
+| Evidence | Source-derived Z3 results plus signed/unsigned CLR witness replay | Same, plus exact flagship-source regression tests |
+
+The expression core is shared; the statement walkers and method-selection conventions remain separate. A successful check is assumed only for normal runtime fallthrough. An unreachable later check is Unknown, and an earlier counterexample is retained. Symbolic IR nodes extend ContractExpr; old mathematical backends reject them rather than treating CLR bit vectors as unbounded numbers. Serialization and cross-project VeloFormal integration remain future work.
+
 ## Counterexample replay and report hardening — 2026-10-20
 
 The first stabilization commit `360efa09eca8679ea23e8c3f56663b64e27705be` passed [all seven GitHub Actions jobs, including CI Gate](https://github.com/jeffadickson/SharpContracts/actions/runs/39549650831). Local regression coverage now totals 193 passing xUnit cases, zero failures/skips, including eight new tests for solver-input replay, inconsistent inline preconditions, by-reference rejection, and checked/unchecked return wrappers.

@@ -6,7 +6,7 @@
 
 SharpContracts' primary contract authoring language is **ordinary C# expressions embedded in C# source**. It is not a separate parser-based DSL. The independently designed, Eiffel-inspired **VeloFormal Contracts Language** (`.vfc`) remains in the [VeloFormal repository](https://github.com/jeffadickson/VeloFormal/blob/main/docs/contract-language-v0.2.md). Its `require`, `ensure`, `invariant`, `cover`, `after N cycles`, and `within A..B cycles` constructs have RTL/temporal semantics and are **not** part of the SharpContracts C# syntax. Neither language replaces the other.
 
-The proposed common denominator is a typed symbolic intermediate representation for expressions, assumptions, guarantees, and source locations. Sharing an IR must not erase the differences between CLR and clocked hardware semantics. A stable cross-project IR is **planned**, not implemented.
+The proposed common denominator is a typed symbolic intermediate representation for expressions, assumptions, guarantees, and source locations. Sharing an IR must not erase the differences between CLR and clocked hardware semantics. A stable cross-project IR is **planned**, not implemented. Within SharpContracts, the compiler-bound entry points now share typed CLR expression nodes derived from ContractExpr; this does not introduce VeloFormal syntax or claim cross-project serialization.
 
 ## Canonical C# surface
 
@@ -80,3 +80,11 @@ The inline source verifier currently targets uniquely selected synchronous metho
 ## Stabilization report details (2026-10-20)
 
 Inline `uint` parameters and returns must be passed by value; `ref`, `in`, `out` and by-reference returns are unsupported. Schema v1 reports add optional `counterexampleInputs`: parameter names mapped to invariant decimal strings representing UInt32 solver values. SAT witnesses include all parameters, using model completion for unconstrained values. Inconsistent inline preconditions produce InconsistentAssumptions/exit 4; feasibility UNKNOWN produces Unknown/exit 3. Neither result is a proof. No authoring syntax changes are introduced.
+
+## Typed CLR expression increment (2026-10-22)
+
+The C# authoring syntax is unchanged. Predicates now share integral conversions, unary plus/minus/bitwise complement/logical NOT, unchecked addition/subtraction/multiplication, comparisons, bitwise AND/OR/XOR and pure Boolean AND/OR/XOR. Unsigned division is supported only with a nonzero compile-time unsigned divisor. Roslyn supplies all promotions before IR lowering; arithmetic wraps at that promoted width. Inline methods still require uint parameters, uint initialized locals and a final uint return; predicates may contain other supported integral expression types.
+
+Signed division, variable/zero divisors, checked arithmetic/conversions, shifts, remainder, nullable lifting, custom operators and statements outside the entry point's documented subset remain unsupported. Short-circuit operands are conservatively both translated: an unmodeled operation is rejected even on a syntactically unreachable operand. Every admitted operand is pure and total in the model.
+
+A successful runtime check constrains normal fallthrough. If prior contract failures make a subsequent contract unreachable, that check is Unknown with an unreachable reason, not a vacuous Proved; the earlier counterexample remains. Numeric SAT inputs now use signed decimal strings for signed parameters and unsigned decimal strings for unsigned/char parameters. Neither frontend promotes source-defined Contract or VerifyAttribute lookalikes into trusted runtime symbols.

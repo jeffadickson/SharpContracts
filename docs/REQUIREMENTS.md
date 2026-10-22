@@ -1,3 +1,22 @@
+# Current requirement status - typed CLR core, 2026-10-22
+
+Local execution: all nine projects build; 322 xUnit cases pass with zero failures or skips (16 runtime, 32 solver, 274 verification). This is 129 more tests than the previous stabilized revision. The new corpus contains exactly 100 uniquely numbered source-derived cases, plus integrity and unreachable-path checks. Every SAT case replays the solver witness against dynamically compiled original C#; every proved case also executes boundary samples. All original flagship and archived-corpus tests remain passing. The current commit's Linux CI conclusion must be checked after publication.
+
+| ID | Acceptance requirement | Status and evidence |
+|---|---|---|
+| SC-081 | Both compiler-bound entry points consume the same typed symbolic primitive-expression IR and Z3 encoder | Closed within the documented straight-line subset; ClrOperationLowerer / ClrExpression / ClrExpressionEncoder |
+| SC-082 | Preserve compiler numeric promotions, signedness and unchecked conversions | Closed for supported primitives; semantic cases 001-060 and 100, plus CLR replay |
+| SC-083 | Numeric and inline SAT results expose replayable parameter values with correct signed interpretation | Closed; semantic counterexamples, including signed widths and char |
+| SC-084 | Source-defined Contract and VerifyAttribute lookalikes must fail closed | Closed; semantic cases 085-087 |
+| SC-085 | Invalid typed nodes, checked operations and exceptional division must never yield a formula/proof | Closed within the backend's model; ClrExpressionEncoderTests and cases 061-070 |
+| SC-086 | Unreachable later contracts must not erase earlier failures or become vacuous proofs | Closed; cases 088-089 and explicit per-check status assertions |
+| SC-087 | Maintain a 100-case source-to-Z3/CLR regression gate with fixture integrity enforcement | Implemented and passing locally; explicit semantic100 CI step retains TRX evidence |
+| SC-088 | Migrate legacy CFG/SSA, assignments and branches into the typed core | Open; legacy mathematical and BV64 implementations retained |
+
+SC-025 remains partial: typed expression nodes now integrate with both compiler-bound entry points, but a stable serialization schema is not implemented. SC-031 is implemented for source-linked scalar counterexamples and automated CLR replay within this subset. SC-026/SC-032 are implemented for the documented subset and report outcomes. Custom types, checked exception paths, loops, heap state, generic math and method-level postconditions remain open. This increment does not close all of Issue #2.
+
+Builds were executed at 10,20,30,40,50,60,70,80,90,100; semantic reviews at 15,30,45,60,75,90 and a final deep review. See [the full case/review ledger](ITERATION_LOG.md). Older milestone entries below are retained as history; historical pending statements do not override this current status.
+
 ## Counterexample replay and report hardening — 2026-10-20
 
 The first stabilization commit `360efa09eca8679ea23e8c3f56663b64e27705be` passed [all seven GitHub Actions jobs, including CI Gate](https://github.com/jeffadickson/SharpContracts/actions/runs/39549650831). Local regression coverage now totals 193 passing xUnit cases, zero failures/skips, including eight new tests for solver-input replay, inconsistent inline preconditions, by-reference rejection, and checked/unchecked return wrappers.
@@ -10,10 +29,10 @@ Windows x64, .NET SDK 8.0.132: all nine projects compile; 185 xUnit tests pass (
 Fixed Roslyn metadata-reference overload inference and semantic operation lookup for checked/unchecked initializer and return wrappers. `SharpContracts.sln` supports root restore/build/test. Linux CI now selects the matching upstream Z3 4.12.2 native library using a pinned SHA-256 because the NuGet package ships no Linux library. Linux execution and a green CI Gate remain pending; this local evidence does not establish general C# soundness or architecture consolidation. The symbolic expression model remains in `SharpContracts.Runtime/Symbolic`.
 ## Verified-core acceptance gate — 100 archived vectors
 
-- SC-077 (P0): Execute all 100 archived arithmetic vectors as CLR xUnit cases. **Integrated in source; execution pending**.
-- SC-078 (P0): Execute the actual annotated C# midpoint/payment/buffer methods and check contract exceptions. **Integrated in source; execution pending**.
-- SC-079 (P0): Require Z3 source-derived proof for each corrected method and counterexample for each defective method. **CI steps and tests committed; solver results pending**.
-- SC-080 (P0): Publish successful GitHub CI Gate run with commit SHA, logs and TRX artifacts before declaring the verified core complete. **Open**.
+- SC-077 (P0): Execute all 100 archived arithmetic vectors as CLR xUnit cases. **Closed: CLR tests executed successfully in the stabilized CI baseline**.
+- SC-078 (P0): Execute the actual annotated C# midpoint/payment/buffer methods and check contract exceptions. **Closed: CLR tests executed successfully in the stabilized CI baseline**.
+- SC-079 (P0): Require Z3 source-derived proof for each corrected method and counterexample for each defective method. **Closed: source-derived Z3 and compiled CLR regressions pass**.
+- SC-080 (P0): Publish successful GitHub CI Gate run with commit SHA, logs and TRX artifacts before declaring the verified core complete. **Closed for stabilized revision `15ece33cb2e6b6fcccdcf7bc483c0f059015af65`: [passing CI Gate](https://github.com/jeffadickson/SharpContracts/actions/runs/39549862533)**.
 
 # Inline contract verification — implementation milestone
 

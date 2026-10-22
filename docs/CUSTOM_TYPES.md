@@ -1,3 +1,7 @@
+## Compiler-bound IR integration (2026-10-22)
+
+NumericTypeDescriptor now feeds the common ClrOperationLowerer used by the numeric and inline entry points. Built-in widths and signedness reach the typed symbolic AST and common Z3 encoder. Custom operators, conversions, nullable lifting and generic math are still rejected; the legacy BV64 engine remains separate. This closes primitive-expression integration, not custom-type verification.
+
 # C# Custom Numeric Types — SharpContracts M9
 
 SharpContracts must verify the **actual semantics** of custom types, rather than assume that overloaded arithmetic behaves like built-in arithmetic.

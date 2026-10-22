@@ -7,12 +7,14 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Operations;
 using Microsoft.Z3;
 using SharpContracts.Solver;
+using SharpContracts.Symbolic;
 
 namespace SharpContracts.Verification;
 
 /// <summary>
 /// Proof engine for [Verify] methods with uint parameters, locals, inline contracts,
-/// and a single final return. Arithmetic is CLR unchecked BV32; unsupported syntax fails closed.
+/// and a single final return. Expressions use compiler-resolved integral bit vectors;
+/// checked and unsupported operations fail closed.
 /// </summary>
 public static class InlineContractVerifier
 {
@@ -43,7 +45,7 @@ public static class InlineContractVerifier
         var method = candidates[0];
         var symbol = model.GetDeclaredSymbol(method);
         if (symbol is null || !symbol.GetAttributes().Any(a =>
-                a.AttributeClass?.ToDisplayString()=="SharpContracts.VerifyAttribute"))
+                RuntimeSymbolPolicy.IsRuntimeType(a.AttributeClass,"SharpContracts.VerifyAttribute")))
             return new(Array.Empty<MethodCheck>(),new[]{"Method must have [Verify] attribute"});
         if (method.Body is null || symbol.ReturnType.SpecialType!=SpecialType.System_UInt32 ||
             symbol.IsAsync || symbol.ReturnsByRef || symbol.ReturnsByRefReadonly ||
@@ -57,65 +59,11 @@ public static class InlineContractVerifier
             using var options = ctx.MkParams();
             options.Add("timeout",10000u);
             solver.Parameters=options;
-            var values = new Dictionary<ISymbol,BitVecExpr>(SymbolEqualityComparer.Default);
+            var values = new Dictionary<ISymbol,ClrExpression>(SymbolEqualityComparer.Default);
             foreach(var p in symbol.Parameters)
-                values.Add(p,ctx.MkBVConst(p.Name,32));
-
-            Microsoft.Z3.Expr Lower(IOperation operation)
-            {
-                if (operation is IParenthesizedOperation parenthesized)
-                    return Lower(parenthesized.Operand);
-                if (operation is IConversionOperation conversion)
-                {
-                    if (conversion.IsChecked || conversion.OperatorMethod is not null ||
-                        !conversion.Conversion.IsIdentity)
-                        throw new NotSupportedException("Nonidentity or checked conversion unsupported");
-                    return Lower(conversion.Operand);
-                }
-                if (operation is IParameterReferenceOperation param &&
-                    values.TryGetValue(param.Parameter,out var pv)) return pv;
-                if (operation is ILocalReferenceOperation local &&
-                    values.TryGetValue(local.Local,out var lv)) return lv;
-                if (operation is ILiteralOperation literal)
-                {
-                    if (literal.ConstantValue.Value is uint u) return ctx.MkBV(u,32);
-                    if (literal.ConstantValue.Value is bool b) return ctx.MkBool(b);
-                    throw new NotSupportedException("Only uint and bool literals supported");
-                }
-                if (operation is IBinaryOperation binary)
-                {
-                    if(binary.IsChecked || binary.OperatorMethod is not null)
-                        throw new NotSupportedException("Checked or overloaded binary operation unsupported");
-                    // The supported operators are pure and total over BV32.
-                    // SMT bit-vector division is total; C# division by zero throws.
-                    // Admit only a nonzero compile-time UInt32 divisor until exceptional
-                    // proof obligations are implemented.
-                    if(binary.OperatorKind==BinaryOperatorKind.Divide)
-                    {
-                        if(binary.RightOperand.ConstantValue.Value is not uint divisor || divisor==0u)
-                            throw new NotSupportedException("Division requires nonzero constant uint divisor");
-                    }
-                    var l=Lower(binary.LeftOperand);
-                    var r=Lower(binary.RightOperand);
-                    if (binary.OperatorKind is BinaryOperatorKind.Equals) return ctx.MkEq(l,r);
-                    if (binary.OperatorKind is BinaryOperatorKind.NotEquals) return ctx.MkNot(ctx.MkEq(l,r));
-                    if (l is not BitVecExpr a || r is not BitVecExpr b ||
-                        a.SortSize != 32 || b.SortSize != 32)
-                        throw new NotSupportedException("Binary operation requires BV32 operands");
-                    return binary.OperatorKind switch
-                    {
-                        BinaryOperatorKind.Add => ctx.MkBVAdd(a,b),
-                        BinaryOperatorKind.Subtract => ctx.MkBVSub(a,b),
-                        BinaryOperatorKind.Divide => ctx.MkBVUDiv(a,b),
-                        BinaryOperatorKind.LessThan => ctx.MkBVULT(a,b),
-                        BinaryOperatorKind.LessThanOrEqual => ctx.MkBVULE(a,b),
-                        BinaryOperatorKind.GreaterThan => ctx.MkBVUGT(a,b),
-                        BinaryOperatorKind.GreaterThanOrEqual => ctx.MkBVUGE(a,b),
-                        _ => throw new NotSupportedException("Unsupported operator "+binary.OperatorKind)
-                    };
-                }
-                throw new NotSupportedException("Unsupported operation "+operation.Kind);
-            }
+                values.Add(p,new ClrParameter(p.Name, ClrOperationLowerer.ScalarType(p.Type)));
+            var lowerer = new ClrOperationLowerer(values);
+            var encoder = new ClrExpressionEncoder(ctx);
 
             bool seenNonrequire = false;
             bool returned = false;
@@ -135,13 +83,15 @@ public static class InlineContractVerifier
                         throw new NotSupportedException("Initialized uint local required");
                     var op=(model.GetOperation(variable.Initializer) as IVariableInitializerOperation)?.Value
                         ?? throw new NotSupportedException("Unbound local initializer");
-                    var value=Lower(op) as BitVecExpr
-                        ?? throw new NotSupportedException("Local initializer not BV32");
+                    var value=lowerer.Lower(op);
+                    if (value.ValueType != ClrScalarType.Integral(32, false))
+                        throw new NotSupportedException("Local initializer not UInt32");
+                    encoder.Encode(value);
                     values.Add(localSymbol,value);
                 }
                 else if (statement is ExpressionStatementSyntax {Expression: InvocationExpressionSyntax invocation} &&
                     model.GetOperation(invocation) is IInvocationOperation call &&
-                    call.TargetMethod.ContainingType.ToDisplayString()=="SharpContracts.Contract" &&
+                    RuntimeSymbolPolicy.IsRuntimeType(call.TargetMethod.ContainingType,"SharpContracts.Contract") &&
                     call.TargetMethod.Name is ("Require" or "Ensure" or "Assert"))
                 {
                     var args=call.Arguments.ToDictionary(a=>a.Parameter!.Name,a=>a.Value);
@@ -154,30 +104,14 @@ public static class InlineContractVerifier
                         throw new NotSupportedException("Constant ID/message required");
                     if (call.TargetMethod.Name=="Require" && seenNonrequire)
                         throw new NotSupportedException("Require must occur before executable statements");
-                    var predicate=Lower(condition) as BoolExpr
+                    var predicate=encoder.Encode(lowerer.Lower(condition)) as BoolExpr
                         ?? throw new NotSupportedException("Contract predicate must be Bool");
                     if(call.TargetMethod.Name=="Require") solver.Assert(predicate);
                     else
                     {
                         seenNonrequire=true;
-                        var feasibility=solver.Check();
-                        if(feasibility==Status.UNSATISFIABLE)
-                            throw new NotSupportedException("Inconsistent preconditions: no permitted inputs");
-                        if(feasibility==Status.UNKNOWN)
-                            throw new NotSupportedException("Precondition feasibility unknown: "+solver.ReasonUnknown);
-                        solver.Push();
-                        solver.Assert(ctx.MkNot(predicate));
-                        var answer=solver.Check();
-                        checks.Add(new(contractId,line,
-                            answer==Status.UNSATISFIABLE?VerificationStatus.Proved:
-                            answer==Status.SATISFIABLE?VerificationStatus.Counterexample:VerificationStatus.Unknown,
-                            answer==Status.SATISFIABLE?solver.Model.ToString():null,
-                            answer==Status.UNKNOWN?solver.ReasonUnknown:null,
-                            answer==Status.SATISFIABLE ? symbol.Parameters.ToDictionary(
-                                p=>p.Name,
-                                p=>((BitVecNum)solver.Model.Evaluate(values[p],true)).UInt64
-                                    .ToString(System.Globalization.CultureInfo.InvariantCulture)) : null));
-                        solver.Pop();
+                        checks.Add(ProofQuery.Check(ctx,solver,predicate,contractId,line,
+                            checks.Count != 0, values.Where(p=>p.Key is IParameterSymbol),encoder));
                         solver.Assert(predicate);
                     }
                 }
@@ -185,7 +119,7 @@ public static class InlineContractVerifier
                 {
                     var operation=(model.GetOperation(ret) as IReturnOperation)?.ReturnedValue
                         ?? throw new NotSupportedException("Unbound return expression");
-                    if(Lower(operation) is not BitVecExpr)
+                    if(encoder.Encode(lowerer.Lower(operation)) is not BitVecExpr)
                         throw new NotSupportedException("Return value must be BV32");
                     returned=true;
                 }

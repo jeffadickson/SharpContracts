@@ -1,3 +1,13 @@
+# Shared typed CLR verification - 2026-10-22
+
+Both compiler-bound entry points now lower Roslyn `IOperation` into `ClrExpression`, a typed extension of the original `ContractExpr` AST. `ClrScalarType` preserves Boolean identity or 8/16/32/64-bit integral width and signedness. Nodes carry source spans; conversions, unary/binary operations and overflow context are explicit. `ClrExpressionEncoder` validates types before producing Z3 expressions, and `ProofQuery` provides the common feasibility/status/model policy.
+
+Unchecked conversions narrow by extraction and widen by source-appropriate sign/zero extension. C# promotions come from Roslyn, including byte addition and mixed uint/int addition to long. Multiplication and bitwise operations wrap at the promoted width. Division accepts only unsigned operands and a compile-time nonzero unsigned divisor. Checked operations, signed/variable division, custom operators, lifted nullable operations, heap access and unsupported statements fail closed.
+
+Both entry points reject source-defined lookalikes of the runtime contract API. Initial inconsistent requirements produce exit 4. A later contract unreachable because an earlier check always throws is UNKNOWN, while the earlier counterexample is retained. Feasibility UNKNOWN is a check result with a reason and cannot yield overall Proved. Counterexample strings preserve signed parameter values and support executable CLR replay.
+
+The [100-case iteration ledger](ITERATION_LOG.md) records the source-to-Z3/CLR corpus, build cadence, reviews and limitations. Full control-flow and legacy-engine migration remain open. Older milestone notes below are historical; their unverified-status statements describe earlier revisions.
+
 ## Counterexample replay and report hardening — 2026-10-20
 
 The first stabilization commit `360efa09eca8679ea23e8c3f56663b64e27705be` passed [all seven GitHub Actions jobs, including CI Gate](https://github.com/jeffadickson/SharpContracts/actions/runs/39549650831). Local regression coverage now totals 193 passing xUnit cases, zero failures/skips, including eight new tests for solver-input replay, inconsistent inline preconditions, by-reference rejection, and checked/unchecked return wrappers.
@@ -255,4 +265,4 @@ The analyzer is **not yet automatically referenced by the runtime NuGet package*
 
 ## Known limitations
 
-Explicit checks and automatic interface-boundary checks are implemented; general class method interception/weaving is not implemented. `Old<T>` is value capture rather than deep reference snapshots. The analyzer identifies three narrow categories only and does not establish full expression purity or contracts' satisfiability. Postcondition failure occurs after potential mutation, without rollback. The browser runs JavaScript examples and does not execute C#. No SMT-backed formal verification yet. Builds and tests should run in GitHub CI; no claim of green status until confirmed.
+Explicit checks and automatic interface-boundary checks are implemented; general class method interception/weaving is not implemented. `Old<T>` is value capture rather than deep reference snapshots. The analyzer identifies three narrow categories only and does not establish full expression purity or contracts' satisfiability. Postcondition failure occurs after potential mutation, without rollback. The browser runs JavaScript examples and does not execute C#. Restricted source-to-Z3 verification now executes; the current model and acceptance evidence are described at the start of this document.
