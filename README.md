@@ -1,3 +1,5 @@
+CI is temporarily disabled at the user's request. The workflow is preserved as .github/workflows/ci.yml.disabled; rename it back to ci.yml and push to restore CI. Local builds, tests, coverage and quality checks remain required.
+
 Local uint assignment, promoted shifts and StrictDoc traceability are now implemented; detailed execution evidence is recorded in docs/ENGINEERING-2026-10-24.md. Canonical requirements: requirements/SharpContracts.sdoc.
 
 # SharpContracts
