@@ -22,7 +22,7 @@ Attributes configure verification. C# expressions define contracts alongside the
 
 ## Build and verify
 
-Use a .NET 8 SDK. Older SDKs such as 8.0.132 compile the solution but warn that the demonstration analyzer targets a newer Roslyn compiler; CI uses the latest .NET 8 SDK.
+Use the .NET 10 SDK (the latest recorded local build used SDK 10.0.402). The current project files target `net8.0`, which the .NET 10 SDK can build; SDK version and target framework are different settings. GitHub Actions CI is intentionally disabled, so the preserved workflow is not evidence of a current CI run.
 
 ```sh
 dotnet restore SharpContracts.sln
