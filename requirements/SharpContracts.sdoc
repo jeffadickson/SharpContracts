@@ -856,7 +856,7 @@ UID: SC-088
 STATUS: Partial
 TITLE: Migrate legacy CFG/SSA, assignments and branches into the typed core
 STATEMENT: Migrate legacy CFG/SSA, assignments and branches into the typed core.
-COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+COMMENT: SC-089 and SC-091 migrate local updates and bounded structured branches/returns. Full CFG/SSA joins and remaining legacy capabilities are still outstanding.
 RELATIONS:
 - TYPE: File
   VALUE: docs/REQUIREMENTS.md
@@ -872,6 +872,8 @@ RELATIONS:
   VALUE: SharpContracts.Verification/InlineContractVerifier.cs
 - TYPE: File
   VALUE: SharpContracts.Verification.Tests/LocalAssignmentTests.cs
+- TYPE: File
+  VALUE: SharpContracts.Verification/InlineControlFlow.cs
 - TYPE: File
   VALUE: SharpContracts.Verification.Tests/AssignmentPropertyTests.cs
 - TYPE: File
@@ -914,3 +916,43 @@ RELATIONS:
   VALUE: SharpContracts.Verification.Tests/ShiftBoundaryTests.cs
 - TYPE: File
   VALUE: docs/ENGINEERING-2026-10-24.md
+
+[REQUIREMENT]
+UID: SC-091
+STATUS: Verified in bounded primitive model
+TITLE: Structured branches and early returns through the typed CLR core
+STATEMENT: Inline verification shall support structured blocks, if/else, nested branches and early returns with isolated immutable UInt32 local snapshots and source-site proof aggregation.
+COMMENT: Ensure retains call-site semantics. This bounded structured interpreter does not claim full CFG/SSA migration, method-exit guarantees, loops or checked exceptions.
+RELATIONS:
+- TYPE: Parent
+  VALUE: SC-088
+- TYPE: File
+  VALUE: SharpContracts.Verification/InlineControlFlow.cs
+- TYPE: File
+  VALUE: SharpContracts.Verification.Tests/ControlFlowTests.cs
+- TYPE: File
+  VALUE: SharpContracts.Verification.Tests/fixtures/control-flow.json
+- TYPE: File
+  VALUE: docs/ENGINEERING-ISSUE2-CONTROLFLOW.md
+- TYPE: File
+  VALUE: docs/evidence/issue2-controlflow.json
+
+[REQUIREMENT]
+UID: SC-092
+STATUS: Verified in bounded primitive model
+TITLE: Complete translation and nonvacuous bounded path verification
+STATEMENT: The verifier shall validate both branch arms before solving, preserve counterexamples and UNKNOWN, reject inconsistent entry assumptions, and discard partial proofs when unsupported syntax or execution budgets prevent complete translation.
+COMMENT: Limits are 256 generated path states, 1024 statements, nesting 64, expanded expressions 4096 nodes and depth 128. An entirely unreachable source contract is UNKNOWN.
+RELATIONS:
+- TYPE: Parent
+  VALUE: SC-091
+- TYPE: File
+  VALUE: SharpContracts.Verification/InlineControlFlow.cs
+- TYPE: File
+  VALUE: SharpContracts.Verification.Tests/ControlFlowTests.cs
+- TYPE: File
+  VALUE: tools/Test-Mutations.ps1
+- TYPE: File
+  VALUE: docs/ENGINEERING-ISSUE2-CONTROLFLOW.md
+- TYPE: File
+  VALUE: docs/evidence/issue2-controlflow.json

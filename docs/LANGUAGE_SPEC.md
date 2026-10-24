@@ -1,5 +1,11 @@
 # SharpContracts Language Specification — Draft v0.1
 
+## Current Issue #2 increment: SC-091 / SC-092
+
+The inline verifier now supports structured blocks, if/else, nested branches and early returns through the typed CLR IR, with independent local snapshots on each path. Complete translation includes dead arms; unsupported operations discard every partial result. Entirely unreachable contracts are UNKNOWN. Require remains an entry prefix and Ensure remains a source call-site check, which an early return can bypass. Bounded exploration is documented in [the engineering evidence](ENGINEERING-ISSUE2-CONTROLFLOW.md). Full CFG/SSA migration, loops, checked exceptions and custom types remain open. This supersedes earlier straight-line-only scope statements below.
+
+Canonical requirements SC-091 and SC-092 are maintained in requirements/SharpContracts.sdoc. CI is temporarily disabled by user request; local execution remains required.
+
 **Status:** Design baseline; the supported verification subset is narrower than the language described here. This file is tracked in Git and must evolve through reviewed changes.
 
 ## Relationship to VeloFormal

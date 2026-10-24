@@ -14,7 +14,7 @@ $comparison=if ([IO.Path]::DirectorySeparatorChar -eq '\') { [StringComparison]:
 $text=Get-Content -LiteralPath $DocumentPath -Raw
 $ids=@([regex]::Matches($text,'(?m)^UID: (SC-\d{3})\r?$') | ForEach-Object { $_.Groups[1].Value })
 if ($ids.Count -ne @($ids | Sort-Object -Unique).Count) { throw 'Duplicate requirement UID.' }
-foreach ($number in 1..90) {
+foreach ($number in 1..92) {
     $expected='SC-'+$number.ToString('000',[cultureinfo]::InvariantCulture)
     if ($ids -notcontains $expected) { throw ('Missing stable requirement '+$expected) }
 }

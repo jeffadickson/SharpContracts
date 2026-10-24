@@ -1,0 +1,113 @@
+{
+  "platform": "Windows x64",
+  "build": "Release: 9 projects, 0 errors, 1 pre-existing legacy nullable warning",
+  "xunit": {
+    "passed": 440,
+    "verification": 392,
+    "skipped": 0,
+    "solver": 32,
+    "failed": 0,
+    "runtime": 16
+  },
+  "pester": {
+    "skipped": 0,
+    "passed": 9,
+    "failed": 0,
+    "commandsCovered": 234,
+    "commandsAnalyzed": 252
+  },
+  "coverageViews": {
+    "verificationTests": {
+      "Verification": {
+        "branch": 78.05,
+        "line": 92.0
+      },
+      "Runtime": {
+        "branch": 10.98,
+        "line": 18.4
+      },
+      "Solver": {
+        "branch": 72.58,
+        "line": 81.33
+      }
+    },
+    "solverTests": {
+      "Solver": {
+        "branch": 50.0,
+        "line": 59.33
+      },
+      "Runtime": {
+        "branch": 19.23,
+        "line": 21.6
+      }
+    },
+    "runtimeTests": {
+      "Analyzers": {
+        "branch": 0,
+        "line": 0
+      },
+      "Runtime": {
+        "branch": 43.4,
+        "line": 70.0
+      }
+    }
+  },
+  "mutations": [
+    {
+      "Mutant": "ignore-local-update",
+      "Status": "Killed",
+      "FailedTests": 4
+    },
+    {
+      "Mutant": "erase-assignment-value",
+      "Status": "Killed",
+      "FailedTests": 5
+    },
+    {
+      "Mutant": "shared-branch-values",
+      "Status": "Killed",
+      "FailedTests": 2
+    },
+    {
+      "Mutant": "wrong-false-guard",
+      "Status": "Killed",
+      "FailedTests": 2
+    },
+    {
+      "Mutant": "ignore-return-termination",
+      "Status": "Killed",
+      "FailedTests": 8
+    },
+    {
+      "Mutant": "omit-false-arm-validation",
+      "Status": "Killed",
+      "FailedTests": 2
+    },
+    {
+      "Mutant": "unmasked-shift-count",
+      "Status": "Killed",
+      "FailedTests": 4
+    },
+    {
+      "Mutant": "wrong-64-bit-mask",
+      "Status": "Killed",
+      "FailedTests": 2
+    },
+    {
+      "Mutant": "logical-for-signed-right",
+      "Status": "Killed",
+      "FailedTests": 2
+    },
+    {
+      "Mutant": "arithmetic-for-unsigned-right",
+      "Status": "Killed",
+      "FailedTests": 4
+    }
+  ],
+  "limitations": [
+    "Per-test-project coverage views overlap and must not be averaged.",
+    "Native Z3 and dynamically compiled CLR replay assemblies are outside collection.",
+    "Selected mutation snapshot precedes raw-source expression budget hardening; final full tests and coverage include it.",
+    "CI is intentionally disabled; no new green CI Gate is claimed."
+  ]
+}

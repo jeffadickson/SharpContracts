@@ -1,3 +1,9 @@
+## Current Issue #2 increment: SC-091 / SC-092
+
+The inline verifier now supports structured blocks, if/else, nested branches and early returns through the typed CLR IR, with independent local snapshots on each path. Complete translation includes dead arms; unsupported operations discard every partial result. Entirely unreachable contracts are UNKNOWN. Require remains an entry prefix and Ensure remains a source call-site check, which an early return can bypass. Bounded exploration is documented in [the engineering evidence](ENGINEERING-ISSUE2-CONTROLFLOW.md). Full CFG/SSA migration, loops, checked exceptions and custom types remain open. This supersedes earlier straight-line-only scope statements below.
+
+Canonical requirements SC-091 and SC-092 are maintained in requirements/SharpContracts.sdoc. CI is temporarily disabled by user request; local execution remains required.
+
 ## Current assignment increment — 2026-10-24
 
 Canonical requirements now live in [StrictDoc](../requirements/SharpContracts.sdoc), preserving all pre-existing SC identifiers. Markdown below is a historical overview. SC-089 adds simple assignment to existing ordinary UInt32 locals through immutable IR substitution; SC-088 remains partial because branches, CFG joins and parameter/heap mutation have not migrated. Ref locals are explicitly rejected to prevent accidental alias reasoning. Compound assignment and checked updates remain unsupported.

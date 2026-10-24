@@ -1,0 +1,693 @@
+[
+  {
+    "name": "Both arms return with own checks",
+    "sourceSha256": "77ea9996d415c3cf8d0a9be5d601a5624b900f159ddc271a0f2a14f374909543",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Proved",
+      "checks": [
+        {
+          "contractId": "H",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        },
+        {
+          "contractId": "L",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "name": "Branches rejoin with equal result",
+    "sourceSha256": "82ae2566fc52a4a6e8b569dfdd24d5549ef8838c5db789374c9f1b802a24434f",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Proved",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "name": "Checked guard fails closed",
+    "sourceSha256": "831fd7301dcb3bdf723fe75509287edf7d5f351ec5c5a842f40725b6d591370f",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Checked, lifted or custom binary operator unsupported"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Compound assignment fails closed",
+    "sourceSha256": "f762f9491960b2998afff95789ea09e239dc5d0d41bfcef5bce4239f01b9814d",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Unsupported statement at line 1: ExpressionStatement"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Conditional expression remains unsupported",
+    "sourceSha256": "d7a58f8a731d1426a679c2bedc726a7c2b8343cc30770fbc5b241288b6be3d5d",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Unsupported bound operation Conditional"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Contracts before early and final returns",
+    "sourceSha256": "1f9fa9c006a215f9d1166be7bfe23bcdf576e5bc9990c5fd65627875641cf060",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Proved",
+      "checks": [
+        {
+          "contractId": "Z",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        },
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "name": "Dead arbitrary divisor fails closed",
+    "sourceSha256": "7fac74d32c123e4766d61990290c6c10f20de2d735701c732c1867f350085bce",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Division requires a nonzero constant unsigned divisor"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Dynamic message in dead arm rejected",
+    "sourceSha256": "53833bcccbd18bb26e5242cc4f8a318cb05d534880f3957427fc05f79338c7d4",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Constant nonblank ID and constant message required"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Else if chain",
+    "sourceSha256": "0b8a25b53f116224b0b7e9cfdd25bad41c1c107de6a4db9ceecade0e5011e6ad",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Proved",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "name": "Entry assumptions inconsistent not unreachable",
+    "sourceSha256": "59cea620b8847af3354459bf853b633a18cb69cf007331803be3f19519fe58ae",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "InconsistentAssumptions",
+      "checks": [],
+      "diagnostics": [
+        "Inconsistent preconditions: no permitted inputs"
+      ],
+      "exitCode": 4
+    }
+  },
+  {
+    "name": "Failing earlier check retains witness across branch",
+    "sourceSha256": "27b8bca6b1d39a479e4f0634af227add74aba94d9d63901f1919e072d7a2bb05",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Counterexample",
+      "checks": [
+        {
+          "contractId": "A",
+          "line": 1,
+          "status": "Counterexample",
+          "counterexample": "(define-fun x () (_ BitVec 32)\n  #xffffffff)",
+          "reason": null,
+          "counterexampleInputs": {
+            "x": "4294967295"
+          }
+        },
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 1
+    }
+  },
+  {
+    "name": "False arm defect",
+    "sourceSha256": "f77ff8d242ece43426415226caf21bf1c137f2eca172588742c1aa21a7b95f89",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Counterexample",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Counterexample",
+          "counterexample": "(define-fun x () (_ BitVec 32)\n  #x00000002)",
+          "reason": null,
+          "counterexampleInputs": {
+            "x": "2"
+          }
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 1
+    }
+  },
+  {
+    "name": "Heap assignment in branch fails closed",
+    "sourceSha256": "56c40ae5f61cf57d7cbf73ff36588d6ceb785f0d9614870ef0301533cc2b66a4",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Assignment requires an existing ordinary uint local"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "If else updates isolate state",
+    "sourceSha256": "d7d7d9998dfecc4250a5acfa04cfa924dbd3c8efae3ba8dab5cac62a877d75cd",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Proved",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "name": "Infeasible arm does not pollute reachable join",
+    "sourceSha256": "febfa170c279e7d87fcab2809d06f7145b4c01a72d4c17b696bc346f14d51643",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Proved",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "name": "Loop inside branch fails closed",
+    "sourceSha256": "ed147089b6067750ae04e92918d8ef6dc384c9e2464d72dd796bd92c6cd6878f",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Unsupported statement at line 1: Loop"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Missing else preserves prior local",
+    "sourceSha256": "9291ddfe5fd8d10b538b3580db892c502b02279cfad363559101f0c5381d3a7d",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Proved",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "name": "Nested block snapshot",
+    "sourceSha256": "0706bfbbeacd18d1db679712f7885ea1cd5ab747d2d315aac33264a5581f6422",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Proved",
+      "checks": [
+        {
+          "contractId": "S",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        },
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "name": "Nested branch state",
+    "sourceSha256": "fffa4d2057ff3ad62df87fb44d6161802770c782d21fb8929c2eb3a6bfba5ba6",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Proved",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "name": "Nested defect has exact input one",
+    "sourceSha256": "24ce6849ffb1ade6e212ecdb43bc65bd1313a4c9356e4f91cea4abd568583a86",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Counterexample",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Counterexample",
+          "counterexample": "(define-fun x () (_ BitVec 32)\n  #x00000001)",
+          "reason": null,
+          "counterexampleInputs": {
+            "x": "1"
+          }
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 1
+    }
+  },
+  {
+    "name": "Parameter mutation in branch fails closed",
+    "sourceSha256": "faf15b45ba9ce9e859e91791c9d15177eee81d1de6b4db12d3fa6fd91e22eacb",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Assignment requires an existing ordinary uint local"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Ref alias in branch fails closed",
+    "sourceSha256": "db016c97c5b4565d2fc4c44a2807bea67edd7a3cf06f853db75725bfb4cd0ff7",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Initialized ordinary uint local required"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Require in branch is not caller assumption",
+    "sourceSha256": "1f5511111cf305821ebe3154b7444b989331055e4bcbcd52db651c0a916d64c5",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Require must occur in the method's top-level entry prefix"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Same spelling locals in sibling scopes",
+    "sourceSha256": "0e0c447336a1c7c6f2f6629c8339ae2cbaf0212bdbd5dfd5d8b3ee23f2d3ddc9",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Proved",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "name": "Statements after both unconditional return arms rejected",
+    "sourceSha256": "7d42899213083c61380a3fc907c4eb5593499d3b251589da33606e0bb0d8b918",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Statements after unconditional return unsupported"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "True arm defect",
+    "sourceSha256": "579c1c74a1d5dd60d3b9965f6b7733e75792d4168bfa7539dfcdb0d01121664e",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Counterexample",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Counterexample",
+          "counterexample": "(define-fun x () (_ BitVec 32)\n  #x00000000)",
+          "reason": null,
+          "counterexampleInputs": {
+            "x": "0"
+          }
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 1
+    }
+  },
+  {
+    "name": "Two parameter maximum",
+    "sourceSha256": "ae01a9c896a67d45853c55d9e72557f464d09d2792e934b811140ea24c587163",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Proved",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 0
+    }
+  },
+  {
+    "name": "Unmodeled early return expression fails closed",
+    "sourceSha256": "03a747b572d8ca65308d48012eaeb42471f8b4772bfeb9cc3887d71916beb5d9",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Unsupported bound operation Invocation"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Unreachable branches retain first failing assertion",
+    "sourceSha256": "690009dd1238077c0a2ed523125d55ae70c90eb30fdfde38fa587ab687886115",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Counterexample",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Counterexample",
+          "counterexample": "",
+          "reason": null,
+          "counterexampleInputs": {
+            "x": "0"
+          }
+        },
+        {
+          "contractId": "Z",
+          "line": 1,
+          "status": "Unknown",
+          "counterexample": null,
+          "reason": "Unreachable contract under entry assumptions or preceding checks; no nonvacuous proof",
+          "counterexampleInputs": null
+        },
+        {
+          "contractId": "N",
+          "line": 1,
+          "status": "Unknown",
+          "counterexample": null,
+          "reason": "Unreachable contract under entry assumptions or preceding checks; no nonvacuous proof",
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 1
+    }
+  },
+  {
+    "name": "Unreachable source goal is unknown",
+    "sourceSha256": "c44f8c1cdc607aaa8e342ec4d2a630013424e9363112a8d2fd9debdbd29fca75",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unknown",
+      "checks": [
+        {
+          "contractId": "D",
+          "line": 1,
+          "status": "Unknown",
+          "counterexample": null,
+          "reason": "Unreachable contract under entry assumptions or preceding checks; no nonvacuous proof",
+          "counterexampleInputs": null
+        },
+        {
+          "contractId": "L",
+          "line": 1,
+          "status": "Proved",
+          "counterexample": null,
+          "reason": null,
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 3
+    }
+  },
+  {
+    "name": "Unsupported dead checked arithmetic fails closed",
+    "sourceSha256": "d11a03c9af267eb9adc6b6f0950d8916eb56a6c36a9cdab1c8ff73dc214bcee2",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Checked, lifted or custom binary operator unsupported"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Unsupported dead invocation fails closed",
+    "sourceSha256": "cd5ae4b5a7e4e1398918c3fb8a697625b35e0cd3e87890e15460263b9c3882ce",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Unsupported bound operation Invocation"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Unsupported syntax outranks vacuous entry",
+    "sourceSha256": "e3ecf74c49eba3fe480fa9607a61d7a15e7fa22cca82e1f44bdbadbc71a3df87",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unsupported",
+      "checks": [],
+      "diagnostics": [
+        "Unsupported bound operation Invocation"
+      ],
+      "exitCode": 2
+    }
+  },
+  {
+    "name": "Upper input counterexample survives join",
+    "sourceSha256": "8e38886174307d935f47cff080a2bfecc8b048fdcf025d2941bd938556ca8fc1",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Counterexample",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Counterexample",
+          "counterexample": "(define-fun x () (_ BitVec 32)\n  #x00000007)",
+          "reason": null,
+          "counterexampleInputs": {
+            "x": "7"
+          }
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 1
+    }
+  },
+  {
+    "name": "Wholly unreachable contract is not proved",
+    "sourceSha256": "66b94d265c99c4598f368d165d2784ee4df73c934a08f0b15708786c7a332645",
+    "passed": true,
+    "report": {
+      "schemaVersion": 1,
+      "outcome": "Unknown",
+      "checks": [
+        {
+          "contractId": "P",
+          "line": 1,
+          "status": "Unknown",
+          "counterexample": null,
+          "reason": "Unreachable contract under entry assumptions or preceding checks; no nonvacuous proof",
+          "counterexampleInputs": null
+        }
+      ],
+      "diagnostics": [],
+      "exitCode": 3
+    }
+  }
+]

@@ -1,0 +1,177 @@
+[
+  {
+    "Name": "If else updates isolate state",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x; if(x==0u)y=1u; else y=x; Contract.Ensure(y>=x,\"P\",\"range\"); return y; } }",
+    "Expected": "Proved"
+  },
+  {
+    "Name": "Branches rejoin with equal result",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=0u; if(x>0u)y=x; else y=0u; Contract.Ensure(y==x,\"P\",\"join\"); return y; } }",
+    "Expected": "Proved"
+  },
+  {
+    "Name": "Missing else preserves prior local",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x; if(x==0u)y=1u; Contract.Ensure(y>=x,\"P\",\"range\"); return y; } }",
+    "Expected": "Proved"
+  },
+  {
+    "Name": "Nested branch state",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x; if(x<10u){if(x==0u)y=10u; else y=x;}else y=x; Contract.Ensure(y>=x,\"P\",\"nested\"); return y; } }",
+    "Expected": "Proved"
+  },
+  {
+    "Name": "Contracts before early and final returns",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x==0u){Contract.Assert(x==0u,\"Z\",\"zero\");return 1u;} Contract.Ensure(x>0u,\"P\",\"nonzero\");return x; } }",
+    "Expected": "Proved"
+  },
+  {
+    "Name": "Both arms return with own checks",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x>=10u){Contract.Ensure(x>=10u,\"H\",\"high\");return x;}else{Contract.Ensure(x<10u,\"L\",\"low\");return x;} } }",
+    "Expected": "Proved"
+  },
+  {
+    "Name": "Nested block snapshot",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x; {uint old=y;y=0u;Contract.Assert(old==x,\"S\",\"snapshot\");} Contract.Ensure(y==0u,\"P\",\"reset\");return y; } }",
+    "Expected": "Proved"
+  },
+  {
+    "Name": "Same spelling locals in sibling scopes",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=0u;if(x==0u){uint temp=1u;y=temp;}else{uint temp=x;y=temp;}Contract.Ensure(y>=x,\"P\",\"scope\");return y; } }",
+    "Expected": "Proved"
+  },
+  {
+    "Name": "Infeasible arm does not pollute reachable join",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { Contract.Require(x==0u,\"A\",\"entry\");uint y=0u;if(x==0u)y=1u;else y=x+1u;Contract.Ensure(y==1u,\"P\",\"join\");return y; } }",
+    "Expected": "Proved"
+  },
+  {
+    "Name": "Failing earlier check retains witness across branch",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { Contract.Assert(x<4294967295u,\"A\",\"bound\");if(x==0u)return 1u;Contract.Ensure(x<4294967295u,\"P\",\"normal fallthrough\");return x; } }",
+    "Expected": "Counterexample"
+  },
+  {
+    "Name": "Two parameter maximum",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x,uint y) { uint maximum=x;if(y>x)maximum=y;Contract.Ensure(maximum>=x && maximum>=y,\"P\",\"maximum\");return maximum; } }",
+    "Expected": "Proved"
+  },
+  {
+    "Name": "Else if chain",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=0u;if(x==0u)y=0u;else if(x==1u)y=1u;else y=x;Contract.Ensure(y==x,\"P\",\"chain\");return y; } }",
+    "Expected": "Proved"
+  },
+  {
+    "Name": "True arm defect",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x;if(x==0u)y=1u;else y=x;Contract.Ensure(y==x,\"P\",\"true arm\");return y; } }",
+    "Expected": "Counterexample"
+  },
+  {
+    "Name": "False arm defect",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x;if(x==0u)y=0u;else y=unchecked(x+1u);Contract.Ensure(y==x,\"P\",\"false arm\");return y; } }",
+    "Expected": "Counterexample"
+  },
+  {
+    "Name": "Upper input counterexample survives join",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x;if(x==0u)y=1u;else y=2u;Contract.Ensure(y>=x,\"P\",\"join\");return y; } }",
+    "Expected": "Counterexample"
+  },
+  {
+    "Name": "Nested defect has exact input one",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x;if(x<2u){if(x==1u)y=0u;}Contract.Ensure(y==x,\"P\",\"nested defect\");return y; } }",
+    "Expected": "Counterexample"
+  },
+  {
+    "Name": "Unsupported dead invocation fails closed",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x;if(x!=x)y=Read(x);Contract.Ensure(true,\"P\",\"dead call\");return y; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Unsupported dead checked arithmetic fails closed",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x!=x){uint y=checked(x+1u);}Contract.Ensure(true,\"P\",\"dead exception\");return x; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Dead arbitrary divisor fails closed",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x!=x){uint y=x/x;}Contract.Ensure(true,\"P\",\"dead division\");return x; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Loop inside branch fails closed",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x==0u){Contract.Assert(true,\"A\",\"prefix\");}else{while(x>0u)x--;}Contract.Ensure(true,\"P\",\"loop\");return x; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Require in branch is not caller assumption",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x==0u){Contract.Require(x==0u,\"A\",\"nested\");}Contract.Ensure(true,\"P\",\"claim\");return x; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Parameter mutation in branch fails closed",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x==0u)x=1u;Contract.Ensure(true,\"P\",\"parameter\");return x; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Ref alias in branch fails closed",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x;if(x==0u){ref uint alias=ref y;alias=0u;}Contract.Ensure(true,\"P\",\"alias\");return y; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Compound assignment fails closed",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x;if(x==0u)y+=1u;Contract.Ensure(true,\"P\",\"compound\");return y; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Unmodeled early return expression fails closed",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x!=x)return Read(x);Contract.Ensure(true,\"P\",\"return call\");return x; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Checked guard fails closed",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(checked(x+1u)>x)return x;Contract.Ensure(true,\"P\",\"guard\");return x; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Heap assignment in branch fails closed",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x==0u)storage=x;Contract.Ensure(true,\"P\",\"heap\");return x; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Unreachable source goal is unknown",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { Contract.Require(x==0u,\"A\",\"entry\");if(x==1u)Contract.Ensure(false,\"D\",\"dead\");else Contract.Ensure(true,\"L\",\"live\");return x; } }",
+    "Expected": "Unknown"
+  },
+  {
+    "Name": "Entry assumptions inconsistent not unreachable",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { Contract.Require(x==0u,\"A\",\"zero\");Contract.Require(x>0u,\"B\",\"positive\");if(x==0u)Contract.Ensure(true,\"P\",\"claim\");return x; } }",
+    "Expected": "InconsistentAssumptions"
+  },
+  {
+    "Name": "Unsupported syntax outranks vacuous entry",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { Contract.Require(x==0u,\"A\",\"zero\");Contract.Require(x>0u,\"B\",\"positive\");if(x!=x)return Read(x);Contract.Ensure(true,\"P\",\"claim\");return x; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Unreachable branches retain first failing assertion",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { Contract.Assert(false,\"P\",\"failure\");if(x==0u)Contract.Ensure(true,\"Z\",\"dead zero\");else Contract.Ensure(true,\"N\",\"dead nonzero\");return x; } }",
+    "Expected": "Counterexample"
+  },
+  {
+    "Name": "Wholly unreachable contract is not proved",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x<x)Contract.Ensure(false,\"P\",\"impossible branch\");return x; } }",
+    "Expected": "Unknown"
+  },
+  {
+    "Name": "Statements after both unconditional return arms rejected",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x==0u)return 1u;else return x;Contract.Ensure(true,\"P\",\"unreachable suffix\"); } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Conditional expression remains unsupported",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { uint y=x==0u ? 1u : x;Contract.Ensure(y>=x,\"P\",\"ternary\");return y; } }",
+    "Expected": "Unsupported"
+  },
+  {
+    "Name": "Dynamic message in dead arm rejected",
+    "Source": "using SharpContracts; public static class Cases { static uint Read(uint v)=>v; static string Message()=>\"dynamic\"; static uint storage; [Verify] public static uint M(uint x) { if(x!=x)Contract.Ensure(true,\"P\",Message());else Contract.Ensure(true,\"L\",\"live\");return x; } }",
+    "Expected": "Unsupported"
+  }
+]

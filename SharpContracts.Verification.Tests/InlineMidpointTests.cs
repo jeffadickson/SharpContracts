@@ -50,7 +50,7 @@ public sealed class InlineMidpointTests
     }
 
     [Fact]
-    public void UnmodeledControlFlowFailsClosed()
+    public void GuardedEarlyReturnPreservesCallSiteContractSemantics()
     {
         const string source = """
             using SharpContracts;
@@ -63,8 +63,8 @@ public sealed class InlineMidpointTests
             }
             """;
         var result=InlineContractVerifier.Verify(source,"M");
-        Assert.NotEmpty(result.Errors);
-        Assert.Empty(result.Checks);
+        Assert.Empty(result.Errors);
+        Assert.True(result.AllProved);
     }
     [Fact]
     public void ArbitraryDivisorIsRejectedRatherThanModeledAsTotal()

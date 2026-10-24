@@ -2,7 +2,7 @@
 Describe 'StrictDoc traceability guard' {
     BeforeEach {
     $lines=@('[DOCUMENT]','TITLE: Test requirements','')
-    foreach ($number in 1..90) {
+    foreach ($number in 1..92) {
         $lines+=@('[REQUIREMENT]',('UID: SC-'+$number.ToString('000')),'STATEMENT: Test requirement.','')
     }
     $valid=$lines -join [Environment]::NewLine

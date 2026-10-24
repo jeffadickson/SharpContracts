@@ -1,6 +1,6 @@
 CI is temporarily disabled at the user's request. The workflow is preserved as .github/workflows/ci.yml.disabled; rename it back to ci.yml and push to restore CI. Local builds, tests, coverage and quality checks remain required.
 
-Local uint assignment, promoted shifts and StrictDoc traceability are now implemented; detailed execution evidence is recorded in docs/ENGINEERING-2026-10-24.md. Canonical requirements: requirements/SharpContracts.sdoc.
+Structured branches, nested blocks and early returns now extend the typed CLR core (SC-091/092); see [Issue #2 evidence](docs/ENGINEERING-ISSUE2-CONTROLFLOW.md). Local uint assignment, promoted shifts and StrictDoc traceability are implemented; detailed execution evidence is recorded in docs/ENGINEERING-2026-10-24.md. Canonical requirements: requirements/SharpContracts.sdoc.
 
 # SharpContracts
 
@@ -58,7 +58,7 @@ C# source -> Roslyn IOperation -> typed symbolic CLR expressions -> shared verif
 
 Supported scalar expressions include unchecked integral conversions, addition/subtraction/multiplication, comparisons, unary operations, pure Boolean/bitwise operations and unsigned division by a nonzero constant, and C# shifts. Entry-point restrictions and unsupported features are listed in [the inline design](docs/INLINE_CONTRACT_DESIGN.md).
 
-Branches, loops, checked exceptions, heap state, custom operators, generic math and true method-level postconditions remain open in [Issue #2](https://github.com/jeffadickson/SharpContracts/issues/2). Unsupported translation clears partial proofs. Impossible preconditions never become a successful proof. Unreachable later contracts are UNKNOWN and retain earlier counterexamples.
+Full CFG/SSA joins, loops, checked exceptions, heap state, custom operators, generic math and true method-level postconditions remain open in [Issue #2](https://github.com/jeffadickson/SharpContracts/issues/2). Unsupported translation clears partial proofs. Impossible preconditions never become a successful proof. Unreachable later contracts are UNKNOWN and retain earlier counterexamples.
 
 JSON exit codes: 0 proved, 1 counterexample, 2 unsupported/no contracts, 3 unknown, 4 inconsistent assumptions. Counterexamples include a contract ID, line, Z3 model and decimal-string input values; signed parameters retain their signed interpretation.
 

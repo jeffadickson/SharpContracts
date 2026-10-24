@@ -498,10 +498,10 @@
   },
   {
     "Iteration": 72,
-    "Name": "Inline branch fails closed",
+    "Name": "Inline guarded early return now supported",
     "Source": "using SharpContracts; public static class Cases {  [Verify] public static uint M(uint x) { if (x == 0u) return 1u; Contract.Ensure(x > 0u, \"P\", \"branch\"); return x; } }",
     "Inline": true,
-    "Expected": "Unsupported"
+    "Expected": "Proved"
   },
   {
     "Iteration": 73,

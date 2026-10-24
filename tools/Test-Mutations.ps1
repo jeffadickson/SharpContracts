@@ -32,13 +32,17 @@ foreach ($file in $files) {
     New-Item -ItemType Directory -Path (Split-Path $destination -Parent) -Force | Out-Null
     Copy-Item -LiteralPath $file.FullName -Destination $destination
 }
-$assignmentFile='SharpContracts.Verification/InlineContractVerifier.cs'
+$assignmentFile='SharpContracts.Verification/InlineControlFlow.cs'
 $shiftFile='SharpContracts.Solver/ClrExpressionEncoder.cs'
 $originals=@{}
 foreach ($file in @($assignmentFile,$shiftFile)) { $originals[$file]=Get-Content -LiteralPath (Join-Path $work $file) -Raw }
 $mutants=@(
-    @{ Name='ignore-local-update'; File=$assignmentFile; From='values[target.Local]=value;'; To='values[target.Local]=values[target.Local];' },
-    @{ Name='erase-assignment-value'; File=$assignmentFile; From='values[target.Local]=value;'; To='values[target.Local]=new ClrConstant(0,ClrScalarType.Integral(32,false));' },
+    @{ Name='ignore-local-update'; File=$assignmentFile; From='path.Values[store.Name]=value;'; To='path.Values.TryAdd(store.Name,value);' },
+    @{ Name='erase-assignment-value'; File=$assignmentFile; From='path.Values[store.Name]=value;'; To='path.Values[store.Name]=new Value(new ClrConstant(0,UInt32));' },
+    @{ Name='shared-branch-values'; File=$assignmentFile; From='new(Values,StringComparer.Ordinal)'; To='Values' },
+    @{ Name='wrong-false-guard'; File=$assignmentFile; From='path.Fork(context.MkNot(condition))'; To='path.Fork(condition)' },
+    @{ Name='ignore-return-termination'; File=$assignmentFile; From='break; // A returned path never reaches a later source contract.'; To='next.Add(path); break; // Deliberate mutation.' },
+    @{ Name='omit-false-arm-validation'; File=$assignmentFile; From='branch.WhenFalse is null ? null : Compile(branch.WhenFalse,depth+1)'; To='null' },
     @{ Name='unmasked-shift-count'; File=$shiftFile; From='uint countMask=type.Width==64 ? 63u : 31u;'; To='uint countMask=uint.MaxValue;' },
     @{ Name='wrong-64-bit-mask'; File=$shiftFile; From='uint countMask=type.Width==64 ? 63u : 31u;'; To='uint countMask=31u;' },
     @{ Name='logical-for-signed-right'; File=$shiftFile; From='context.MkBVASHR(operand,distance)'; To='context.MkBVLSHR(operand,distance)' },
@@ -47,7 +51,7 @@ $mutants=@(
 $results=[System.Collections.Generic.List[object]]::new()
 Push-Location $work
 try {
-    $filter='FullyQualifiedName~LocalAssignmentTests|FullyQualifiedName~ShiftBoundaryTests'
+    $filter='FullyQualifiedName~LocalAssignmentTests|FullyQualifiedName~ShiftBoundaryTests|FullyQualifiedName~ControlFlowSanityTests'
     $baselinePath=Join-Path $runResults 'baseline'
     & dotnet test SharpContracts.Verification.Tests --configuration Release --filter $filter --logger 'trx;LogFileName=baseline.trx' --results-directory $baselinePath *> (Join-Path $output 'baseline.log')
     if ($LASTEXITCODE -ne 0) { throw 'Mutation baseline failed; no mutation score is valid.' }

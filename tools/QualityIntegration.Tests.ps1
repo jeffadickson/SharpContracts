@@ -7,6 +7,6 @@ Describe 'Native quality automation integration' {
         & "$PSScriptRoot/Test-Cli.ps1"
     }
     It 'kills the selected compiled mutants without stale result reuse' {
-        & "$PSScriptRoot/Test-Mutations.ps1" -OutputDirectory artifacts/mutations-reviewed
+        & "$PSScriptRoot/Test-Mutations.ps1" -OutputDirectory artifacts/issue2/mutations-reviewed
     }
 }

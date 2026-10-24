@@ -1,5 +1,11 @@
 # Inline C# contracts: implemented verification model
 
+## Current Issue #2 increment: SC-091 / SC-092
+
+The inline verifier now supports structured blocks, if/else, nested branches and early returns through the typed CLR IR, with independent local snapshots on each path. Complete translation includes dead arms; unsupported operations discard every partial result. Entirely unreachable contracts are UNKNOWN. Require remains an entry prefix and Ensure remains a source call-site check, which an early return can bypass. Bounded exploration is documented in [the engineering evidence](ENGINEERING-ISSUE2-CONTROLFLOW.md). Full CFG/SSA migration, loops, checked exceptions and custom types remain open. This supersedes earlier straight-line-only scope statements below.
+
+Canonical requirements SC-091 and SC-092 are maintained in requirements/SharpContracts.sdoc. CI is temporarily disabled by user request; local execution remains required.
+
 Canonical requirements: requirements/SharpContracts.sdoc. Expression semantics are shared with the parameter-only numeric entry point through ClrOperationLowerer, ClrExpression, ClrExpressionEncoder and ProofQuery. The older mathematical and BV64 engines remain separate, retained prototypes.
 
 | Feature | Inline entry point |
@@ -12,10 +18,10 @@ Canonical requirements: requirements/SharpContracts.sdoc. Expression semantics a
 | Arithmetic | Unchecked +, -, *, conversions; unsigned division by a nonzero constant |
 | Bit operations | AND/OR/XOR, unary complement, <<, >> and >>> with C# masking and signedness |
 | Contracts | Nonblank constant IDs and constant messages; Require before executable statements |
-| Return | One final supported uint expression; Ensures remains a check at its call site |
+| Return | Supported uint expression on every normal path; Ensure remains a check at its call site |
 | Failure policy | Unsupported statements/operations clear all partial proof results |
 
-Ref locals, parameter assignment, fields, aliases, compound/increment assignments, branches, loops, early returns, custom operators, nullable lifting, heap state, signed/variable division, remainder, checked exceptions and method-level result contracts remain unsupported. SC-088 is only partially addressed by straight-line local updates.
+Ref locals, parameter assignment, fields, aliases, compound/increment assignments, loops, custom operators, nullable lifting, heap state, signed/variable division, remainder, checked exceptions and method-level result contracts remain unsupported. SC-088 remains partial: structured paths are supported, but full CFG/SSA migration is outstanding.
 
 SAT returns a source line, contract ID, raw Z3 model and decimal parameter inputs. Initial contradictory assumptions are inconsistent, never Proved. A later check unreachable after prior contract failures is Unknown and preserves the earlier counterexample. Solver UNKNOWN/timeouts cannot yield an overall Proved result.
 
