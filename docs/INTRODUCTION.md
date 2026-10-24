@@ -271,3 +271,7 @@ The analyzer is **not yet automatically referenced by the runtime NuGet package*
 ## Known limitations
 
 Explicit checks and automatic interface-boundary checks are implemented; general class method interception/weaving is not implemented. `Old<T>` is value capture rather than deep reference snapshots. The analyzer identifies three narrow categories only and does not establish full expression purity or contracts' satisfiability. Postcondition failure occurs after potential mutation, without rollback. The browser runs JavaScript examples and does not execute C#. Restricted source-to-Z3 verification now executes; the current model and acceptance evidence are described at the start of this document.
+
+## Promoted shifts and measured quality (2026-10-24)
+
+The core now verifies C# <<, >> and >>> with compiler promotion, signedness and the CLR shift-count mask. Ordinary uint local reassignment is supported; aliasing, parameter mutation, branches and checked exception paths remain rejected. The 50 new source cases retain structured Z3 reports and replay counterexamples against compiled C#; additional fixed-seed FsCheck and boundary checks compare encoded result bits with the CLR. StrictDoc requirements and managed coverage reports accompany the implementation. Coverage does not measure native Z3 or establish soundness.

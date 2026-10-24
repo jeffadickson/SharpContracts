@@ -863,7 +863,7 @@ RELATIONS:
 
 [REQUIREMENT]
 UID: SC-089
-STATUS: Verified
+STATUS: Verified in supported primitive model
 TITLE: Verify simple assignment to existing ordinary UInt32 locals using immutable symbolic snapshots
 STATEMENT: Verify simple assignment to existing ordinary UInt32 locals using immutable symbolic snapshots.
 COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
@@ -872,6 +872,10 @@ RELATIONS:
   VALUE: SharpContracts.Verification/InlineContractVerifier.cs
 - TYPE: File
   VALUE: SharpContracts.Verification.Tests/LocalAssignmentTests.cs
+- TYPE: File
+  VALUE: SharpContracts.Verification.Tests/AssignmentPropertyTests.cs
+- TYPE: File
+  VALUE: docs/ENGINEERING-2026-10-24.md
 
 [REQUIREMENT]
 UID: SC-062
@@ -891,4 +895,22 @@ RELATIONS:
 - TYPE: File
   VALUE: SharpContracts.Verification/ProofReport.cs
 
-
+[REQUIREMENT]
+UID: SC-090
+STATUS: Verified in supported primitive model
+TITLE: Compiler-accurate promoted C# shift expressions
+STATEMENT: The compiler-bound source verifiers shall encode <<, >> and >>> with C# integral promotion, signedness and low-five/low-six-bit Int32 shift count masking, and reject unsupported operand/result types.
+COMMENT: Source-derived Z3 cases, exact compiled CLR replay, boundary tests, seeded FsCheck properties and isolated deliberate mutations provide evidence; none alone constitutes general translator soundness.
+RELATIONS:
+- TYPE: Parent
+  VALUE: SC-082
+- TYPE: File
+  VALUE: SharpContracts.Verification/ClrOperationLowerer.cs
+- TYPE: File
+  VALUE: SharpContracts.Solver/ClrExpressionEncoder.cs
+- TYPE: File
+  VALUE: SharpContracts.Verification.Tests/ShiftRequirementTests.cs
+- TYPE: File
+  VALUE: SharpContracts.Verification.Tests/ShiftBoundaryTests.cs
+- TYPE: File
+  VALUE: docs/ENGINEERING-2026-10-24.md

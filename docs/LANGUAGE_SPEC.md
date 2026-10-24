@@ -85,10 +85,14 @@ Inline `uint` parameters and returns must be passed by value; `ref`, `in`, `out`
 
 The C# authoring syntax is unchanged. Predicates now share integral conversions, unary plus/minus/bitwise complement/logical NOT, unchecked addition/subtraction/multiplication, comparisons, bitwise AND/OR/XOR and pure Boolean AND/OR/XOR. Unsigned division is supported only with a nonzero compile-time unsigned divisor. Roslyn supplies all promotions before IR lowering; arithmetic wraps at that promoted width. Inline methods still require uint parameters, uint initialized locals and a final uint return; predicates may contain other supported integral expression types.
 
-Signed division, variable/zero divisors, checked arithmetic/conversions, shifts, remainder, nullable lifting, custom operators and statements outside the entry point's documented subset remain unsupported. Short-circuit operands are conservatively both translated: an unmodeled operation is rejected even on a syntactically unreachable operand. Every admitted operand is pure and total in the model.
+Signed division, variable/zero divisors, checked arithmetic/conversions, remainder, nullable lifting, custom operators and statements outside the entry point's documented subset remain unsupported. Short-circuit operands are conservatively both translated: an unmodeled operation is rejected even on a syntactically unreachable operand. Every admitted operand is pure and total in the model.
 
 A successful runtime check constrains normal fallthrough. If prior contract failures make a subsequent contract unreachable, that check is Unknown with an unreachable reason, not a vacuous Proved; the earlier counterexample remains. Numeric SAT inputs now use signed decimal strings for signed parameters and unsigned decimal strings for unsigned/char parameters. Neither frontend promotes source-defined Contract or VerifyAttribute lookalikes into trusted runtime symbols.
 
 ## Ordinary local assignment (2026-10-24)
 
 The inline entry point accepts simple assignment to an existing ordinary uint local. Its RHS is lowered against the pre-assignment symbolic state and stored as an immutable expression, so previously captured locals retain their values. Assignment to parameters, fields, ref locals, deconstruction targets and compound/increment operations remains unsupported. Checked RHS operations fail closed. This does not introduce method-level Ensures or control-flow support.
+
+## Promoted shift expressions (2026-10-24)
+
+The compiler-bound expression core now supports built-in <<, >> and >>> after Roslyn applies C# integral promotion. The left value must be promoted Int32, UInt32, Int64 or UInt64, the right value Int32, and the result matches the left type. Counts are masked by 31 for 32-bit values and 63 for 64-bit values, including negative counts. Signed >> sign-extends; unsigned >> and all >>> zero-fill. Shift expressions themselves do not add checked overflow exceptions, but checked arithmetic or conversions in their operands remain unsupported. Shifts do not enable parameter mutation, incrementing counts or user-defined operators.

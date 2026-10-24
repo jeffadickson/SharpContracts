@@ -62,7 +62,7 @@ public sealed class RequirementIterationTests
         Replay(source, report);
     }
 
-    private static void Replay(string source, ProofReport report)
+    internal static void Replay(string source, ProofReport report)
     {
         var references = ((string)AppContext.GetData("TRUSTED_PLATFORM_ASSEMBLIES")!).Split(Path.PathSeparator)
             .Append(typeof(Contract).Assembly.Location).Distinct()

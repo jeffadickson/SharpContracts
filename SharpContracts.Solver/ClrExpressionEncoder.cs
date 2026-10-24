@@ -67,6 +67,8 @@ public sealed class ClrExpressionEncoder(Context context)
     private Microsoft.Z3.Expr EncodeBinary(ClrBinary binary)
     {
         if (binary.IsChecked) throw new NotSupportedException("Checked arithmetic requires exception verification");
+        if (binary.Operator is ClrBinaryOperator.ShiftLeft or ClrBinaryOperator.ShiftRight or ClrBinaryOperator.UnsignedShiftRight)
+            return EncodeShift(binary);
         if (binary.Left.ValueType != binary.Right.ValueType) throw new ArgumentException("Binary operand type mismatch");
         bool comparison = binary.Operator is ClrBinaryOperator.Equal or ClrBinaryOperator.NotEqual
             or ClrBinaryOperator.LessThan or ClrBinaryOperator.LessOrEqual
@@ -107,6 +109,27 @@ public sealed class ClrExpressionEncoder(Context context)
             ClrBinaryOperator.GreaterThan => signed ? context.MkBVSGT(a, b) : context.MkBVUGT(a, b),
             ClrBinaryOperator.GreaterOrEqual => signed ? context.MkBVSGE(a, b) : context.MkBVUGE(a, b),
             _ => throw new NotSupportedException("Unsupported bit-vector operator")
+        };
+    }
+
+    private Microsoft.Z3.Expr EncodeShift(ClrBinary binary)
+    {
+        // Roslyn has promoted narrow left operands. C# uses only the low 5/6 count bits,
+        // including for negative Int32 counts; SMT shifts do not apply this mask themselves.
+        var type=binary.Left.ValueType;
+        if (type.IsBoolean || type.Width is not (32 or 64) || binary.ValueType != type ||
+            binary.Right.ValueType != ClrScalarType.Integral(32,true))
+            throw new ArgumentException("Shift requires a promoted 32/64-bit left operand, Int32 count and matching result");
+        var operand=(BitVecExpr)Encode(binary.Left);
+        var count=(BitVecExpr)Encode(binary.Right);
+        uint countMask=type.Width==64 ? 63u : 31u;
+        BitVecExpr distance=context.MkBVAND(count,context.MkBV(countMask,32));
+        if (type.Width==64) distance=context.MkZeroExt(32,distance);
+        return binary.Operator switch
+        {
+            ClrBinaryOperator.ShiftLeft => context.MkBVSHL(operand,distance),
+            ClrBinaryOperator.ShiftRight when type.IsSigned => context.MkBVASHR(operand,distance),
+            _ => context.MkBVLSHR(operand,distance)
         };
     }
 }

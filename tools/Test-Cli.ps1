@@ -22,5 +22,18 @@ foreach ($case in $cases) {
         $report.schemaVersion -ne 1 -or @($report.checks).Count -eq 0 -or @($report.diagnostics).Count -ne 0) {
         throw ('CLI contract mismatch: '+$case.File+' '+$case.Method)
     }
+    foreach ($check in $report.checks) {
+        if ([string]::IsNullOrWhiteSpace($check.contractId) -or $check.line -le 0) { throw 'Missing source-linked contract.' }
+        if ($case.Inline -and $check.status -eq 'Counterexample') {
+            if ($null -eq $check.counterexampleInputs -or @($check.counterexampleInputs.PSObject.Properties).Count -eq 0) {
+                throw 'Missing replay inputs.'
+            }
+            foreach ($inputValue in $check.counterexampleInputs.PSObject.Properties) {
+                [uint]$parsed=0
+                if (-not [uint]::TryParse([string]$inputValue.Value,[Globalization.NumberStyles]::None,
+                    [cultureinfo]::InvariantCulture,[ref]$parsed)) { throw 'Invalid UInt32 replay input.' }
+            }
+        }
+    }
     Write-Output ('PASS '+$case.File+' '+$case.Method+': '+$report.outcome+' exit='+$code)
 }

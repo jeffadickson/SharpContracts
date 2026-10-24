@@ -24,12 +24,14 @@ public sealed class LocalAssignmentTests
     [Fact]
     public void UpdatedLocalWraparoundHasOriginalInputWitness()
     {
-        var result=InlineContractVerifier.Verify(Source(
-            "uint y=x; y=unchecked(y+1u); Contract.Ensure(y>x,\"P\",\"increase\"); return y;"),"M");
+        var source=Source("uint y=x; y=unchecked(y+1u); Contract.Ensure(y>x,\"P\",\"increase\"); return y;");
+        var result=InlineContractVerifier.Verify(source,"M");
         Assert.Empty(result.Errors);
         var check=Assert.Single(result.Checks);
         Assert.Equal(VerificationStatus.Counterexample,check.Status);
         Assert.Equal(uint.MaxValue.ToString(),check.CounterexampleInputs!["x"]);
+        // Execute the exact annotated source with the solver witness, rather than only its arithmetic.
+        RequirementIterationTests.Replay(source,ProofReport.From(result));
     }
 
     [Theory]

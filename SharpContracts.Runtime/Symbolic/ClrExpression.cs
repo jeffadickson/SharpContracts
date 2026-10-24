@@ -31,7 +31,8 @@ public sealed record ClrParameter(string Name, ClrScalarType ScalarType) : ClrEx
 public enum ClrBinaryOperator
 {
     Add, Subtract, Multiply, Divide, Equal, NotEqual,
-    LessThan, LessOrEqual, GreaterThan, GreaterOrEqual, And, Or, Xor
+    LessThan, LessOrEqual, GreaterThan, GreaterOrEqual, And, Or, Xor,
+    ShiftLeft, ShiftRight, UnsignedShiftRight
 }
 public sealed record ClrBinary(ClrBinaryOperator Operator, ClrExpression Left,
     ClrExpression Right, ClrScalarType ResultType, bool IsChecked = false) : ClrExpression(ResultType);

@@ -1,0 +1,352 @@
+[
+  {
+    "Iteration": 1,
+    "Name": "UInt32 left shift zero",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((x << 0) == x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 2,
+    "Name": "UInt32 left shift count 32 masks to zero",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((x << 32) == x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 3,
+    "Name": "UInt32 left shift count 33 masks to one",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((x << 33) == (x << 1),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 4,
+    "Name": "UInt32 left shift count negative one",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((x << -1) == (x << 31),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 5,
+    "Name": "UInt32 left shift count negative 32",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((x << -32) == x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 6,
+    "Name": "Int32 left shift count 32",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((x << 32) == x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 7,
+    "Name": "Int32 left shift count 33",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((x << 33) == (x << 1),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 8,
+    "Name": "Int32 left shift negative count",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((x << -1) == (x << 31),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 9,
+    "Name": "UInt32 left shift can decrease",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((x << 1) >= x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 10,
+    "Name": "Int32 left shift can decrease",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((x << 1) >= x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 11,
+    "Name": "Int32 arithmetic right keeps sign",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((x >> 1) >= 0,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 12,
+    "Name": "Int32 right shift count 32",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((x >> 32) == x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 13,
+    "Name": "Int32 right negative count",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((x >> -1) == (x >> 31),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 14,
+    "Name": "UInt32 right count 32",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((x >> 32) == x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 15,
+    "Name": "UInt32 right cannot increase",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((x >> 1) <= x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 16,
+    "Name": "UInt32 right count 33",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((x >> 33) == (x >> 1),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 17,
+    "Name": "Int32 full arithmetic right is zero or minus one",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((x >> 31) == 0 || (x >> 31) == -1,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 18,
+    "Name": "UInt32 top bit right is zero or one",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((x >> 31) <= 1u,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 19,
+    "Name": "UInt32 negative right count",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x) { Contract.Ensure((x >> -1) == (x >> 31),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 20,
+    "Name": "Int32 right count 64",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x) { Contract.Ensure((x >> 64) == x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 21,
+    "Name": "Int64 left shift count 64",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) { Contract.Ensure((x << 64) == x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 22,
+    "Name": "UInt64 left shift count 64",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x) { Contract.Ensure((x << 64) == x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 23,
+    "Name": "Int64 left shift count 65",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) { Contract.Ensure((x << 65) == (x << 1),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 24,
+    "Name": "UInt64 negative left count",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x) { Contract.Ensure((x << -1) == (x << 63),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 25,
+    "Name": "Int64 negative right count",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) { Contract.Ensure((x >> -1) == (x >> 63),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 26,
+    "Name": "UInt64 right count 64",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x) { Contract.Ensure((x >> 64) == x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 27,
+    "Name": "Int64 right count 64",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) { Contract.Ensure((x >> 64) == x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 28,
+    "Name": "UInt64 left shift can decrease",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x) { Contract.Ensure((x << 63) >= x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 29,
+    "Name": "Int64 arithmetic sign extension",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x) { Contract.Ensure((x >> 63) == 0L || (x >> 63) == -1L,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 30,
+    "Name": "UInt64 logical high bit",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x) { Contract.Ensure((x >> 63) <= 1UL,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 31,
+    "Name": "Int32 unsigned right has explicit logical semantics",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x, int count) { Contract.Ensure(unchecked((uint)(x >>> count)) == (unchecked((uint)x) >> count),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 32,
+    "Name": "Int64 unsigned right has explicit logical semantics",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x, int count) { Contract.Ensure(unchecked((ulong)(x >>> count)) == (unchecked((ulong)x) >> count),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 33,
+    "Name": "UInt32 unsigned and ordinary right agree",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x, int count) { Contract.Ensure((x >>> count) == (x >> count),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 34,
+    "Name": "UInt64 unsigned and ordinary right agree",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x, int count) { Contract.Ensure((x >>> count) == (x >> count),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 35,
+    "Name": "Int32 unsigned right by one is nonnegative",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x, int count) { Contract.Ensure((x >>> 1) >= 0,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 36,
+    "Name": "Int64 unsigned right by one is nonnegative",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x, int count) { Contract.Ensure((x >>> 1) >= 0L,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 37,
+    "Name": "Int32 unsigned right count 32 retains negative value",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x, int count) { Contract.Ensure((x >>> 32) >= 0,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 38,
+    "Name": "Int64 unsigned right count 64 retains negative value",
+    "Source": "using SharpContracts; public static class Cases { public static void M(long x, int count) { Contract.Ensure((x >>> 64) >= 0L,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 39,
+    "Name": "UInt32 variable left count uses low five bits",
+    "Source": "using SharpContracts; public static class Cases { public static void M(uint x, int count) { Contract.Ensure((x << count) == (x << (count & 31)),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 40,
+    "Name": "UInt64 variable left count uses low six bits",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ulong x, int count) { Contract.Ensure((x << count) == (x << (count & 63)),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 41,
+    "Name": "Byte left shift promotes before shifting by eight",
+    "Source": "using SharpContracts; public static class Cases { public static void M(byte x, int count) { Contract.Ensure((x << 8) >= x,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 42,
+    "Name": "SByte arithmetic right uses sign extension",
+    "Source": "using SharpContracts; public static class Cases { public static void M(sbyte x, int count) { Contract.Ensure((x >> 8) == 0 || (x >> 8) == -1,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 43,
+    "Name": "Int16 left shift retains signed Int32 behavior",
+    "Source": "using SharpContracts; public static class Cases { public static void M(short x, int count) { Contract.Ensure((x << 16) >= 0,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 44,
+    "Name": "UInt16 left shift can become negative Int32",
+    "Source": "using SharpContracts; public static class Cases { public static void M(ushort x, int count) { Contract.Ensure((x << 16) >= 0,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 45,
+    "Name": "Char left shift can become negative Int32",
+    "Source": "using SharpContracts; public static class Cases { public static void M(char x, int count) { Contract.Ensure((x << 16) >= 0,\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Counterexample"
+  },
+  {
+    "Iteration": 46,
+    "Name": "Checked context does not add shift overflow exceptions",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x, int count) { Contract.Ensure(checked(x << count) == unchecked(x << count),\"P\",\"shift case\"); } }",
+    "Inline": false,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 47,
+    "Name": "Assigned UInt32 shift count 32 preserves value",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { uint y=x; y=y<<32; Contract.Ensure(y==x,\"P\",\"mask\"); return y; } }",
+    "Inline": true,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 48,
+    "Name": "Earlier local snapshot survives shifted assignment",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { uint old=x; uint y=x; y=y<<1; Contract.Ensure(old==x,\"P\",\"snapshot\"); return y; } }",
+    "Inline": true,
+    "Expected": "Proved"
+  },
+  {
+    "Iteration": 49,
+    "Name": "Shifted parameter mutation remains unsupported",
+    "Source": "using SharpContracts; public static class Cases { [Verify] public static uint M(uint x) { x=x<<1; Contract.Ensure(x==x,\"P\",\"parameter\"); return x; } }",
+    "Inline": true,
+    "Expected": "Unsupported"
+  },
+  {
+    "Iteration": 50,
+    "Name": "Shift count increment clears earlier partial proof",
+    "Source": "using SharpContracts; public static class Cases { public static void M(int x,int count) { Contract.Ensure(x==x,\"A\",\"identity\"); Contract.Ensure((x<<count++)==x,\"P\",\"side effect\"); } }",
+    "Inline": false,
+    "Expected": "Unsupported"
+  }
+]

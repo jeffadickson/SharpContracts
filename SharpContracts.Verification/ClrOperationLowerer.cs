@@ -99,6 +99,9 @@ internal sealed class ClrOperationLowerer(IReadOnlyDictionary<ISymbol, ClrExpres
             BinaryOperatorKind.And or BinaryOperatorKind.ConditionalAnd => ClrBinaryOperator.And,
             BinaryOperatorKind.Or or BinaryOperatorKind.ConditionalOr => ClrBinaryOperator.Or,
             BinaryOperatorKind.ExclusiveOr => ClrBinaryOperator.Xor,
+            BinaryOperatorKind.LeftShift => ClrBinaryOperator.ShiftLeft,
+            BinaryOperatorKind.RightShift => ClrBinaryOperator.ShiftRight,
+            BinaryOperatorKind.UnsignedRightShift => ClrBinaryOperator.UnsignedShiftRight,
             _ => throw new NotSupportedException("Unsupported binary operator " + binary.OperatorKind)
         };
         if (op == ClrBinaryOperator.Divide)

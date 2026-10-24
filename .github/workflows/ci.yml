@@ -67,13 +67,13 @@ jobs:
       - name: Restore
         run: dotnet restore SharpContracts.Tests/SharpContracts.Tests.csproj
       - name: Test runtime and compile analyzer
-        run: dotnet test SharpContracts.Tests/SharpContracts.Tests.csproj --configuration Release --logger 'trx;LogFileName=runtime.trx' --results-directory artifacts/test-results/runtime
+        run: dotnet test SharpContracts.Tests/SharpContracts.Tests.csproj --configuration Release --collect 'XPlat Code Coverage' --settings coverage.runsettings --logger 'trx;LogFileName=runtime.trx' --results-directory artifacts/test-results/runtime
       - name: Upload runtime results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sharpcontracts-runtime-test-results
-          path: artifacts/test-results/runtime/**/*.trx
+          path: artifacts/test-results/runtime/**/*
           if-no-files-found: ignore
           retention-days: 14
       - name: Build runnable example
@@ -90,14 +90,14 @@ jobs:
       - name: Native Z3 Linux runtime dependency
         run: bash scripts/setup-z3-linux.sh
       - name: Run actual Z3 solver tests
-        run: dotnet test SharpContracts.Solver.Tests/SharpContracts.Solver.Tests.csproj --configuration Release --logger 'trx;LogFileName=solver.trx' --results-directory artifacts/test-results/solver
+        run: dotnet test SharpContracts.Solver.Tests/SharpContracts.Solver.Tests.csproj --configuration Release --collect 'XPlat Code Coverage' --settings coverage.runsettings --logger 'trx;LogFileName=solver.trx' --results-directory artifacts/test-results/solver
 
       - name: Upload solver results
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: sharpcontracts-solver-test-results
-          path: artifacts/test-results/solver/**/*.trx
+          path: artifacts/test-results/solver/**/*
           if-no-files-found: ignore
           retention-days: 14
 
@@ -109,7 +109,7 @@ jobs:
         with:
           dotnet-version: '8.0.x'
       - run: bash scripts/setup-z3-linux.sh
-      - run: dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj --configuration Release --logger 'trx;LogFileName=verification.trx' --results-directory artifacts/test-results/verification
+      - run: dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj --configuration Release --collect 'XPlat Code Coverage' --settings coverage.runsettings --logger 'trx;LogFileName=verification.trx' --results-directory artifacts/test-results/verification
 
       - name: Run archived 100-case CLR regression corpus
         run: dotnet test SharpContracts.Verification.Tests/SharpContracts.Verification.Tests.csproj --configuration Release --filter FullyQualifiedName~Corpus100Tests --logger 'trx;LogFileName=corpus100.trx' --results-directory artifacts/test-results/corpus100
@@ -123,7 +123,7 @@ jobs:
         with:
           name: sharpcontracts-verification-test-results
           path: |
-            artifacts/test-results/verification/**/*.trx
+            artifacts/test-results/verification/**/*
             artifacts/test-results/corpus100/**/*.trx
             artifacts/test-results/inline-proofs/**/*.trx
             artifacts/test-results/semantic100/**/*.trx
@@ -139,6 +139,21 @@ jobs:
           node-version: '22'
       - name: Validate embedded tutorial and demo JavaScript
         run: python3 scripts/check_html.py
+      - name: Validate stable StrictDoc IDs and implementation links
+        run: pwsh -NoProfile -File tools/Test-Requirements.ps1
+      - name: Validate and export canonical StrictDoc requirements
+        shell: bash
+        run: |
+          python3 -m venv "$RUNNER_TEMP/strictdoc"
+          "$RUNNER_TEMP/strictdoc/bin/python" -m pip install -r tools/strictdoc-requirements.txt
+          "$RUNNER_TEMP/strictdoc/bin/strictdoc" export requirements --output-dir artifacts/strictdoc --formats html,json --no-parallelization
+      - name: Upload requirement traceability export
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: sharpcontracts-strictdoc
+          path: artifacts/strictdoc/**
+          if-no-files-found: error
 
   cli-smoke:
     runs-on: ubuntu-latest
@@ -164,7 +179,7 @@ jobs:
           set -e
           test "$code" -eq 1
       - name: Validate machine-readable proof report and exit codes
-        run: python3 scripts/check_cli_report.py
+        run: pwsh -NoProfile -File tools/Test-Cli.ps1
       - name: Counterexample must exit nonzero (code 1)
         shell: bash
         run: |
