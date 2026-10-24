@@ -22,7 +22,7 @@ Attributes configure verification. C# expressions define contracts alongside the
 
 ## Build and verify
 
-Use the .NET 10 SDK (the latest recorded local build used SDK 10.0.402). The current project files target `net8.0`, which the .NET 10 SDK can build; SDK version and target framework are different settings. GitHub Actions CI is intentionally disabled, so the preserved workflow is not evidence of a current CI run.
+Use the .NET 10 SDK (the latest recorded local build used SDK 10.0.402). All nine project files now target `net10.0`, including the Roslyn analyzer (previously `netstandard2.0`). This may affect analyzer host compatibility and requires a fresh build and IDE validation. GitHub Actions CI is intentionally disabled, so the preserved workflow is not evidence of a current CI run.
 
 ```sh
 dotnet restore SharpContracts.sln
