@@ -79,6 +79,7 @@ public static class InlineContractVerifier
                     var variable=localStatement.Declaration.Variables[0];
                     if (variable.Initializer is null ||
                         model.GetDeclaredSymbol(variable) is not ILocalSymbol localSymbol ||
+                        localSymbol.RefKind != RefKind.None ||
                         localSymbol.Type.SpecialType!=SpecialType.System_UInt32)
                         throw new NotSupportedException("Initialized uint local required");
                     var op=(model.GetOperation(variable.Initializer) as IVariableInitializerOperation)?.Value
@@ -88,6 +89,21 @@ public static class InlineContractVerifier
                         throw new NotSupportedException("Local initializer not UInt32");
                     encoder.Encode(value);
                     values.Add(localSymbol,value);
+                }
+                else if (statement is ExpressionStatementSyntax assignmentStatement &&
+                    model.GetOperation(assignmentStatement.Expression) is ISimpleAssignmentOperation assignment)
+                {
+                    // Immutable IR substitution snapshots the old value before replacing the local.
+                    // Ref aliases, parameters and heap locations need a separate storage model.
+                    seenNonrequire=true;
+                    if (assignment.IsRef || assignment.Target is not ILocalReferenceOperation target ||
+                        target.Local.RefKind != RefKind.None || !values.ContainsKey(target.Local))
+                        throw new NotSupportedException("Assignment requires an existing ordinary uint local");
+                    var value=lowerer.Lower(assignment.Value);
+                    if (value.ValueType != ClrScalarType.Integral(32, false))
+                        throw new NotSupportedException("Assignment value must be UInt32");
+                    encoder.Encode(value);
+                    values[target.Local]=value;
                 }
                 else if (statement is ExpressionStatementSyntax {Expression: InvocationExpressionSyntax invocation} &&
                     model.GetOperation(invocation) is IInvocationOperation call &&

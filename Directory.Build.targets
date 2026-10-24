@@ -1,0 +1,6 @@
+<Project>
+  <!-- Coverage is a test dependency only; production packages do not acquire a collector. -->
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <PackageReference Include="coverlet.collector" Version="6.0.4" PrivateAssets="all" />
+  </ItemGroup>
+</Project>

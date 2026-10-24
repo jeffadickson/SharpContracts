@@ -1,3 +1,8 @@
+## Current assignment increment — 2026-10-24
+
+Canonical requirements now live in [StrictDoc](../requirements/SharpContracts.sdoc), preserving all pre-existing SC identifiers. Markdown below is a historical overview. SC-089 adds simple assignment to existing ordinary UInt32 locals through immutable IR substitution; SC-088 remains partial because branches, CFG joins and parameter/heap mutation have not migrated. Ref locals are explicitly rejected to prevent accidental alias reasoning. Compound assignment and checked updates remain unsupported.
+
+Coverage, mutation, fuzz/property seeds and execution counts for this increment are recorded in ENGINEERING-2026-10-24.md after actual execution. Coverage measures managed assemblies only, not native Z3 or dynamically emitted replay assemblies.
 # Current inline verification implementation - 2026-10-22
 
 Both compiler-bound entry points now lower Roslyn `IOperation` into `ClrExpression`, a typed extension of the original `ContractExpr` AST. `ClrScalarType` preserves Boolean identity or 8/16/32/64-bit integral width and signedness. Nodes carry source spans; conversions, unary/binary operations and overflow context are explicit. `ClrExpressionEncoder` validates types before producing Z3 expressions, and `ProofQuery` provides the common feasibility/status/model policy.

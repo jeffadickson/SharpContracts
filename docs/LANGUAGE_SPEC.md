@@ -88,3 +88,7 @@ The C# authoring syntax is unchanged. Predicates now share integral conversions,
 Signed division, variable/zero divisors, checked arithmetic/conversions, shifts, remainder, nullable lifting, custom operators and statements outside the entry point's documented subset remain unsupported. Short-circuit operands are conservatively both translated: an unmodeled operation is rejected even on a syntactically unreachable operand. Every admitted operand is pure and total in the model.
 
 A successful runtime check constrains normal fallthrough. If prior contract failures make a subsequent contract unreachable, that check is Unknown with an unreachable reason, not a vacuous Proved; the earlier counterexample remains. Numeric SAT inputs now use signed decimal strings for signed parameters and unsigned decimal strings for unsigned/char parameters. Neither frontend promotes source-defined Contract or VerifyAttribute lookalikes into trusted runtime symbols.
+
+## Ordinary local assignment (2026-10-24)
+
+The inline entry point accepts simple assignment to an existing ordinary uint local. Its RHS is lowered against the pre-assignment symbolic state and stored as an immutable expression, so previously captured locals retain their values. Assignment to parameters, fields, ref locals, deconstruction targets and compound/increment operations remains unsupported. Checked RHS operations fail closed. This does not introduce method-level Ensures or control-flow support.

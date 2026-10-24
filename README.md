@@ -1,3 +1,5 @@
+Local uint assignment and StrictDoc traceability are now implemented; detailed execution evidence is recorded in docs/ENGINEERING-2026-10-24.md. Canonical requirements: requirements/SharpContracts.sdoc.
+
 # SharpContracts
 
 Design by Contract and experimental formal verification for ordinary C# using Roslyn and Microsoft Z3.

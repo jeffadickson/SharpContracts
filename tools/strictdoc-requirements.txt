@@ -1,0 +1,2 @@
+# StrictDoc itself requires Python; repository automation remains PowerShell/.NET.
+strictdoc==0.30.4

@@ -1,0 +1,894 @@
+[DOCUMENT]
+TITLE: SharpContracts software requirements
+
+[REQUIREMENT]
+UID: SC-001
+STATUS: Legacy status pending audit
+TITLE: Named require preconditions with machine-readable violations
+STATEMENT: Named require preconditions with machine-readable violations.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-002
+STATUS: Legacy status pending audit
+TITLE: Named ensure postconditions with machine-readable violations
+STATEMENT: Named ensure postconditions with machine-readable violations.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-003
+STATUS: Legacy status pending audit
+TITLE: Named object invariants checked at specified boundaries
+STATEMENT: Named object invariants checked at specified boundaries.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-004
+STATUS: Legacy status pending audit
+TITLE: Old snapshot of value types at method entry
+STATEMENT: Old snapshot of value types at method entry.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-005
+STATUS: Legacy status pending audit
+TITLE: Define old semantics for immutable and mutable reference graphs
+STATEMENT: Define old semantics for immutable and mutable reference graphs.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-006
+STATUS: Legacy status pending audit
+TITLE: Named result and exceptional postconditions
+STATEMENT: Named result and exceptional postconditions.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-007
+STATUS: Legacy status pending audit
+TITLE: Explicit check ordering, side-effect policy and exceptions
+STATEMENT: Explicit check ordering, side-effect policy and exceptions.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-008
+STATUS: Legacy status pending audit
+TITLE: Contract inheritance and Liskov-compatible override rules
+STATEMENT: Contract inheritance and Liskov-compatible override rules.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-009
+STATUS: Legacy status pending audit
+TITLE: Nullable and generic contracts
+STATEMENT: Nullable and generic contracts.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-010
+STATUS: Legacy status pending audit
+TITLE: Pure expressions and side-effect detection
+STATEMENT: Pure expressions and side-effect detection.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-011
+STATUS: Legacy status pending audit
+TITLE: Async Task/ValueTask pre/postconditions
+STATEMENT: Async Task/ValueTask pre/postconditions.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-012
+STATUS: Legacy status pending audit
+TITLE: Cancellation, reentrancy and thread-safety contracts
+STATEMENT: Cancellation, reentrancy and thread-safety contracts.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-013
+STATUS: Legacy status pending audit
+TITLE: Overflow, float, decimal and NaN policies
+STATEMENT: Overflow, float, decimal and NaN policies.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-014
+STATUS: Legacy status pending audit
+TITLE: Grouping, severity and configurable enablement
+STATEMENT: Grouping, severity and configurable enablement.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-015
+STATUS: Legacy status pending audit
+TITLE: Roslyn analyzer with stable diagnostics and code fixes
+STATEMENT: Roslyn analyzer with stable diagnostics and code fixes.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-016
+STATUS: Legacy status pending audit
+TITLE: Method injection via verified weaving or transformation
+STATEMENT: Method injection via verified weaving or transformation.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-017
+STATUS: Legacy status pending audit
+TITLE: Incremental source generation where additive code suffices
+STATEMENT: Incremental source generation where additive code suffices.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-018
+STATUS: Legacy status pending audit
+TITLE: xUnit automated behavioral tests and negative cases
+STATEMENT: xUnit automated behavioral tests and negative cases.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-019
+STATUS: Legacy status pending audit
+TITLE: NSubstitute sequence-sensitive dependency verification
+STATEMENT: NSubstitute sequence-sensitive dependency verification.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-020
+STATUS: Legacy status pending audit
+TITLE: Testcontainers database integration tests
+STATEMENT: Testcontainers database integration tests.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-021
+STATUS: Legacy status pending audit
+TITLE: Stable source locations, structured errors and JSON/SARIF
+STATEMENT: Stable source locations, structured errors and JSON/SARIF.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-022
+STATUS: Legacy status pending audit
+TITLE: Documentation site, runnable examples and IDE integration
+STATEMENT: Documentation site, runnable examples and IDE integration.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-023
+STATUS: Legacy status pending audit
+TITLE: Deterministic fuzz and property-based generation
+STATEMENT: Deterministic fuzz and property-based generation.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-024
+STATUS: Legacy status pending audit
+TITLE: Contract coverage and mutation testing
+STATEMENT: Contract coverage and mutation testing.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-025
+STATUS: Legacy status pending audit
+TITLE: typed expression nodes now integrate with both compiler-bound entry points, but a stable serialization schema is not implemented. SC-031 is implemented for source-linked scalar counterexamples and automated CLR replay within this subset. SC-026/SC-032 are implemented for the documented subset and report outcomes. Custom types, checked exception paths, loops, heap state, generic math and method-level postconditions remain open. This increment does not close all of Issue #2.
+STATEMENT: typed expression nodes now integrate with both compiler-bound entry points, but a stable serialization schema is not implemented. SC-031 is implemented for source-linked scalar counterexamples and automated CLR replay within this subset. SC-026/SC-032 are implemented for the documented subset and report outcomes. Custom types, checked exception paths, loops, heap state, generic math and method-level postconditions remain open. This increment does not close all of Issue #2..
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-026
+STATUS: Legacy status pending audit
+TITLE: Explicitly documented verifiable C# subset
+STATEMENT: Explicitly documented verifiable C# subset.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-027
+STATUS: Legacy status pending audit
+TITLE: Verification conditions from contract semantics
+STATEMENT: Verification conditions from contract semantics.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-028
+STATUS: Legacy status pending audit
+TITLE: Z3/SMT bounded verification integration
+STATEMENT: Z3/SMT bounded verification integration.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-029
+STATUS: Legacy status pending audit
+TITLE: Loop invariants and termination variants
+STATEMENT: Loop invariants and termination variants.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-030
+STATUS: Legacy status pending audit
+TITLE: Quantifiers, arrays, collections, frame conditions
+STATEMENT: Quantifiers, arrays, collections, frame conditions.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-031
+STATUS: Legacy status pending audit
+TITLE: Map counterexamples into source and executable tests
+STATEMENT: Map counterexamples into source and executable tests.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-032
+STATUS: Legacy status pending audit
+TITLE: Distinguish proved, falsified, timeout, unsupported, unknown
+STATEMENT: Distinguish proved, falsified, timeout, unsupported, unknown.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-033
+STATUS: Legacy status pending audit
+TITLE: Dafny adapter for selected pure algorithms
+STATEMENT: Dafny adapter for selected pure algorithms.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-034
+STATUS: Legacy status pending audit
+TITLE: Optional Boogie backend and translation validation
+STATEMENT: Optional Boogie backend and translation validation.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-035
+STATUS: Legacy status pending audit
+TITLE: Versioned shared expression schema independent of VeloFormal
+STATEMENT: Versioned shared expression schema independent of VeloFormal.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-036
+STATUS: Legacy status pending audit
+TITLE: Soundness regression corpus and solver cross-checks
+STATEMENT: Soundness regression corpus and solver cross-checks.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-037
+STATUS: Legacy status pending audit
+TITLE: Runtime overhead benchmarks and instrumentation
+STATEMENT: Runtime overhead benchmarks and instrumentation.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-038
+STATUS: Legacy status pending audit
+TITLE: Failure redaction, telemetry and OpenTelemetry correlation
+STATEMENT: Failure redaction, telemetry and OpenTelemetry correlation.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-039
+STATUS: Legacy status pending audit
+TITLE: API versioning and compatibility policy
+STATEMENT: API versioning and compatibility policy.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-040
+STATUS: Legacy status pending audit
+TITLE: Trust model for unsafe, native, dynamic and reflective code
+STATEMENT: Trust model for unsafe, native, dynamic and reflective code.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-041
+STATUS: Legacy status pending audit
+TITLE: Contract disabling must not alter behavior
+STATEMENT: Contract disabling must not alter behavior.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-042
+STATUS: Legacy status pending audit
+TITLE: Reproducible CI, offline where possible
+STATEMENT: Reproducible CI, offline where possible.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-043
+STATUS: Legacy status pending audit
+TITLE: Requirement-to-test-to-code traceability
+STATEMENT: Requirement-to-test-to-code traceability.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-044
+STATUS: Legacy status pending audit
+TITLE: Binary and package supply chain policy
+STATEMENT: Binary and package supply chain policy.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-045
+STATUS: Legacy status pending audit
+TITLE: Interface contracts for persistence and external services
+STATEMENT: Interface contracts for persistence and external services.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-046
+STATUS: Legacy status pending audit
+TITLE: Separate assumptions, guarantees and environmental constraints
+STATEMENT: Separate assumptions, guarantees and environmental constraints.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-047
+STATUS: Legacy status pending audit
+TITLE: Transaction rollback/atomicity on observed failure
+STATEMENT: Transaction rollback/atomicity on observed failure.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-048
+STATUS: Legacy status pending audit
+TITLE: Explain runtime detection versus mathematical proof
+STATEMENT: Explain runtime detection versus mathematical proof.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-049
+STATUS: Legacy status pending audit
+TITLE: semantic numeric descriptors now feed a limited solver backend (partial).
+STATEMENT: semantic numeric descriptors now feed a limited solver backend (partial)..
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-050
+STATUS: Legacy status pending audit
+TITLE: promotion-aware lowering added for supported integer conversions (partial); checked conversions and complete C# numeric rules remain open.
+STATEMENT: promotion-aware lowering added for supported integer conversions (partial); checked conversions and complete C# numeric rules remain open..
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-051
+STATUS: Legacy status pending audit
+TITLE: Model custom structs and invariant-bearing fields
+STATEMENT: Model custom structs and invariant-bearing fields.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-052
+STATUS: Legacy status pending audit
+TITLE: Verify user-defined operator implementations and contracts
+STATEMENT: Verify user-defined operator implementations and contracts.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-053
+STATUS: Legacy status pending audit
+TITLE: Support generic math interfaces without assuming algebraic laws
+STATEMENT: Support generic math interfaces without assuming algebraic laws.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-054
+STATUS: Legacy status pending audit
+TITLE: Model custom implicit/explicit conversion methods
+STATEMENT: Model custom implicit/explicit conversion methods.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-055
+STATUS: Legacy status pending audit
+TITLE: CLI for verifying a source method and reporting outcomes
+STATEMENT: CLI for verifying a source method and reporting outcomes.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-056
+STATUS: Legacy status pending audit
+TITLE: CI smoke tests for proof and counterexample CLI outcomes
+STATEMENT: CI smoke tests for proof and counterexample CLI outcomes.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-057
+STATUS: Legacy status pending audit
+TITLE: Contract exit statuses distinguish proved, counterexample and unsupported
+STATEMENT: Contract exit statuses distinguish proved, counterexample and unsupported.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-058
+STATUS: Legacy status pending audit
+TITLE: Compare solver outcomes against compiled C# boundary cases
+STATEMENT: Compare solver outcomes against compiled C# boundary cases.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-059
+STATUS: Legacy status pending audit
+TITLE: Exhaustively validate byte addition promotion
+STATEMENT: Exhaustively validate byte addition promotion.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-060
+STATUS: Legacy status pending audit
+TITLE: Gate correctness claims on a successful CI run
+STATEMENT: Gate correctness claims on a successful CI run.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-061
+STATUS: Legacy status pending audit
+TITLE: Check joint precondition satisfiability and reject vacuous proof success. Implementation and regression tests committed; CI execution unverified.
+STATEMENT: Check joint precondition satisfiability and reject vacuous proof success. Implementation and regression tests committed; CI execution unverified..
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-064
+STATUS: Legacy status pending audit
+TITLE: CI must parse JSON output and verify version, classification and exit status for positive and negative proof cases. Implemented in workflow/scripts; execution still unverified.
+STATEMENT: CI must parse JSON output and verify version, classification and exit status for positive and negative proof cases. Implemented in workflow/scripts; execution still unverified..
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-065
+STATUS: Legacy status pending audit
+TITLE: the compile-all job must attempt all nine projects and must not stop after the first compiler failure. Status: workflow change committed; successful execution unverified. `build.log` and `summary.log` are retained in the artifact.
+STATEMENT: the compile-all job must attempt all nine projects and must not stop after the first compiler failure. Status: workflow change committed; successful execution unverified. `build.log` and `summary.log` are retained in the artifact..
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-066
+STATUS: Legacy status pending audit
+TITLE: Reject unmodeled argument evaluation in runtime contract calls. Current implementation requires compile-time constant messages and nonblank constant IDs; regression tests committed, execution unverified. Broader argument purity verification remains open.
+STATEMENT: Reject unmodeled argument evaluation in runtime contract calls. Current implementation requires compile-time constant messages and nonblank constant IDs; regression tests committed, execution unverified. Broader argument purity verification remains open..
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-067
+STATUS: Legacy status pending audit
+TITLE: A single CI result must enforce successful completion of all six compilation, runtime, solver, verifier, CLI and HTML checks. Configured as `ci-gate`, awaiting verified execution. No branch-protection rule has been applied.
+STATEMENT: A single CI result must enforce successful completion of all six compilation, runtime, solver, verifier, CLI and HTML checks. Configured as `ci-gate`, awaiting verified execution. No branch-protection rule has been applied..
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-068
+STATUS: Legacy status pending audit
+TITLE: Aggregate CI Gate must identify each required dependency and conclusion in the Actions job summary. Implemented in workflow; run verification pending. Legacy GitHub commit statuses and Actions check runs are distinct, so no-run conclusions must not be drawn from empty legacy status results.
+STATEMENT: Aggregate CI Gate must identify each required dependency and conclusion in the Actions job summary. Implemented in workflow; run verification pending. Legacy GitHub commit statuses and Actions check runs are distinct, so no-run conclusions must not be drawn from empty legacy status results..
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-069
+STATUS: Legacy status pending audit
+TITLE: Opt-in C# verification with [Verify] metadata
+STATEMENT: Opt-in C# verification with [Verify] metadata.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-070
+STATUS: Legacy status pending audit
+TITLE: Inline Require, Assert and Ensure contracts using typed C# expressions
+STATEMENT: Inline Require, Assert and Ensure contracts using typed C# expressions.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-071
+STATUS: Legacy status pending audit
+TITLE: Extract proof obligations directly from the annotated C# method, not handwritten Z3 formulas
+STATEMENT: Extract proof obligations directly from the annotated C# method, not handwritten Z3 formulas.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-072
+STATUS: Legacy status pending audit
+TITLE: Translate local declaration and final return via Roslyn semantic operations
+STATEMENT: Translate local declaration and final return via Roslyn semantic operations.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-073
+STATUS: Legacy status pending audit
+TITLE: Prove corrected midpoint and detect buggy midpoint from the same annotated file
+STATEMENT: Prove corrected midpoint and detect buggy midpoint from the same annotated file.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-074
+STATUS: Legacy status pending audit
+TITLE: Reject unmodeled exceptions (zero divisor, checked arithmetic) and unsupported C# constructs
+STATEMENT: Reject unmodeled exceptions (zero divisor, checked arithmetic) and unsupported C# constructs.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-075
+STATUS: Legacy status pending audit
+TITLE: Support true method-level postconditions across every return/exception path
+STATEMENT: Support true method-level postconditions across every return/exception path.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-076
+STATUS: Legacy status pending audit
+TITLE: Integrate attribute-driven verification into compiler/IDE diagnostics automatically
+STATEMENT: Integrate attribute-driven verification into compiler/IDE diagnostics automatically.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-077
+STATUS: Verified baseline
+TITLE: Execute all 100 archived arithmetic vectors as CLR xUnit cases
+STATEMENT: Execute all 100 archived arithmetic vectors as CLR xUnit cases.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-078
+STATUS: Verified baseline
+TITLE: Execute the actual annotated C# midpoint/payment/buffer methods and check contract exceptions
+STATEMENT: Execute the actual annotated C# midpoint/payment/buffer methods and check contract exceptions.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-079
+STATUS: Verified baseline
+TITLE: Require Z3 source-derived proof for each corrected method and counterexample for each defective method
+STATEMENT: Require Z3 source-derived proof for each corrected method and counterexample for each defective method.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-080
+STATUS: Verified baseline
+TITLE: Publish successful GitHub CI Gate run with commit SHA, logs and TRX artifacts before declaring the verified core complete
+STATEMENT: Publish successful GitHub CI Gate run with commit SHA, logs and TRX artifacts before declaring the verified core complete.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-081
+STATUS: Verified baseline
+TITLE: Both compiler-bound entry points consume the same typed symbolic primitive-expression IR and Z3 encoder
+STATEMENT: Both compiler-bound entry points consume the same typed symbolic primitive-expression IR and Z3 encoder.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-082
+STATUS: Verified baseline
+TITLE: Preserve compiler numeric promotions, signedness and unchecked conversions
+STATEMENT: Preserve compiler numeric promotions, signedness and unchecked conversions.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-083
+STATUS: Verified baseline
+TITLE: Numeric and inline SAT results expose replayable parameter values with correct signed interpretation
+STATEMENT: Numeric and inline SAT results expose replayable parameter values with correct signed interpretation.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-084
+STATUS: Verified baseline
+TITLE: Source-defined Contract and VerifyAttribute lookalikes must fail closed
+STATEMENT: Source-defined Contract and VerifyAttribute lookalikes must fail closed.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-085
+STATUS: Verified baseline
+TITLE: Invalid typed nodes, checked operations and exceptional division must never yield a formula/proof
+STATEMENT: Invalid typed nodes, checked operations and exceptional division must never yield a formula/proof.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-086
+STATUS: Verified baseline
+TITLE: Unreachable later contracts must not erase earlier failures or become vacuous proofs
+STATEMENT: Unreachable later contracts must not erase earlier failures or become vacuous proofs.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-087
+STATUS: Legacy status pending audit
+TITLE: Maintain a 100-case source-to-Z3/CLR regression gate with fixture integrity enforcement
+STATEMENT: Maintain a 100-case source-to-Z3/CLR regression gate with fixture integrity enforcement.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-088
+STATUS: Partial
+TITLE: Migrate legacy CFG/SSA, assignments and branches into the typed core
+STATEMENT: Migrate legacy CFG/SSA, assignments and branches into the typed core.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: docs/REQUIREMENTS.md
+
+[REQUIREMENT]
+UID: SC-089
+STATUS: Verified
+TITLE: Verify simple assignment to existing ordinary UInt32 locals using immutable symbolic snapshots
+STATEMENT: Verify simple assignment to existing ordinary UInt32 locals using immutable symbolic snapshots.
+COMMENT: Existing IDs are preserved; imported legacy status is not a completion claim. See docs/REQUIREMENTS.md for historical context.
+RELATIONS:
+- TYPE: File
+  VALUE: SharpContracts.Verification/InlineContractVerifier.cs
+- TYPE: File
+  VALUE: SharpContracts.Verification.Tests/LocalAssignmentTests.cs
+
+[REQUIREMENT]
+UID: SC-062
+STATUS: Legacy status pending audit
+TITLE: Structured machine-readable proof reporting
+STATEMENT: Structured machine-readable proof reporting.
+RELATIONS:
+- TYPE: File
+  VALUE: SharpContracts.Verification/ProofReport.cs
+
+[REQUIREMENT]
+UID: SC-063
+STATUS: Legacy status pending audit
+TITLE: Distinct exit codes for UNKNOWN and contradictory assumptions
+STATEMENT: Distinct exit codes for UNKNOWN and contradictory assumptions.
+RELATIONS:
+- TYPE: File
+  VALUE: SharpContracts.Verification/ProofReport.cs
+
+

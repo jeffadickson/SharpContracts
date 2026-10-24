@@ -1,3 +1,8 @@
+## Current assignment increment — 2026-10-24
+
+Canonical requirements now live in [StrictDoc](../requirements/SharpContracts.sdoc), preserving all pre-existing SC identifiers. Markdown below is a historical overview. SC-089 adds simple assignment to existing ordinary UInt32 locals through immutable IR substitution; SC-088 remains partial because branches, CFG joins and parameter/heap mutation have not migrated. Ref locals are explicitly rejected to prevent accidental alias reasoning. Compound assignment and checked updates remain unsupported.
+
+Coverage, mutation, fuzz/property seeds and execution counts for this increment are recorded in ENGINEERING-2026-10-24.md after actual execution. Coverage measures managed assemblies only, not native Z3 or dynamically emitted replay assemblies.
 # Current requirement status - typed CLR core, 2026-10-22
 
 Local execution: all nine projects build; 322 xUnit cases pass with zero failures or skips (16 runtime, 32 solver, 274 verification). This is 129 more tests than the previous stabilized revision. The new corpus contains exactly 100 uniquely numbered source-derived cases, plus integrity and unreachable-path checks. Every SAT case replays the solver witness against dynamically compiled original C#; every proved case also executes boundary samples. All original flagship and archived-corpus tests remain passing. The current commit's Linux CI conclusion must be checked after publication.

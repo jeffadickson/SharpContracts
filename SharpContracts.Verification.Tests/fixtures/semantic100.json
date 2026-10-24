@@ -491,10 +491,10 @@
   },
   {
     "Iteration": 71,
-    "Name": "Inline assignment fails closed",
+    "Name": "Inline local assignment now supported",
     "Source": "using SharpContracts; public static class Cases {  [Verify] public static uint M(uint x) { uint y = x; y = 0u; Contract.Ensure(y == 0u, \"P\", \"assignment\"); return y; } }",
     "Inline": true,
-    "Expected": "Unsupported"
+    "Expected": "Proved"
   },
   {
     "Iteration": 72,
